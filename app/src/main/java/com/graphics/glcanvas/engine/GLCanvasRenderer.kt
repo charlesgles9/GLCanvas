@@ -13,7 +13,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
     private val rect=RectF(300.0f,100.0f,190.0f,90.0f)
     private val block=RectF(300.0f,390.0f,190.0f,190.0f)
     private val line=Line(200.0f,200.0f,300.0f,200.0f)
-    private val text=Text("@prayers god.xml",Font("fonts/sans.fnt",context))
+    private val text=Text("@prayers god.xml",0.3f,Font("fonts/sans.fnt",context))
     private val polyLine=PolyLine()
     private val polygon=Polygon()
     private val circle=Circle(300f,580f,100f)
@@ -40,6 +40,9 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         polygon.lineColor(ColorRGBA(0.51f,0f,0f,.6f))
         circle.setColor(ColorRGBA(1f,1f,0f,1f))
         circle.setThickness(25f)
+
+        text.set(200f,200f)
+        text.setMaxWidth(250f)
 
     }
 
