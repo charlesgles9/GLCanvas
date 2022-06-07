@@ -1,0 +1,88 @@
+precision mediump float;
+varying vec4 v_color;
+varying vec2 pos;
+uniform int a_isQuad;
+uniform vec2 srcRes;
+varying vec4 a_center;
+varying vec2 a_rounded_properties;
+uniform int sampleId;
+uniform sampler2D u_texture;
+varying vec2 v_TexCoordinate;
+
+vec2 pixel_min(float ySrc,float xSrc,float yEdge,float xEdge){
+  return vec2(1.0-step(xSrc,xEdge),1.0-step(ySrc,yEdge));
+}
+
+void main(){
+ vec2 src,pos,size,min_v,max_v,topLeft,topRight,bottomLeft,bottomRight;
+// modify  coordinates to match screen space coordinates
+  src.x=gl_FragCoord.x;
+  src.y=srcRes.y-gl_FragCoord.y;
+  // pixel position
+  pos=a_center.xy;
+  // quad dimensions
+  size=a_center.zw;
+  float radius=a_rounded_properties.y;
+  float thickness=a_rounded_properties.x;
+  // thickness cannot be zero
+  if(thickness==0.0)
+   thickness=size.x*size.y;
+  min_v.x=size.x-radius;
+  min_v.y=size.y-radius;
+  // if its a quad test if it has rounded corners
+ if(a_isQuad==1){
+  topLeft.x=pos.x-min_v.x;
+  topLeft.y=pos.y-min_v.y;
+  topRight.x=pos.x+min_v.x;
+  topRight.y=pos.y-min_v.y;
+  bottomLeft.x=pos.x-min_v.x;
+  bottomLeft.y=pos.y+min_v.y;
+  bottomRight.x=pos.x+min_v.x;
+  bottomRight.y=pos.y+min_v.y;
+
+  vec2 diff_topLeft=src-topLeft;
+  vec2 diff_topRight=src-topRight;
+  vec2 diff_bottomLeft=src-bottomLeft;
+  vec2 diff_bottomRight=src-bottomRight;
+
+ // test if this pixel is within the radius region
+  vec2 topLeft_ppx_min=pixel_min(src.y,src.x,topLeft.y,topLeft.x);
+  vec2 topRight_ppx_min=pixel_min(src.y,topRight.x,topRight.y,src.x);
+  vec2 bottomLeft_ppx_min=pixel_min(bottomLeft.y,src.x,src.y,bottomLeft.x);
+  vec2 bottomRight_ppx_min=pixel_min(bottomRight.y,bottomRight.x,src.y,src.x);
+
+ // test if distance between pixel and origin is within the radius
+  float boolean_topLeft=1.0-step(1.0,min(1.0,topLeft_ppx_min.x+topLeft_ppx_min.y));
+  float boolean_topRight=1.0-step(1.0,min(1.0,topRight_ppx_min.x+topRight_ppx_min.y));
+  float boolean_bottomLeft=1.0-step(1.0,min(1.0,bottomLeft_ppx_min.x+bottomLeft_ppx_min.y));
+  float boolean_bottomRight=1.0-step(1.0,min(1.0,bottomRight_ppx_min.x+bottomRight_ppx_min.y));
+
+  float d_topLeft=1.0-step(sqrt(dot(diff_topLeft,diff_topLeft)),radius);
+  float d_topRight=1.0-step(sqrt(dot(diff_topRight,diff_topRight)),radius);
+  float d_bottomLeft=1.0-step(sqrt(dot(diff_bottomLeft,diff_bottomLeft)),radius);
+  float d_bottomRight=1.0-step(sqrt(dot(diff_bottomRight,diff_bottomRight)),radius);
+
+   // if there is thickness  then let's make the quad hollow
+   vec2 innerLength=size-thickness;
+   vec2 inner_quad=pos+innerLength;
+   vec2 inner_min=pixel_min(pos.y-innerLength.y,pos.x-innerLength.x,src.y,src.x);
+   vec2 inner_max=pixel_min(src.y,src.x,pos.y+innerLength.y,pos.x+innerLength.x);
+   float boolean_inner_min=step(1.0,min(1.0,inner_min.y+inner_min.x));
+   float boolean_inner_max=step(1.0,min(1.0,inner_max.y+inner_max.x));
+
+    if(sampleId!=0)
+     gl_FragColor=v_color*texture2D(u_texture,v_TexCoordinate);
+        else
+     gl_FragColor=v_color;
+
+   gl_FragColor*=1.0-(d_bottomLeft*boolean_bottomLeft+d_topLeft*
+                        boolean_topLeft+boolean_topRight*d_topRight+boolean_bottomRight*d_bottomRight);
+     // apply thickness
+   gl_FragColor*=min(1.0,boolean_inner_min+boolean_inner_max);
+  }else{
+   if(sampleId!=0)
+     gl_FragColor=v_color*texture2D(u_texture,v_TexCoordinate);
+     else
+     gl_FragColor=v_color;
+  }
+}
