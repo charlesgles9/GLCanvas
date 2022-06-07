@@ -1,6 +1,5 @@
 package com.graphics.glcanvas.engine.structures
 
-import android.content.Context
 import com.graphics.glcanvas.engine.Batch
 import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.maths.Vector2f
