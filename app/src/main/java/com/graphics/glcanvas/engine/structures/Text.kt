@@ -14,18 +14,29 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
         splitText()
     }
     private fun splitText(){
-        val array=text.split(" ")
+        val paragraphs=text.split("\n")
         words.clear()
         val cursor=Vector2f()
+        if(paragraphs.isNotEmpty()) {
+            paragraphs.forEach {
+                splitParagraph(it, cursor)
+                //move to next line
+                cursor.x=0f
+                cursor.y+=font.lineHeight*fontSize
+            }
+        }else
+            splitParagraph(text, cursor)
+    }
+
+    private fun splitParagraph(text: String,cursor:Vector2f){
+        val array=text.split(" ")
         // word spacing
         val space=20f
         array.forEach {
             words.add(Word(it,font,cursor,fontSize,color,position,maxWidth))
             cursor.addX(space*fontSize)
         }
-
     }
-
     fun set(x:Float,y:Float){
         this.position.set(x,y)
         splitText()
