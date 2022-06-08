@@ -72,7 +72,7 @@ class Shader(private val vname:String,private val fname:String) {
         GLES32.glUniform2f(GLES32.glGetUniformLocation(getProgram(),name),x,y)
     }
 
-    fun uniformli(name:String,value:Int){
+    fun uniformLi(name:String, value:Int){
         GLES32.glUniform1i(GLES32.glGetUniformLocation(getProgram(),name),value)
     }
 

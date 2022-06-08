@@ -589,7 +589,7 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
         //bind texture
         val textureUniformHandle=defaultShader.getUniformLocation("u_texture")
         //this test if its a valid texture in the shader
-        defaultShader.uniformli("sampleId",mTexture)
+        defaultShader.uniformLi("sampleId",mTexture)
         // pass texture coordinate info
         textureBuffer!!.put(textures).position(0)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[2])
@@ -609,7 +609,7 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
             defaultShader.use()
         defaultShader.getUniformMatrix4fv("u_MVPMatrix",mMVPMatrix)
         circleShader.uniform2f("srcRes",ResolutionX,ResolutionY)
-        defaultShader.uniformli("a_isQuad",if(primitiveType==Primitives.QUAD)1 else 0)
+        defaultShader.uniformLi("a_isQuad",if(primitiveType==Primitives.QUAD)1 else 0)
         bindVertexShader()
         bindFragmentShader()
         if(primitiveType == Primitives.QUAD||primitiveType==Primitives.CIRCLE||primitiveType==Primitives.TRIANGLE)
