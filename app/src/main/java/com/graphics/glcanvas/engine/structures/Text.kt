@@ -23,6 +23,7 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
             words.add(Word(it,font,cursor,fontSize,color,position,maxWidth))
             cursor.addX(space*fontSize)
         }
+
     }
 
     fun set(x:Float,y:Float){

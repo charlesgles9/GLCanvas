@@ -5,7 +5,7 @@ import java.io.InputStream
 
 class Font(path:String,context: Context) {
   private val metaList= mutableMapOf<Char,FontMetaData>()
-  private var lineHeight=0f
+   var lineHeight=0f
    var scaleW=0f
    var scaleH=0f
    val padding=FloatArray(4)

@@ -653,8 +653,6 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
         GLES32.glUniformMatrix4fv(location,1,false,mMVPMatrix,0)
         GLES32.glUniform2f(GLES32.glGetUniformLocation(circleShader.getProgram(),"srcRes"),ResolutionX,ResolutionY)
         GLES32.glUniform1i(GLES32.glGetUniformLocation(defaultShader.getProgram(),"a_isQuad"),if(primitiveType==Primitives.QUAD)1 else 0)
-
-
         bindVertexShader()
         bindFragmentShader()
         if(primitiveType == Primitives.QUAD||primitiveType==Primitives.CIRCLE||primitiveType==Primitives.TRIANGLE)
