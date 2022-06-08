@@ -46,6 +46,8 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
     private var mcount=0
     // rounded properties count
     private var rcount=0
+    // draw calls counter
+    private var num_draw_calls=0
 
     private val VERTEX_COORDS_PER_VERTEX=3
     private val COLOR_COORDS_PER_VERTEX=4
@@ -94,6 +96,7 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
     fun begin(camera: Camera2D){
         this.camera=camera
         batchQueue.reset()
+        num_draw_calls=0
         reset()
     }
 
@@ -105,12 +108,16 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
         tcount=0
         mcount=0
         rcount=0
+
     }
 
     fun draw(vertex: Vertex){
         entities.add(vertex)
     }
 
+    fun getDrawCallCount():Int{
+        return num_draw_calls
+    }
     fun end(){
         for( i in 0 until entities.size){
             val entity=entities[i]
@@ -129,7 +136,7 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
             }
              batchQueue.addVertex(entity,type)
         }
-
+        num_draw_calls+=batchQueue.getBatchedQueue().size
         while (!batchQueue.getBatchedQueue().isEmpty()){
             val bucket=batchQueue.getBatchedQueue().remove()
             val list=bucket.getBatchList()
@@ -634,7 +641,7 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
          2,
          GLES32.GL_FLOAT,
          false,
-         0,textureBuffer);
+         0,textureBuffer)
         GLES32.glEnableVertexAttribArray(textureCordHandle)
         //set to unit 0
         GLES32.glActiveTexture(GLES32.GL_TEXTURE0)

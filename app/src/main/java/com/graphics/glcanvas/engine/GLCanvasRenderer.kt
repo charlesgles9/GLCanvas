@@ -20,6 +20,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
     private val polygon=Polygon()
     private val circle=Circle(300f,580f,100f)
     private val textFPS=Text("FPS: 60",0.4f, Font("fonts/harrington.fnt",context))
+    private val drawCalls=Text("DrawCalls",0.4f,Font("fonts/sans.fnt",context))
     // init camera here or resources
     override fun prepare() {
         batch.initShader(context)
@@ -53,6 +54,8 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         FpsCounter.setCap(60)
         textFPS.set(30f,30f)
 
+        drawCalls.set(500f,30f)
+        drawCalls.setColor(ColorRGBA(1f,1f,0f,1f))
     }
 
 
@@ -70,8 +73,10 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         batch.draw(block)
         batch.draw(polygon)
         text.draw(batch)
+        drawCalls.draw(batch)
         FpsCounter.getInstance().draw(batch)
         batch.end()
+        drawCalls.setText("DrawCalls: "+batch.getDrawCallCount())
         FpsCounter.getInstance().update(time)
     }
 
