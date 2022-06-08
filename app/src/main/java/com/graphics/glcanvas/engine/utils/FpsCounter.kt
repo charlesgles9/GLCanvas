@@ -1,6 +1,4 @@
 package com.graphics.glcanvas.engine.utils
-
-import android.os.SystemClock
 import com.graphics.glcanvas.engine.Batch
 import com.graphics.glcanvas.engine.structures.Text
 
