@@ -15,7 +15,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
     private val rect=RectF(300.0f,100.0f,190.0f,90.0f)
     private val block=RectF(300.0f,390.0f,190.0f,190.0f)
     private val line=Line(200.0f,200.0f,300.0f,200.0f)
-    private val text=Text("This is an amazing project good learning experience i am down for amazing work. Hello world people! it takes alot of hard work and commitment to be a good software engineer. one day i know i will triumph and rise above mediocrity. Most people live average mediocre ignorant lives and i must fight this thing inside me that makes me extremely lazy and foolish. I don't come from a rich background but i know I will one day rise to glory.",0.3f,Font("fonts/sans.fnt",context))
+    private val text=Text("This is an amazing project good learning experience i am down for amazing work. Hello world people! it takes alot of hard work and commitment to be a good software engineer. one day i know i will triumph and rise above mediocrity. Most people live average mediocre ignorant lives and i must fight this thing inside me that makes me extremely lazy and foolish. I don't come from a rich background but i know I will one day rise to glory. This is the one struggle that i must win because I have tried so many times and failed over and over again. I promised myself that one day I will have a victory at last, all these years of struggle will pay off I can feel it. I must win!",0.3f,Font("fonts/sans.fnt",context))
     private val polyLine=PolyLine()
     private val polygon=Polygon()
     private val circle=Circle(300f,580f,100f)
@@ -48,8 +48,8 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         circle.setColor(ColorRGBA(1f,1f,0f,1f))
         circle.setThickness(25f)
 
-        text.set(200f,700f)
-        text.setMaxWidth(350f)
+        text.set(200f,690f)
+        text.setMaxWidth(450f)
 
         FpsCounter.setGUITextView(textFPS)
 
@@ -59,7 +59,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         drawCalls.setColor(ColorRGBA(1f,1f,0f,1f))
         triangles.set(500f,80f)
         triangles.setColor(ColorRGBA(1f,1f,0f,1f))
-
+        getRenderer().fpsCap(60)
     }
 
 
@@ -67,8 +67,6 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
     override fun draw() {
         GLES32.glClear(GLES32.GL_DEPTH_BUFFER_BIT or  GLES32.GL_COLOR_BUFFER_BIT)
         GLES32.glClearColor(0.5f,0.5f,0.5f,0.5f)
-        val time=SystemClock.currentThreadTimeMillis()
-
         batch.begin(camera)
         batch.draw(circle)
         batch.draw(line)
@@ -83,11 +81,10 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         batch.end()
         drawCalls.setText("DrawCalls: "+batch.getDrawCallCount())
         triangles.setText("Triangles: "+batch.getTriangleCount())
-        FpsCounter.getInstance().update(time)
     }
 
-    override fun update(delta: Float) {
-
+    override fun update(delta: Long) {
+        FpsCounter.getInstance().update(delta)
     }
 
 

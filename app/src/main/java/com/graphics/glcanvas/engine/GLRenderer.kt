@@ -1,15 +1,28 @@
 package com.graphics.glcanvas.engine
 import android.opengl.GLES32
 import android.opengl.GLSurfaceView
+import android.os.SystemClock
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
 class GLRenderer(private val updatable: Updatable) : GLSurfaceView.Renderer {
 
+    private var st=SystemClock.elapsedRealtimeNanos()/1000000L
+    private var cap=60
+    private var intervals=1000L/cap
     override fun onDrawFrame(gl: GL10?) {
-        updatable.draw( )
-        updatable.update(0.0f)
+        val time= SystemClock.elapsedRealtimeNanos()/1000000L
+        val elapsed=time-st
+        if(elapsed>=intervals){
+            updatable.draw( )
+            updatable.update(time)
+            st+=intervals
+        }
 
+    }
+
+    fun fpsCap(cap:Int){
+        this.cap=cap
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {

@@ -19,7 +19,7 @@ open class GLRendererWrapper( width: Float, height: Float) :Updatable {
 
     }
 
-    override fun update(delta: Float) {
+    override fun update(delta: Long) {
 
     }
 
@@ -30,6 +30,10 @@ open class GLRendererWrapper( width: Float, height: Float) :Updatable {
 
     fun getRenderer(): GLRenderer {
         return renderer
+    }
+
+    fun fpsCap(cap:Int){
+        renderer.fpsCap(cap+10)
     }
 
     fun getCanvasWidth():Float{
