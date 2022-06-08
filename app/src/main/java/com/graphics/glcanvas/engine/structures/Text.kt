@@ -13,6 +13,7 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
     init {
         splitText()
     }
+
     private fun splitText(){
         val paragraphs=text.split("\n")
         words.clear()
