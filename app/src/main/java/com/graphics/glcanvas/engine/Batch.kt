@@ -124,6 +124,7 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
     fun getTriangleCount():Int{
         return num_triangles
     }
+
     fun end(){
         for( i in 0 until entities.size){
             val entity=entities[i]
@@ -561,113 +562,54 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
         vertexBuffer!!.put(vertexes).position(0)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[0])
         GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,vcount*4,vertexBuffer)
-        val positionHandle=GLES32.glGetAttribLocation(defaultShader.getProgram(),"a_position")
-        GLES32.glEnableVertexAttribArray(positionHandle)
-        //prepare triangle coordinate data
-        GLES32.glVertexAttribPointer(
-            positionHandle,
-            VERTEX_COORDS_PER_VERTEX,
-        GLES32.GL_FLOAT,
-        false,
-        12,
-        vertexBuffer)
-
+        defaultShader.enableVertexAttribPointer("a_position",VERTEX_COORDS_PER_VERTEX,12,vertexBuffer)
         // pass in every circle or quads center position
         centerBuffer!!.put(centerVertex).position(0)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[3])
         GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,mcount*4,centerBuffer)
         if(primitiveType==Primitives.CIRCLE) {
-            val centerPHandle = GLES32.glGetAttribLocation(circleShader.getProgram(), "v_center")
-            GLES32.glEnableVertexAttribArray(centerPHandle)
-            //prepare triangle coordinate data
-            GLES32.glVertexAttribPointer(
-                centerPHandle,
-                4,
-                GLES32.GL_FLOAT,
-                false,
-                0,
-                centerBuffer)
+            circleShader.enableVertexAttribPointer("v_center",4,0,centerBuffer)
         }else if (primitiveType==Primitives.QUAD) {
-            val centerPHandle = GLES32.glGetAttribLocation(defaultShader.getProgram(), "v_center")
-            GLES32.glEnableVertexAttribArray(centerPHandle)
-            //prepare triangle coordinate data
-            GLES32.glVertexAttribPointer(
-                centerPHandle,
-                4,
-                GLES32.GL_FLOAT,
-                false,
-                0,
-                centerBuffer)
+             defaultShader.enableVertexAttribPointer("v_center",4,0,centerBuffer)
             // pass the rounded corners for rectF shape
             roundedPropBuffer!!.put(roundedRectProperties).position(0)
             GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[4])
             GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,rcount*4,roundedPropBuffer)
-            val roundedRectHandle=GLES32.glGetAttribLocation(defaultShader.getProgram(),"v_rounded_properties")
-            GLES32.glEnableVertexAttribArray(roundedRectHandle)
-            //prepare triangle coordinate data
-            GLES32.glVertexAttribPointer(
-                roundedRectHandle,
-                2,
-                GLES32.GL_FLOAT,
-                false,
-                0,
-                roundedPropBuffer)
-
+            defaultShader.enableVertexAttribPointer("v_rounded_properties",2,0,roundedPropBuffer)
         }
-
-
     }
 
     // bind fragment shader attributes
     private fun bindFragmentShader(){
         //bind color
-        val colorHandle=GLES32.glGetAttribLocation(defaultShader.getProgram(),"a_color")
         colorBuffer!!.put(colors).position(0)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[1])
         GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,acount*4,colorBuffer)
-        GLES32.glEnableVertexAttribArray(colorHandle)
-        //pass color information to the shader
-        GLES32.glVertexAttribPointer(
-            colorHandle,
-            COLOR_COORDS_PER_VERTEX,
-            GLES32.GL_FLOAT,
-            false,
-            0,
-            colorBuffer)
-
+        defaultShader.enableVertexAttribPointer("a_color",COLOR_COORDS_PER_VERTEX,0,colorBuffer)
         //bind texture
-        val textureCordHandle=GLES32.glGetAttribLocation(defaultShader.getProgram(),"a_TexCoordinate")
-        val textureUniformHandle=GLES32.glGetUniformLocation(defaultShader.getProgram(),"u_texture")
-        //test if its a valid texture
-        GLES32.glUniform1i(GLES32.glGetUniformLocation(defaultShader.getProgram(),"sampleId"),mTexture)
+        val textureUniformHandle=defaultShader.getUniformLocation("u_texture")
+        //this test if its a valid texture in the shader
+        defaultShader.uniformli("sampleId",mTexture)
         // pass texture coordinate info
         textureBuffer!!.put(textures).position(0)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[2])
         GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,tcount*4,textureBuffer)
-
-        GLES32.glVertexAttribPointer(textureCordHandle,
-         2,
-         GLES32.GL_FLOAT,
-         false,
-         0,textureBuffer)
-        GLES32.glEnableVertexAttribArray(textureCordHandle)
+        defaultShader.enableVertexAttribPointer("a_TexCoordinate",2,0,textureBuffer)
         //set to unit 0
         GLES32.glActiveTexture(GLES32.GL_TEXTURE0)
         GLES32.glBindTexture(GLES32.GL_TEXTURE_2D,mTexture)
         GLES32.glUniform1i(textureUniformHandle,0)
-
     }
 
     private fun render(){
         // use different shader is it's a circle
         if(primitiveType==Primitives.CIRCLE)
-            GLES32.glUseProgram(circleShader.getProgram())
+            circleShader.use()
         else
-            GLES32.glUseProgram(defaultShader.getProgram())
-        val location=GLES32.glGetUniformLocation(defaultShader.getProgram(),"u_MVPMatrix")
-        GLES32.glUniformMatrix4fv(location,1,false,mMVPMatrix,0)
-        GLES32.glUniform2f(GLES32.glGetUniformLocation(circleShader.getProgram(),"srcRes"),ResolutionX,ResolutionY)
-        GLES32.glUniform1i(GLES32.glGetUniformLocation(defaultShader.getProgram(),"a_isQuad"),if(primitiveType==Primitives.QUAD)1 else 0)
+            defaultShader.use()
+        defaultShader.getUniformMatrix4fv("u_MVPMatrix",mMVPMatrix)
+        circleShader.uniform2f("srcRes",ResolutionX,ResolutionY)
+        defaultShader.uniformli("a_isQuad",if(primitiveType==Primitives.QUAD)1 else 0)
         bindVertexShader()
         bindFragmentShader()
         if(primitiveType == Primitives.QUAD||primitiveType==Primitives.CIRCLE||primitiveType==Primitives.TRIANGLE)

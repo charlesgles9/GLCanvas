@@ -3,6 +3,7 @@ package com.graphics.glcanvas.engine.structures
 import android.content.Context
 import android.opengl.GLES32
 import com.graphics.glcanvas.engine.utils.ResourceLoader
+import java.nio.FloatBuffer
 
 class Shader(private val vname:String,private val fname:String) {
 
@@ -53,6 +54,39 @@ class Shader(private val vname:String,private val fname:String) {
             }
 
         }
+    }
+
+    fun use(){
+        GLES32.glUseProgram(getProgram())
+    }
+
+     fun getUniformLocation(name:String):Int{
+        return GLES32.glGetUniformLocation(getProgram(),name)
+    }
+
+    fun getUniformMatrix4fv(name:String,mMVPMatrix:FloatArray){
+        GLES32.glUniformMatrix4fv(getUniformLocation(name),1,false,mMVPMatrix,0)
+    }
+
+    fun uniform2f(name:String,x:Float,y:Float){
+        GLES32.glUniform2f(GLES32.glGetUniformLocation(getProgram(),name),x,y)
+    }
+
+    fun uniformli(name:String,value:Int){
+        GLES32.glUniform1i(GLES32.glGetUniformLocation(getProgram(),name),value)
+    }
+
+    fun enableVertexAttribPointer(name:String,coords_per_vertex:Int,stride:Int,buffer:FloatBuffer?){
+        val handle=GLES32.glGetAttribLocation(getProgram(),name)
+        GLES32.glEnableVertexAttribArray(handle)
+        //prepare triangle coordinate data
+        GLES32.glVertexAttribPointer(
+            handle,
+            coords_per_vertex,
+            GLES32.GL_FLOAT,
+            false,
+            stride,
+            buffer)
     }
 
     fun getProgram():Int{

@@ -58,7 +58,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         drawCalls.set(500f,30f)
         drawCalls.setColor(ColorRGBA(1f,1f,0f,1f))
         triangles.set(500f,80f)
-        triangles.setColor(ColorRGBA(1f,0f,1f,1f))
+        triangles.setColor(ColorRGBA(1f,1f,0f,1f))
 
     }
 
