@@ -5,8 +5,6 @@ import android.opengl.GLES32
 import android.opengl.Matrix
 import com.graphics.glcanvas.engine.maths.Vector3f
 import com.graphics.glcanvas.engine.structures.*
-import java.nio.ByteBuffer
-import java.nio.ByteOrder
 import java.nio.FloatBuffer
 import java.nio.ShortBuffer
 import kotlin.math.abs
