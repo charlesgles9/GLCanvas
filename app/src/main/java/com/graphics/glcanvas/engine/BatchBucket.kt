@@ -32,6 +32,8 @@ class BatchBucket(private val primitiveType: Primitives):Comparable<BatchBucket>
         return batchList.first()
     }
 
+    // sorts quads in terms of priority weights
+    // geometry with low priority will be rendered first
     override fun compareTo(other: BatchBucket): Int {
         return if (priority<=other.getPriority())-1 else 1
     }

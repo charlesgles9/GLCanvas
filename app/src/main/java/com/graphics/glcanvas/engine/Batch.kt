@@ -13,13 +13,12 @@ import kotlin.math.abs
 
 class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
 
-// a model matrix used to move models from object space
+    // a model matrix used to move models from object space
     private val mModelMatrix=FloatArray(16)
     // transforms world space into eye space
     private val mViewMatrix= FloatArray(16)
     // model view Projection  matrix this we will pass it to the vertex shader
     private val mMVPMatrix=FloatArray(16)
-
     // buffers
     // positional
     private var vertexBuffer:FloatBuffer?=null
@@ -499,62 +498,28 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
 
     //initialize vertex byte buffer for shape coordinates
     private fun createVertexBuffer(){
-        val bb=ByteBuffer.allocateDirect((vertexes.size*BYTES_PER_FLOAT))
-        bb.order(ByteOrder.nativeOrder())
-        vertexBuffer=bb.asFloatBuffer()
-        vertexBuffer?.put(vertexes)
-        vertexBuffer?.position(0)
-        GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[0])
-        GLES32.glBufferData(GLES32.GL_ARRAY_BUFFER,vertexBuffer!!.capacity()*BYTES_PER_FLOAT,null,GLES32.GL_DYNAMIC_DRAW)
+        vertexBuffer=Buffer.createFloatBuffer(buffers[0],0,vertexes)
     }
 
     // initialize the drawList
     private fun initializeDrawList(){
-        val dlb=ByteBuffer.allocateDirect(indices.size*2)
-        dlb.order(ByteOrder.nativeOrder())
-        drawListBuffer=dlb.asShortBuffer()
-        drawListBuffer?.put(indices)
-        drawListBuffer?.position(0)
+        drawListBuffer=Buffer.createDrawListBuffer(0,indices)
     }
 
     private fun createColorBuffer(){
-        val bb=ByteBuffer.allocateDirect((colors.size*BYTES_PER_FLOAT))
-        bb.order(ByteOrder.nativeOrder())
-        colorBuffer=bb.asFloatBuffer()
-        colorBuffer?.put(colors)
-        colorBuffer?.position(0)
-        GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[1])
-        GLES32.glBufferData(GLES32.GL_ARRAY_BUFFER,colorBuffer!!.capacity()*BYTES_PER_FLOAT,null,GLES32.GL_DYNAMIC_DRAW)
-    }
+        colorBuffer=Buffer.createFloatBuffer(buffers[1],0,colors)
+     }
 
     private fun createTextureBuffer(){
-        val bb=ByteBuffer.allocateDirect((textures.size*BYTES_PER_FLOAT))
-        bb.order(ByteOrder.nativeOrder())
-        textureBuffer=bb.asFloatBuffer()
-        textureBuffer?.put(textures)
-        textureBuffer?.position(0)
-        GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[2])
-        GLES32.glBufferData(GLES32.GL_ARRAY_BUFFER,textureBuffer!!.capacity()*BYTES_PER_FLOAT,null,GLES32.GL_DYNAMIC_DRAW)
+        textureBuffer=Buffer.createFloatBuffer(buffers[2],0,textures)
     }
 
     private fun createCenterBuffer(){
-        val bb=ByteBuffer.allocateDirect((centerVertex.size*BYTES_PER_FLOAT))
-        bb.order(ByteOrder.nativeOrder())
-        centerBuffer=bb.asFloatBuffer()
-        centerBuffer?.put(centerVertex)
-        centerBuffer?.position(0)
-        GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[3])
-        GLES32.glBufferData(GLES32.GL_ARRAY_BUFFER,centerBuffer!!.capacity()*BYTES_PER_FLOAT,null,GLES32.GL_DYNAMIC_DRAW)
+        centerBuffer=Buffer.createFloatBuffer(buffers[3],0,centerVertex)
     }
 
     private fun createRoundedPropertiesBuffer(){
-        val bb=ByteBuffer.allocateDirect((roundedRectProperties.size*BYTES_PER_FLOAT))
-        bb.order(ByteOrder.nativeOrder())
-        roundedPropBuffer=bb.asFloatBuffer()
-        roundedPropBuffer?.put(roundedRectProperties)
-        roundedPropBuffer?.position(0)
-        GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[4])
-        GLES32.glBufferData(GLES32.GL_ARRAY_BUFFER,roundedPropBuffer!!.capacity()*BYTES_PER_FLOAT,null,GLES32.GL_DYNAMIC_DRAW)
+        roundedPropBuffer=Buffer.createFloatBuffer(buffers[4],0,roundedRectProperties)
     }
 
     // bind vertex shader attributes
