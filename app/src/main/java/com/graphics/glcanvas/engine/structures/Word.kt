@@ -7,6 +7,21 @@ import com.graphics.glcanvas.engine.maths.Vector2f
 class Word(str:String, font: Font, cursor:Vector2f,size:Float,color: ColorRGBA,position:Vector2f,maxWidth:Float) {
     private val characters=ArrayList<Character>()
     init {
+        // test if this whole word can fit in this line
+        var testWidth=0f
+        for(i in str.indices) {
+            val meta = font.getCharMetaData(str[i])
+            //how further this character is spaced to the next
+            val advance = meta!!.getAdvanceX() * size
+            testWidth+=advance-font.padding[Font.PADDING_LEFT]
+
+        }
+        //move to next line if the virtual cursor has reached maximum width
+        if((cursor.x+testWidth)>=maxWidth){
+            cursor.x=0f
+            cursor.y+=font.lineHeight*size
+        }
+
         for(i in str.indices){
             val char=Character(str[i],font)
             val meta=font.getCharMetaData(str[i])
@@ -27,12 +42,6 @@ class Word(str:String, font: Font, cursor:Vector2f,size:Float,color: ColorRGBA,p
             // subtract the padding for proper char spacing
             cursor.addX(advance-font.padding[Font.PADDING_LEFT])
            //@debug println("char = ${char.getChar()} w $fontSizeX h $fontSizeY advX ${meta!!.getAdvanceX()} OffsetX ${meta.getOffsetX()} OffsetY ${meta.getOffsetY()}")
-
-            //move to next line if the virtual cursor has reached maximum width
-            if(cursor.x>=maxWidth){
-                cursor.x=0f
-                cursor.y+=font.lineHeight*size
-            }
         }
 
     }

@@ -15,12 +15,13 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
     private val rect=RectF(300.0f,100.0f,190.0f,90.0f)
     private val block=RectF(300.0f,390.0f,190.0f,190.0f)
     private val line=Line(200.0f,200.0f,300.0f,200.0f)
-    private val text=Text("This is an amazing project good learning experience i am down for amazing work. Hello world people!",0.3f,Font("fonts/sans.fnt",context))
+    private val text=Text("This is an amazing project good learning experience i am down for amazing work. Hello world people! it takes alot of hard work and commitment to be a good software engineer. one day i know i will triumph and rise above mediocrity. Most people live average mediocre ignorant lives and i must fight this thing inside me that makes me extremely lazy and foolish. I don't come from a rich background but i know I will one day rise to glory.",0.3f,Font("fonts/sans.fnt",context))
     private val polyLine=PolyLine()
     private val polygon=Polygon()
     private val circle=Circle(300f,580f,100f)
     private val textFPS=Text("FPS: 60",0.4f, Font("fonts/harrington.fnt",context))
     private val drawCalls=Text("DrawCalls",0.4f,Font("fonts/sans.fnt",context))
+    private val triangles=Text("Triangles",0.4f,Font("fonts/sans.fnt",context))
     // init camera here or resources
     override fun prepare() {
         batch.initShader(context)
@@ -48,14 +49,17 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         circle.setThickness(25f)
 
         text.set(200f,700f)
-        text.setMaxWidth(200f)
+        text.setMaxWidth(350f)
 
         FpsCounter.setGUITextView(textFPS)
-        FpsCounter.setCap(60)
+
         textFPS.set(30f,30f)
 
         drawCalls.set(500f,30f)
         drawCalls.setColor(ColorRGBA(1f,1f,0f,1f))
+        triangles.set(500f,80f)
+        triangles.setColor(ColorRGBA(1f,0f,1f,1f))
+
     }
 
 
@@ -74,9 +78,11 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         batch.draw(polygon)
         text.draw(batch)
         drawCalls.draw(batch)
+        triangles.draw(batch)
         FpsCounter.getInstance().draw(batch)
         batch.end()
         drawCalls.setText("DrawCalls: "+batch.getDrawCallCount())
+        triangles.setText("Triangles: "+batch.getTriangleCount())
         FpsCounter.getInstance().update(time)
     }
 

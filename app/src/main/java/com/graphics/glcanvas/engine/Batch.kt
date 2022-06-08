@@ -48,6 +48,7 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
     private var rcount=0
     // draw calls counter
     private var num_draw_calls=0
+    private var num_triangles=0
 
     private val VERTEX_COORDS_PER_VERTEX=3
     private val COLOR_COORDS_PER_VERTEX=4
@@ -97,6 +98,7 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
         this.camera=camera
         batchQueue.reset()
         num_draw_calls=0
+        num_triangles=0
         reset()
     }
 
@@ -117,6 +119,10 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
 
     fun getDrawCallCount():Int{
         return num_draw_calls
+    }
+
+    fun getTriangleCount():Int{
+        return num_triangles
     }
     fun end(){
         for( i in 0 until entities.size){
@@ -243,6 +249,7 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
         colors[acount++]=color4.get(2)
         colors[acount++]=color4.get(3)
         mTexture=vertex.getTexture()
+        num_triangles+=2
     }
 
     private fun addRectF(index:Int,vertex: Vertex){
@@ -346,7 +353,7 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
         colors[acount++]=color4.get(1)
         colors[acount++]=color4.get(2)
         colors[acount++]=color4.get(3)
-
+        num_triangles+=2
     }
 
     private fun addLine(index: Int, vertex: Vertex){
@@ -473,6 +480,7 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
                 colors[acount++] =color3.get(2)
                 colors[acount++] =color3.get(3)
                 pcount++
+                num_triangles+=1
             }
 
         }
