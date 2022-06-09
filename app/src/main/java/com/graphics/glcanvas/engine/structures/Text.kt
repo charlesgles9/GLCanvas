@@ -9,6 +9,11 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
     private val words=ArrayList<Word>()
     private val color=ColorRGBA()
     private val position=Vector2f()
+    private var outline=ColorRGBA()
+    private var innerEdge=0f
+    private var innerWidth=0f
+    private var borderWidth=0f
+    private var borderEdge=0f
     private var maxWidth=Float.MAX_VALUE
     init {
         splitText()
@@ -34,7 +39,8 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
         // word spacing
         val space=20f
         array.forEach {
-            words.add(Word(it,font,cursor,fontSize,color,position,maxWidth))
+            words.add(Word(it,font,cursor,fontSize,color,outline,innerEdge, innerWidth,
+                                           borderWidth, borderEdge, position, maxWidth))
             cursor.addX(space*fontSize)
         }
     }
@@ -72,6 +78,30 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
 
     fun getText():String{
         return text
+    }
+
+    fun setOutlineColor(outline:ColorRGBA){
+        this.outline=outline
+    }
+
+    fun setOutlineColor(r:Float,g:Float,b:Float){
+        this.outline.set(r,g,b)
+    }
+
+    fun setInnerEdge(innerEdge:Float){
+        this.innerEdge=innerEdge
+    }
+
+    fun setInnerWidth(innerWidth:Float){
+        this.innerWidth=innerWidth
+    }
+
+    fun setBorderWidth(borderWidth:Float){
+        this.borderWidth=borderWidth
+    }
+
+    fun setBorderEdge(borderEdge:Float){
+        this.borderEdge=borderEdge
     }
 
     fun draw(batch: Batch){

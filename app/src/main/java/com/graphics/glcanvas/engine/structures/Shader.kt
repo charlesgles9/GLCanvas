@@ -69,11 +69,19 @@ class Shader(private val vname:String,private val fname:String) {
     }
 
     fun uniform2f(name:String,x:Float,y:Float){
-        GLES32.glUniform2f(GLES32.glGetUniformLocation(getProgram(),name),x,y)
+        GLES32.glUniform2f(getUniformLocation(name),x,y)
     }
 
     fun uniformLi(name:String, value:Int){
-        GLES32.glUniform1i(GLES32.glGetUniformLocation(getProgram(),name),value)
+        GLES32.glUniform1i(getUniformLocation(name),value)
+    }
+
+    fun uniform1f(name:String,value:Float){
+        GLES32.glUniform1f(getUniformLocation(name),value)
+    }
+
+    fun uniform3f(name: String,x:Float,y:Float,z:Float){
+        GLES32.glUniform3f(getUniformLocation(name),x,y,z)
     }
 
     fun enableVertexAttribPointer(name:String,coords_per_vertex:Int,stride:Int,buffer:FloatBuffer?){

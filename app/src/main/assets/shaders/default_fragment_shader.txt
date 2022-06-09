@@ -6,9 +6,14 @@ uniform vec2 srcRes;
 varying vec4 a_center;
 varying vec2 a_rounded_properties;
 uniform int sampleId;
+uniform int isText;
 uniform sampler2D u_texture;
 varying vec2 v_TexCoordinate;
-
+uniform float textEdge;
+uniform float textWidth;
+uniform float textBorderWidth;
+uniform float textBorderEdge;
+uniform vec3 outlineColor;
 vec2 pixel_min(float ySrc,float xSrc,float yEdge,float xEdge){
   return vec2(1.0-step(xSrc,xEdge),1.0-step(ySrc,yEdge));
 }
@@ -29,8 +34,9 @@ void main(){
    thickness=size.x*size.y;
   min_v.x=size.x-radius;
   min_v.y=size.y-radius;
-  // if its a quad test if it has rounded corners
- if(a_isQuad==1){
+  /* if its a quad test if it has rounded corners
+    ignore text objects since texts are also quads*/
+ if(a_isQuad==1&&isText==0){
   topLeft.x=pos.x-min_v.x;
   topLeft.y=pos.y-min_v.y;
   topRight.x=pos.x+min_v.x;
@@ -80,7 +86,16 @@ void main(){
      // apply thickness
    gl_FragColor*=min(1.0,boolean_inner_min+boolean_inner_max);
   }else{
-   if(sampleId!=0)
+    if(isText==1){
+      float innerDistance=1.0-texture2D(u_texture,v_TexCoordinate).a;
+      float innerAlpha=1.0-smoothstep(textWidth,textWidth+textEdge,innerDistance);
+      float borderDistance=1.0-texture2D(u_texture,v_TexCoordinate).a;
+      float outlineAlpha=1.0-smoothstep(textBorderWidth,textBorderWidth+textBorderEdge,borderDistance);
+      float overallAlpha=innerAlpha+(1.0-innerAlpha)*outlineAlpha;
+      vec3 overallColor=mix(outlineColor.rgb,v_color.rgb,innerAlpha/overallAlpha);
+      gl_FragColor=vec4(overallColor.rgb,overallAlpha)*texture2D(u_texture,v_TexCoordinate);
+     }else
+    if(sampleId!=0)
      gl_FragColor=v_color*texture2D(u_texture,v_TexCoordinate);
      else
      gl_FragColor=v_color;

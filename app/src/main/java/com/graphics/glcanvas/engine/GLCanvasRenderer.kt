@@ -19,16 +19,16 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
     private val polyLine=PolyLine()
     private val polygon=Polygon()
     private val circle=Circle(300f,580f,100f)
-    private val textFPS=Text("FPS: 60",0.4f, Font("fonts/harrington.fnt",context))
+    private val textFPS=Text("FPS: 60",0.8f, Font("fonts/candara.fnt",context))
     private val drawCalls=Text("DrawCalls",0.4f,Font("fonts/sans.fnt",context))
     private val triangles=Text("Triangles",0.4f,Font("fonts/sans.fnt",context))
-    // init camera here or resources
+    //init camera here or resources
     override fun prepare() {
         batch.initShader(context)
         camera.setOrtho( getCanvasWidth(), getCanvasHeight())
         TextureLoader.getInstance().getTexture(context,"fonts/sans.png")
         TextureLoader.getInstance().getTexture(context,"fonts/harrington.png")
-
+        TextureLoader.getInstance().getTexture(context,"fonts/candara.png")
         rect.gradient(ColorRGBA(1.0f,0.0f,0.0f,0.0f),
             ColorRGBA(0.0f,1.0f,0.0f,0.0f))
         block.setColor(ColorRGBA(0.5f,1f,0f,1f))
@@ -47,19 +47,20 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         polygon.lineColor(ColorRGBA(0.51f,0f,0f,.6f))
         circle.setColor(ColorRGBA(1f,1f,0f,1f))
         circle.setThickness(25f)
-
         text.set(100f,690f)
         text.setMaxWidth(550f)
-
         FpsCounter.setGUITextView(textFPS)
-
         textFPS.set(30f,30f)
-
         drawCalls.set(500f,30f)
         drawCalls.setColor(ColorRGBA(1f,1f,0f,1f))
         triangles.set(500f,80f)
         triangles.setColor(ColorRGBA(1f,1f,0f,1f))
         getRenderer().fpsCap(60)
+        textFPS.setOutlineColor(1f,0f,1f)
+        textFPS.setInnerEdge(0.2f)
+        textFPS.setInnerWidth(0.4f)
+        //textFPS.setBorderEdge(0.6f)
+        //textFPS.setBorderWidth(0.1f)
     }
 
 

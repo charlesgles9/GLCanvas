@@ -4,7 +4,8 @@ import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.maths.Vector2f
 
 
-class Word(str:String, font: Font, cursor:Vector2f,size:Float,color: ColorRGBA,position:Vector2f,maxWidth:Float) {
+class Word(str:String, font: Font, cursor:Vector2f,size:Float,color: ColorRGBA,outline:ColorRGBA,
+           innerEdge:Float,innerWidth:Float,borderWidth:Float,borderEdge:Float,position:Vector2f,maxWidth:Float) {
     private val characters=ArrayList<Character>()
     init {
         // test if this whole word can fit in this line
@@ -39,8 +40,13 @@ class Word(str:String, font: Font, cursor:Vector2f,size:Float,color: ColorRGBA,p
                 fontSizeX,
                 fontSizeY )
                 characters.add(char)
+            char.setOutlineColor(outline)
+            char.setInnerEdge(innerEdge)
+            char.setInnerWidth(innerWidth)
+            char.setBorderEdge(borderEdge)
+            char.setBorderWidth(borderWidth)
             // subtract the padding for proper char spacing
-            cursor.addX(advance-font.padding[Font.PADDING_LEFT])
+            cursor.addX(advance+font.padding[Font.PADDING_LEFT]*0.5f)
            //@debug println("char = ${char.getChar()} w $fontSizeX h $fontSizeY advX ${meta!!.getAdvanceX()} OffsetX ${meta.getOffsetX()} OffsetY ${meta.getOffsetY()}")
         }
 

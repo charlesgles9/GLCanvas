@@ -3,6 +3,7 @@ package com.graphics.glcanvas.engine
 import android.content.Context
 import android.opengl.GLES32
 import android.opengl.Matrix
+import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.maths.Vector3f
 import com.graphics.glcanvas.engine.structures.*
 import java.nio.FloatBuffer
@@ -63,6 +64,13 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
     private var textures=FloatArray(BATCH_SIZE*TEXTURE_COORDS_PER_VERTEX*4)
     // current texture
     private var mTexture=0
+    // text uniforms
+    private var isText=false
+    private var textWidth=0.4f
+    private var textEdge=0.1f
+    private var textBorderWidth=0.1f
+    private var textBorderEdge=0.1f
+    private var outlineColor=ColorRGBA()
     // used to draw batched circles since we need the center position
     // also useful to pass in the center position of our quad to create rounded edges
     private var centerVertex=FloatArray(BATCH_SIZE*4*4)
@@ -145,6 +153,15 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
             val bucket=batchQueue.getBatchedQueue().remove()
             val list=bucket.getBatchList()
             reset()
+            isText=list.first() is Character
+             if(isText){
+                 val char=list.first() as Character
+                 textBorderEdge=char.getBorderEdge()
+                 textBorderWidth=char.getBorderWidth()
+                 textEdge=char.getInnerEdge()
+                 textWidth=char.getInnerWidth()
+                 outlineColor.set(char.getOutlineColor())
+             }
                for(i in 0 until list.size){
                    when(bucket.getPrimitiveType()){
                        Primitives.QUAD ->  addRectF(i, list[i])
@@ -573,6 +590,13 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
         defaultShader.getUniformMatrix4fv("u_MVPMatrix",mMVPMatrix)
         circleShader.uniform2f("srcRes",ResolutionX,ResolutionY)
         defaultShader.uniformLi("a_isQuad",if(primitiveType==Primitives.QUAD)1 else 0)
+        defaultShader.uniformLi("isText",if(isText)1 else 0)
+        // distance field uniforms for text rendering
+        defaultShader.uniform1f("textEdge",textEdge)
+        defaultShader.uniform1f("textWidth",textWidth)
+        defaultShader.uniform1f("textBorderWidth",textBorderWidth)
+        defaultShader.uniform1f("textBorderEdge",textBorderEdge)
+        defaultShader.uniform3f("outlineColor", outlineColor.get(0),outlineColor.get(1),outlineColor.get(2))
         bindVertexShader()
         bindFragmentShader()
         if(primitiveType == Primitives.QUAD||primitiveType==Primitives.CIRCLE||primitiveType==Primitives.TRIANGLE)
