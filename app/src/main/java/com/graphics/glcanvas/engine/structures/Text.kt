@@ -69,6 +69,11 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
 
     fun setColor(color: ColorRGBA){
         this.color.set(color)
+        words.forEach { word->
+            word.getCharacter().forEach {
+              it.setColor(color)
+            }
+        }
     }
 
     fun setText(text: String){
