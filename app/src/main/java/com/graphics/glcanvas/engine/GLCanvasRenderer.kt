@@ -5,7 +5,9 @@ import android.opengl.GLES32
 import android.os.SystemClock
 import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.structures.*
+import com.graphics.glcanvas.engine.utils.AnimationFrame
 import com.graphics.glcanvas.engine.utils.FpsCounter
+import com.graphics.glcanvas.engine.utils.SpriteAnimator
 import com.graphics.glcanvas.engine.utils.TextureLoader
 
 class GLCanvasRenderer(private val context: Context,width: Float, height: Float) : GLRendererWrapper(width, height) {
@@ -32,7 +34,11 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         rect.gradient(ColorRGBA(1.0f,0.0f,0.0f,0.0f),
             ColorRGBA(0.0f,1.0f,0.0f,0.0f))
         block.setColor(ColorRGBA(0.5f,1f,0f,1f))
-        block.setTexture(context,"fonts/sans.png")
+        block.setTexture(context,"textures/effects/13_vortex_spritesheet.png")
+        block.getSpriteSheet().resize(8,8)
+        block.setAnimator(SpriteAnimator("vortex",AnimationFrame(100L,7,8),block.getSpriteSheet()))
+        block.getAnimator()?.setActivated(true)
+        block.getAnimator()?.setLooping(true)
         rect.setConnerRadius(20f)
         rect.setThickness(20f)
         polyLine.moveTo(300.0f,200.0f)
@@ -86,6 +92,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
 
     override fun update(delta: Long) {
         FpsCounter.getInstance().update(delta)
+        block.update(delta)
     }
 
 

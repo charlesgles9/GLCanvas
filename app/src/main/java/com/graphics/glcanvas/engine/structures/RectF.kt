@@ -1,5 +1,6 @@
 package com.graphics.glcanvas.engine.structures
 import com.graphics.glcanvas.engine.maths.Vector3f
+import com.graphics.glcanvas.engine.utils.SpriteAnimator
 
 open class RectF :Vertex {
     private val position=Vector3f()
@@ -7,7 +8,7 @@ open class RectF :Vertex {
     private var height=0.0f
     private var connerRadius=0.0f
     private var thickness=0.0f
-
+    private var animator:SpriteAnimator?=null
     constructor():super(4,4){}
     constructor(x:Float,y:Float,width:Float,height:Float):super(4,4){
         this.width=width
@@ -59,6 +60,16 @@ open class RectF :Vertex {
         return connerRadius
     }
 
+    fun setAnimator(animator: SpriteAnimator){
+        this.animator=animator
+    }
 
+    fun getAnimator():SpriteAnimator?{
+        return animator
+    }
+
+   fun update(delta:Long){
+       animator?.update(delta)
+   }
 
 }

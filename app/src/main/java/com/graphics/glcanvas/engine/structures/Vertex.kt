@@ -29,6 +29,7 @@ open class Vertex(pSize: Int, tSize: Int) {
     fun getSpriteSheet():SpriteSheet{
         return spriteSheet!!
     }
+
     fun gradient(start:ColorRGBA, stop:ColorRGBA){
         // must be a square shape
         if(colors!!.size==4){

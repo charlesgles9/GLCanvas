@@ -1,7 +1,5 @@
 package com.graphics.glcanvas.engine.utils
 
-import android.os.SystemClock
-
 class SpriteAnimator(name: String, frame: AnimationFrame, sheet: SpriteSheet) {
 
     private var lastFrameTime=0L
@@ -22,6 +20,7 @@ class SpriteAnimator(name: String, frame: AnimationFrame, sheet: SpriteSheet) {
 
     init {
         put(name, frame, sheet)
+        setCurrent(name)
     }
 
     fun put(name: String,frame: AnimationFrame,sheet: SpriteSheet){
@@ -33,10 +32,13 @@ class SpriteAnimator(name: String, frame: AnimationFrame, sheet: SpriteSheet) {
         this.current=current
     }
 
-    fun getCurrentFrame():AnimationFrame{
-        return frames[current]!!.getFrame()
+    fun getCurrentFrame():AnimationFrame?{
+        return frames[current]?.getFrame()
     }
 
+    fun getCurrentSpriteSheet():SpriteSheet?{
+        return frames[current]?.getSheet()
+    }
     fun isActivated():Boolean{
         return activated
     }
@@ -54,20 +56,21 @@ class SpriteAnimator(name: String, frame: AnimationFrame, sheet: SpriteSheet) {
     }
 
     fun reset(){
-        getCurrentFrame().reset()
+        getCurrentFrame()?.reset()
     }
 
-    fun updateFrame(){
-        val time=SystemClock.currentThreadTimeMillis()
+    fun update(time:Long){
         if(activated){
             val frame=getCurrentFrame()
+            if(frame!=null)
             if(time>lastFrameTime+frame.getFrameLength()[frame.getTick()]){
                 lastFrameTime=time
                 frame.increment()
-                if(frame.getTick()>=frame.getFrameLength().size){
+                if(frame.getTick()>frame.getFrameLength().size-1){
                     reset()
                     activated=isLooping()
                 }
+                getCurrentSpriteSheet()?.setCurrentFrame(frame.getTick())
             }
         }
     }

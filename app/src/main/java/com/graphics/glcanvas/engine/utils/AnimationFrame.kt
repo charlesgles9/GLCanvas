@@ -1,11 +1,16 @@
 package com.graphics.glcanvas.engine.utils
 
-class AnimationFrame(frameLength: Array<Long>, frames: Array<Int>) {
+class AnimationFrame(//represents how long this animation will last in millis
+                    private var frameLength: Array<Long>,
+                     //frames to be displayed
+                     private var frames: Array<Int>) {
 
-    private var frameLength:Array<Long>?= frameLength
-    private var frames:Array<Int>?= frames
     private var tick=0
 
+    constructor(time:Long,width:Int,height:Int):
+            this(Array(width*height,init = {time}),Array<Int>(width*height) { i ->  (i)})  {
+
+    }
     fun setFrameLength(frameLength: Array<Long>){
         this.frameLength=frameLength
     }
@@ -15,11 +20,11 @@ class AnimationFrame(frameLength: Array<Long>, frames: Array<Int>) {
     }
 
     fun getFrameLength():Array<Long>{
-        return frameLength!!
+        return frameLength
     }
 
     fun getFrames():Array<Int>{
-        return frames!!
+        return frames
     }
 
     fun getTick():Int{
@@ -31,12 +36,11 @@ class AnimationFrame(frameLength: Array<Long>, frames: Array<Int>) {
     }
 
     fun getCurrent():Int{
-        return frames!![tick]
+        return frames[tick]
     }
 
     fun reset(){
         tick=0
     }
-
 
 }

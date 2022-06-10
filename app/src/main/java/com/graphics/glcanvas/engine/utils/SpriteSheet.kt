@@ -1,10 +1,7 @@
 package com.graphics.glcanvas.engine.utils
 
-class SpriteSheet(width: Int, height: Int) {
+class SpriteSheet( private var WIDTH: Int,  private var HEIGHT: Int) {
 
-
-    private var WIDTH= width
-    private var HEIGHT= height
     private var position=0
     private var frames=ArrayList<FloatArray>()
 
@@ -16,6 +13,13 @@ class SpriteSheet(width: Int, height: Int) {
         for(j in 0 until HEIGHT)
             for(i in 0 until WIDTH )
                 frames.add(getSTMatrix(i,j))
+    }
+
+    fun resize(WIDTH:Int,HEIGHT:Int){
+        this.WIDTH=WIDTH
+        this.HEIGHT=HEIGHT
+        frames.clear()
+        initialize()
     }
 
     fun getCurrentFrame():FloatArray{

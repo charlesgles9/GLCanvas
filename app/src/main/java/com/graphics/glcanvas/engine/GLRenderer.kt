@@ -7,16 +7,19 @@ import javax.microedition.khronos.opengles.GL10
 
 class GLRenderer(private val updatable: Updatable) : GLSurfaceView.Renderer {
 
+    //start time
     private var st=SystemClock.elapsedRealtimeNanos()/1000000L
+    //fps limit default at 60 to prevent vsync
     private var cap=60
-    private var intervals=1000L/cap
+    //expected cycle
+    private var ms_per_frame=1000L/cap
     override fun onDrawFrame(gl: GL10?) {
         val time= SystemClock.elapsedRealtimeNanos()/1000000L
         val elapsed=time-st
-        if(elapsed>=intervals){
+        if(elapsed>=ms_per_frame){
             updatable.draw( )
             updatable.update(time)
-            st+=intervals
+            st+=ms_per_frame
         }
 
     }
