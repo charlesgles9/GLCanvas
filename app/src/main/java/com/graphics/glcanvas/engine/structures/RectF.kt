@@ -16,7 +16,7 @@ open class RectF :Vertex {
         this.position.set(x,y,0.0f)
     }
 
-    operator fun set(x:Float, y:Float){
+     fun set(x:Float, y:Float){
         position.setValueX(x)
         position.setValueY(y)
     }

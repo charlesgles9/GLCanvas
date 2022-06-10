@@ -4,25 +4,27 @@ import android.content.Context
 import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.maths.Vector3f
 import com.graphics.glcanvas.engine.utils.SpriteSheet
+import com.graphics.glcanvas.engine.utils.Texture
 import com.graphics.glcanvas.engine.utils.TextureLoader
 
 open class Vertex(pSize: Int, tSize: Int) {
     private var positions: MutableList<Vector3f>? =null
     private var colors:MutableList<ColorRGBA>?=null
     private var spriteSheet:SpriteSheet?=null
-    private var texture=0
+    private var texture=Texture()
     init {
         positions= MutableList(pSize,init = { Vector3f() })
         colors=MutableList(pSize,init = {ColorRGBA(1.0f,1.0f,1.0f,1.0f) })
         spriteSheet= SpriteSheet(1,1)
     }
     fun setTexture(context: Context, path:String){
-        this.texture= TextureLoader.getInstance().getTexture(context,path)
+        this.texture.load(context, path)
     }
-    fun setTexture(texture:Int){
+    fun setTexture(texture:Texture){
         this.texture=texture
     }
-    fun getTexture():Int{
+
+    fun getTexture():Texture{
         return texture
     }
 

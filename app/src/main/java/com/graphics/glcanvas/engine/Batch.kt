@@ -263,7 +263,7 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
         colors[acount++]=color4.get(1)
         colors[acount++]=color4.get(2)
         colors[acount++]=color4.get(3)
-        mTexture=vertex.getTexture()
+        mTexture=vertex.getTexture().getId()
         num_triangles+=2
     }
 
@@ -304,7 +304,7 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
         textures[tcount++]=texture[6]
         textures[tcount++]=texture[7]
 
-        mTexture=rect.getTexture()
+        mTexture=rect.getTexture().getId()
 
         centerVertex[mcount++]=x
         centerVertex[mcount++]=y
@@ -401,7 +401,7 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
         colors[acount++]=color2.get(1)
         colors[acount++]=color2.get(2)
         colors[acount++]=color2.get(3)
-        mTexture=vertex.getTexture()
+        mTexture=vertex.getTexture().getId()
     }
 
     private fun addPolyLine(index: Int, vertex: Vertex):Int{
@@ -441,7 +441,7 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
             }
 
         }
-        mTexture=vertex.getTexture()
+        mTexture=vertex.getTexture().getId()
         return vcount
 
     }
@@ -499,7 +499,7 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
             }
 
         }
-        mTexture=vertex.getTexture()
+        mTexture=vertex.getTexture().getId()
         return vcount
 
     }

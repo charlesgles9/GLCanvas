@@ -19,7 +19,7 @@ class BatchQueue {
         }else{
             // test if the last item matches this primitive
             val lastBucket=queue.last()
-            if(lastBucket.getPrimitiveType()==primitiveType&&vertex.getTexture()==lastBucket.getFirst().getTexture()){
+            if(lastBucket.getPrimitiveType()==primitiveType&&vertex.getTexture().getId()==lastBucket.getFirst().getTexture().getId()){
                 lastBucket.add(vertex)
             }else{
                 priority++
