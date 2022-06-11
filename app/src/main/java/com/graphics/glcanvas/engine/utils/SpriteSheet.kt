@@ -22,6 +22,12 @@ class SpriteSheet( private var WIDTH: Int,  private var HEIGHT: Int) {
         initialize()
     }
 
+    fun resize(size:Int){
+        frames.clear()
+        for(i in 0 until size){
+            frames.add(getSTMatrix(1,1))
+        }
+    }
     fun getCurrentFrame():FloatArray{
         return frames[position]
     }

@@ -5,10 +5,7 @@ import android.opengl.GLES32
 import android.os.SystemClock
 import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.structures.*
-import com.graphics.glcanvas.engine.utils.AnimationFrame
-import com.graphics.glcanvas.engine.utils.FpsCounter
-import com.graphics.glcanvas.engine.utils.SpriteAnimator
-import com.graphics.glcanvas.engine.utils.TextureLoader
+import com.graphics.glcanvas.engine.utils.*
 
 class GLCanvasRenderer(private val context: Context,width: Float, height: Float) : GLRendererWrapper(width, height) {
 
@@ -19,6 +16,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
     private val text=Text("My test paragraph.\n\nDead target zombies and monsters. Charge bro charge and let's kill every one of the scums.Let me test my skills using hardness and courage I am very holy.This is an amazing project good learning experience i am down for amazing work. Hello world people! it takes alot of hard work and commitment to be a good software engineer. one day i know i will triumph and rise above mediocrity. Most people live average mediocre ignorant lives and i must fight this thing inside me that makes me extremely lazy and foolish. I don't come from a rich background but i know I will one day rise to glory. This is the one struggle that i must win because I have tried so many times and failed over and over again. I promised myself that one day I will have a victory at last, all these years of struggle will pay off I can feel it. I must win!",0.3f,Font("fonts/harrington.fnt",context))
     private val textFPS=Text("FPS: 60",0.8f, Font("fonts/candara.fnt",context))
     private val background=RectF(width/2,height/2,width, height)
+    private var atlas:TextureAtlas?=null
      //init camera here or resources eg textures
     override fun prepare() {
         batch.initShader(context)
@@ -26,6 +24,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         TextureLoader.getInstance().getTexture(context,"fonts/sans.png")
         TextureLoader.getInstance().getTexture(context,"fonts/harrington.png")
         TextureLoader.getInstance().getTexture(context,"fonts/candara.png")
+         atlas= TextureAtlas("textures/ui/wenrexa/wenrexa.atlas",context)
         rect.gradient(ColorRGBA(1.0f,0.0f,0.0f,0.0f),
             ColorRGBA(0.0f,1.0f,0.0f,0.0f))
         block.setColor(ColorRGBA(0.5f,1f,0f,1f))
