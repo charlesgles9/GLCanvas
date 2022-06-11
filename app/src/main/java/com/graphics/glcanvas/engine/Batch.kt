@@ -119,6 +119,7 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
     }
 
     fun draw(vertex: Vertex){
+        if(vertex.getVisibility())
         entities.add(vertex)
     }
 

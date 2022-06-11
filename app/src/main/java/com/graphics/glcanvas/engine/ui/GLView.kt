@@ -18,10 +18,10 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
       private var foreground=RectF(0f,0f,width, height)
       protected var text:Text?=null
       private var secondary:RectF?=null
-      private var ripple=RectF()
+      private var ripple=ColorRGBA(0f,0f,0f,0f)
+      private var default=ColorRGBA()
       init {
           foreground.setColor(ColorRGBA(1f,1f,1f,0f))
-          ripple.setColor(ColorRGBA(0f,0f,0f,0f))
       }
 
       fun setBackgroundColor(color: ColorRGBA){
@@ -64,7 +64,7 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
     }
 
     fun setRippleColor(color: ColorRGBA){
-        this.ripple.setColor(color)
+        this.ripple.set(color)
     }
       fun set(x:Float,y:Float){
           background.set(x,y)
@@ -86,7 +86,6 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
 
       override fun draw(batch: Batch) {
           batch.draw(background)
-          batch.draw(ripple)
       //    batch.draw(foreground)
           background.setWidth(width)
           background.setHeight(height)
@@ -112,11 +111,11 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
 
         when(event?.actionMasked?.and(event.action)){
             MotionEvent.ACTION_DOWN->{
-                println("First finger Touched")
+               background.setColor(ripple)
             }
 
             MotionEvent.ACTION_UP->{
-                println("First finger Not Touch")
+               background.setColor(default)
             }
 
             MotionEvent.ACTION_POINTER_DOWN->{
