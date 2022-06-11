@@ -3,30 +3,44 @@ package com.graphics.glcanvas.engine.ui
 import android.view.MotionEvent
 import android.view.View
 import com.graphics.glcanvas.engine.Batch
+import com.graphics.glcanvas.engine.Touch
 import com.graphics.glcanvas.engine.Update
 import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.structures.RectF
 import com.graphics.glcanvas.engine.structures.Text
 import com.graphics.glcanvas.engine.utils.Texture
+import com.graphics.glcanvas.engine.utils.TextureAtlas
 
 
-open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Update,View.OnTouchListener{
+open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Update,Touch{
 
       private var background= RectF(0f,0f,width, height)
       private var foreground=RectF(0f,0f,width, height)
       protected var text:Text?=null
       private var secondary:RectF?=null
+      private var ripple=RectF()
       init {
           foreground.setColor(ColorRGBA(1f,1f,1f,0f))
+          ripple.setColor(ColorRGBA(0f,0f,0f,0f))
       }
 
       fun setBackgroundColor(color: ColorRGBA){
             background.setColor(color)
       }
 
-      fun setBackgroundImage(texture: Texture){
-         this.background.setTexture(texture)
+      private fun setBackgroundImage(texture: Texture?){
+         this.background.setTexture(texture!!)
       }
+
+      fun setBackgroundTextureAtlas(atlas: TextureAtlas){
+          background.setSpriteSheet(atlas.getSheet())
+          setBackgroundImage(atlas.getTexture())
+      }
+
+     fun setSecondaryTextureAtlas(atlas: TextureAtlas){
+        foreground.setSpriteSheet(atlas.getSheet())
+        setSecondaryImage(atlas.getTexture())
+     }
 
       fun setForegroundColor(color: ColorRGBA){
         this.foreground.setColor(color)
@@ -41,7 +55,7 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
       }
 
 
-    fun setSecondaryImage(texture: Texture?){
+    private fun setSecondaryImage(texture: Texture?){
         if(secondary==null&&texture!=null){
             secondary= RectF(background.getX(),background.getY(),width, height)
             secondary?.setTexture(texture )
@@ -49,6 +63,9 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
             secondary=null
     }
 
+    fun setRippleColor(color: ColorRGBA){
+        this.ripple.setColor(color)
+    }
       fun set(x:Float,y:Float){
           background.set(x,y)
           foreground.set(x,y)
@@ -69,7 +86,8 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
 
       override fun draw(batch: Batch) {
           batch.draw(background)
-          batch.draw(foreground)
+          batch.draw(ripple)
+      //    batch.draw(foreground)
           background.setWidth(width)
           background.setHeight(height)
           foreground.setWidth(width)
@@ -78,14 +96,44 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
 
       }
 
+    protected fun getBackground():RectF{
+        return background
+    }
+
+    protected fun getSecondary():RectF?{
+        return secondary
+    }
       override fun update(delta: Long) {
 
       }
 
 
-      override fun onTouch(p0: View?, p1: MotionEvent?): Boolean {
-            TODO("Not yet implemented")
-      }
+    override fun onTouchEvent(event: MotionEvent?) {
+
+        when(event?.actionMasked?.and(event.action)){
+            MotionEvent.ACTION_DOWN->{
+                println("First finger Touched")
+            }
+
+            MotionEvent.ACTION_UP->{
+                println("First finger Not Touch")
+            }
+
+            MotionEvent.ACTION_POINTER_DOWN->{
+                println("Second finger Touched")
+            }
+
+            MotionEvent.ACTION_POINTER_UP->{
+                println("Second finger Not Touch")
+            }
+            MotionEvent.ACTION_MOVE->{
+                println("Moving")
+            }
+
+        }
+    }
+
+
 
 
 }

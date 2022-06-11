@@ -8,6 +8,7 @@ import com.graphics.glcanvas.engine.utils.Texture
 import com.graphics.glcanvas.engine.utils.TextureLoader
 
 open class Vertex(pSize: Int, tSize: Int) {
+    private var visible=true
     private var positions: MutableList<Vector3f>? =null
     private var colors:MutableList<ColorRGBA>?=null
     private var spriteSheet:SpriteSheet?=null
@@ -32,6 +33,10 @@ open class Vertex(pSize: Int, tSize: Int) {
         return spriteSheet!!
     }
 
+    fun setSpriteSheet(spriteSheet: SpriteSheet?){
+        this.spriteSheet=spriteSheet
+    }
+
     fun gradient(start:ColorRGBA, stop:ColorRGBA){
         // must be a square shape
         if(colors!!.size==4){
@@ -51,6 +56,14 @@ open class Vertex(pSize: Int, tSize: Int) {
         colors!!.forEach { it.set(color) }
     }
 
+    fun setVisibility(visible:Boolean){
+        this.visible=visible
+    }
+
+    fun getVisibility():Boolean{
+        return visible
+    }
+
     fun getColor(index:Int):ColorRGBA{
         return colors!![index]
     }
@@ -66,5 +79,6 @@ open class Vertex(pSize: Int, tSize: Int) {
     fun getTextureCords():FloatArray{
         return spriteSheet!!.getCurrentFrame()
     }
+
 
 }

@@ -1,5 +1,5 @@
 
-textures/ui/wenrexa.png
+textures/ui/wenrexa/wenrexa.png
 size: 4096, 2048
 format: RGBA8888
 filter: Nearest, Nearest
@@ -179,63 +179,63 @@ Cell125x121px
   orig: 125, 121
   offset: 0, 0
   index: -1
-CellBig
+CellBig1
   rotate: false
   xy: 1379, 745
   size: 191, 192
   orig: 191, 192
   offset: 0, 0
   index: 2
-CellBig
+CellBig2
   rotate: false
   xy: 1379, 551
   size: 191, 192
   orig: 191, 192
   offset: 0, 0
   index: 1
-CellBig
+CellBig3
   rotate: false
   xy: 1189, 290
   size: 191, 192
   orig: 191, 192
   offset: 0, 0
   index: 3
-Checked
+Checked1
   rotate: false
   xy: 1379, 499
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: 3
-Checked
+Checked2
   rotate: false
   xy: 1980, 1473
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: 5
-Checked
+Checked3
   rotate: false
   xy: 3784, 1927
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: 2
-Checked
+Checked4
   rotate: false
   xy: 2656, 1586
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: 4
-Checked
+Checked4
   rotate: false
   xy: 2347, 1545
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: 1
-Checked
+Checked5
   rotate: false
   xy: 1572, 764
   size: 50, 50

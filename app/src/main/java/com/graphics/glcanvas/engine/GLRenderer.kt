@@ -7,6 +7,7 @@ import javax.microedition.khronos.opengles.GL10
 
 class GLRenderer(private val updatable: Updatable) : GLSurfaceView.Renderer {
 
+    private var controller:GLCanvasSurfaceView.TouchController?=null
     //start time
     private var st=SystemClock.elapsedRealtimeNanos()/1000000L
     //fps limit default at 60 to prevent vsync
@@ -38,6 +39,13 @@ class GLRenderer(private val updatable: Updatable) : GLSurfaceView.Renderer {
         setTransparency(gl!!,true)
     }
 
+    fun setController(controller:GLCanvasSurfaceView.TouchController){
+       this.controller=controller
+    }
+
+    fun getController():GLCanvasSurfaceView.TouchController?{
+        return controller
+    }
      private fun setTransparency(gl:GL10, transparency:Boolean){
         if(transparency){
             gl.glEnable(GL10.GL_BLEND)

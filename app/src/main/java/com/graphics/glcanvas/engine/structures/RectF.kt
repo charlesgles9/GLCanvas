@@ -45,6 +45,8 @@ open class RectF :Vertex {
         return height
     }
 
+
+
     fun setThickness(thickness:Float){
         this.thickness=thickness
     }

@@ -8,6 +8,7 @@ import java.io.InputStream
 
 class TextureAtlas(path:String,context: Context) {
     private var texturePath=""
+    private var texture:Texture?=null
     private var resolution=Vector2f()
     private var format=""
     private val map=HashMap<String,Atlas>()
@@ -26,6 +27,7 @@ class TextureAtlas(path:String,context: Context) {
             coordinates[k] = counter
             counter++
         }
+       texture= Texture(context,texturePath)
     }
 
     private fun split(text:String):List<String>{
@@ -40,7 +42,7 @@ class TextureAtlas(path:String,context: Context) {
              if(!it.contains(":")){
                  // test if this data is the image details located at the
                  // start of the text file
-                 if (map.isEmpty()) {
+                 if (map.isEmpty()&&texturePath=="") {
                      texturePath = it
                  }else {
                      //if map isn't empty then these are the sprite coordinates
@@ -105,10 +107,13 @@ class TextureAtlas(path:String,context: Context) {
         return sheet
     }
 
-    fun getTextureCoordinate(key: String):FloatArray?{
-        return sheet?.getFrameAt(coordinates[key]!!)
+    fun getTextureCoordinate(key: String):Int{
+        return coordinates[key]!!
     }
 
+    fun getTexture():Texture?{
+        return texture
+    }
     inner class Atlas(){
         private var rotate=false
         private var position=Vector2f()

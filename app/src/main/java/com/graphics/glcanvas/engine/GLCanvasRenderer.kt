@@ -5,18 +5,18 @@ import android.opengl.GLES32
 import android.os.SystemClock
 import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.structures.*
+import com.graphics.glcanvas.engine.ui.GLTextButton
 import com.graphics.glcanvas.engine.utils.*
 
 class GLCanvasRenderer(private val context: Context,width: Float, height: Float) : GLRendererWrapper(width, height) {
 
     private val batch = Batch(width,height)
     private val camera=Camera2D(1.0f)
-    private val rect=RectF(300.0f,100.0f,190.0f,90.0f)
-    private val block=RectF(300.0f,390.0f,190.0f,190.0f)
     private val text=Text("My test paragraph.\n\nDead target zombies and monsters. Charge bro charge and let's kill every one of the scums.Let me test my skills using hardness and courage I am very holy.This is an amazing project good learning experience i am down for amazing work. Hello world people! it takes alot of hard work and commitment to be a good software engineer. one day i know i will triumph and rise above mediocrity. Most people live average mediocre ignorant lives and i must fight this thing inside me that makes me extremely lazy and foolish. I don't come from a rich background but i know I will one day rise to glory. This is the one struggle that i must win because I have tried so many times and failed over and over again. I promised myself that one day I will have a victory at last, all these years of struggle will pay off I can feel it. I must win!",0.3f,Font("fonts/harrington.fnt",context))
     private val textFPS=Text("FPS: 60",0.8f, Font("fonts/candara.fnt",context))
     private val background=RectF(width/2,height/2,width, height)
     private var atlas:TextureAtlas?=null
+    private var button:GLTextButton?=null
      //init camera here or resources eg textures
     override fun prepare() {
         batch.initShader(context)
@@ -25,17 +25,10 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         TextureLoader.getInstance().getTexture(context,"fonts/harrington.png")
         TextureLoader.getInstance().getTexture(context,"fonts/candara.png")
          atlas= TextureAtlas("textures/ui/wenrexa/wenrexa.atlas",context)
-        rect.gradient(ColorRGBA(1.0f,0.0f,0.0f,0.0f),
-            ColorRGBA(0.0f,1.0f,0.0f,0.0f))
-        block.setColor(ColorRGBA(0.5f,1f,0f,1f))
-        block.setTexture(context,"textures/effects/13_vortex_spritesheet.png")
+         button= GLTextButton(100f,50f,atlas!!,"Checked2")
+         button?.set(200f,200f)
+         getRenderer().getController()?.addEvent(button!!)
         background.setTexture(context,"textures/ui/wenrexa/Background_green.png")
-        block.getSpriteSheet().resize(8,8)
-        block.setAnimator(SpriteAnimator("vortex", AnimationFrame(100L,7,8),block.getSpriteSheet()))
-        block.getAnimator()?.setActivated(true)
-        block.getAnimator()?.setLooping(true)
-        rect.setConnerRadius(20f)
-        rect.setThickness(20f)
         text.set(100f,690f)
         text.setMaxWidth(600f)
         FpsCounter.setGUITextView(textFPS)
@@ -44,8 +37,6 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         textFPS.setOutlineColor(1f,0f,1f)
         textFPS.setInnerEdge(0.2f)
         textFPS.setInnerWidth(0.4f)
-        //textFPS.setBorderEdge(0.6f)
-        //textFPS.setBorderWidth(0.1f)
     }
 
 
@@ -55,8 +46,8 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         GLES32.glClearColor(0.5f,0.5f,0.5f,0.5f)
         batch.begin(camera)
         batch.draw(background)
-        batch.draw(block)
         text.draw(batch)
+        button?.draw(batch)
         FpsCounter.getInstance().draw(batch)
         batch.end()
 
@@ -64,7 +55,6 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
 
     override fun update(delta: Long) {
         FpsCounter.getInstance().update(delta)
-        block.update(delta)
     }
 
 
