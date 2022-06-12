@@ -3,6 +3,7 @@ package com.graphics.glcanvas.engine
 import android.content.Context
 import android.opengl.GLES32
 import android.opengl.Matrix
+import com.graphics.glcanvas.engine.constants.Primitives
 import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.maths.Vector3f
 import com.graphics.glcanvas.engine.structures.*
@@ -80,7 +81,7 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
     private val circleShader=Shader("shaders/circle_vertex_shader.txt","shaders/circle_fragment_shader.txt")
     private var camera:Camera2D?=null
     private val batchQueue=BatchQueue()
-    private var primitiveType=Primitives.QUAD
+    private var primitiveType= Primitives.QUAD
     private val entities=ArrayList<Vertex>()
 
     init {
@@ -134,16 +135,16 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
     fun end(){
         for( i in 0 until entities.size){
             val entity=entities[i]
-            var type=Primitives.CIRCLE
+            var type= Primitives.CIRCLE
             when (entity) {
                 is RectF ->
                     type = Primitives.QUAD
                 is Line ->
-                    type=Primitives.LINE
+                    type= Primitives.LINE
                 is PolyLine ->
-                    type=Primitives.POLYLINE
+                    type= Primitives.POLYLINE
                 is Polygon ->
-                    type=Primitives.TRIANGLE
+                    type= Primitives.TRIANGLE
                 is Circle ->
                     type = Primitives.CIRCLE
             }
@@ -548,9 +549,9 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
         centerBuffer!!.put(centerVertex).position(0)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[3])
         GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,mcount*4,centerBuffer)
-        if(primitiveType==Primitives.CIRCLE) {
+        if(primitiveType== Primitives.CIRCLE) {
             circleShader.enableVertexAttribPointer("v_center",4,0,centerBuffer)
-        }else if (primitiveType==Primitives.QUAD) {
+        }else if (primitiveType== Primitives.QUAD) {
              defaultShader.enableVertexAttribPointer("v_center",4,0,centerBuffer)
             // pass the rounded corners for rectF shape
             roundedPropBuffer!!.put(roundedRectProperties).position(0)
@@ -584,13 +585,13 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
 
     private fun render(){
         // use different shader is it's a circle
-        if(primitiveType==Primitives.CIRCLE)
+        if(primitiveType== Primitives.CIRCLE)
             circleShader.use()
         else
             defaultShader.use()
         defaultShader.getUniformMatrix4fv("u_MVPMatrix",mMVPMatrix)
         circleShader.uniform2f("srcRes",ResolutionX,ResolutionY)
-        defaultShader.uniformLi("a_isQuad",if(primitiveType==Primitives.QUAD)1 else 0)
+        defaultShader.uniformLi("a_isQuad",if(primitiveType== Primitives.QUAD)1 else 0)
         defaultShader.uniformLi("isText",if(isText)1 else 0)
         // distance field uniforms for text rendering
         defaultShader.uniform1f("textEdge",textEdge)
@@ -600,9 +601,9 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
         defaultShader.uniform3f("outlineColor", outlineColor.get(0),outlineColor.get(1),outlineColor.get(2))
         bindVertexShader()
         bindFragmentShader()
-        if(primitiveType == Primitives.QUAD||primitiveType==Primitives.CIRCLE||primitiveType==Primitives.TRIANGLE)
+        if(primitiveType == Primitives.QUAD||primitiveType== Primitives.CIRCLE||primitiveType== Primitives.TRIANGLE)
         GLES32.glDrawElements(GLES32.GL_TRIANGLES,icount,GLES32.GL_UNSIGNED_SHORT,drawListBuffer)
-        else if(primitiveType == Primitives.LINE||primitiveType==Primitives.POLYLINE){
+        else if(primitiveType == Primitives.LINE||primitiveType== Primitives.POLYLINE){
         GLES32.glDrawElements(GLES32.GL_LINES,icount,GLES32.GL_UNSIGNED_SHORT,drawListBuffer)
 
         }

@@ -1,5 +1,5 @@
 package com.graphics.glcanvas.engine
-import com.graphics.glcanvas.engine.structures.Primitives
+import com.graphics.glcanvas.engine.constants.Primitives
 import com.graphics.glcanvas.engine.structures.Vertex
 import java.util.PriorityQueue
 
@@ -8,7 +8,7 @@ class BatchQueue {
     private var priority=0
     // first come first draw last come last draw
     // last elements will be drawn on top of first elements
-    fun addVertex(vertex: Vertex,primitiveType:Primitives){
+    fun addVertex(vertex: Vertex,primitiveType: Primitives){
         // if the queue is empty let's add first item we don't care about priority
         if(queue.isEmpty()) {
             val bucket=BatchBucket(primitiveType)

@@ -1,6 +1,6 @@
 package com.graphics.glcanvas.engine
 
-import com.graphics.glcanvas.engine.structures.Primitives
+import com.graphics.glcanvas.engine.constants.Primitives
 import com.graphics.glcanvas.engine.structures.Vertex
 
 class BatchBucket(private val primitiveType: Primitives):Comparable<BatchBucket> {
@@ -20,7 +20,7 @@ class BatchBucket(private val primitiveType: Primitives):Comparable<BatchBucket>
         return priority
     }
 
-    fun getPrimitiveType():Primitives{
+    fun getPrimitiveType(): Primitives {
         return primitiveType
     }
 

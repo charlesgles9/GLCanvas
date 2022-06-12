@@ -4,6 +4,8 @@ import com.graphics.glcanvas.engine.Batch
 import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.maths.Vector2f
 import com.graphics.glcanvas.engine.utils.TextureLoader
+import kotlin.math.abs
+import kotlin.math.max
 
 class Text(private var text:String,private var fontSize:Float,private var font: Font) {
     private val words=ArrayList<Word>()
@@ -15,6 +17,9 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
     private var borderWidth=0f
     private var borderEdge=0f
     private var maxWidth=Float.MAX_VALUE
+    private var maxHeight=Float.MAX_VALUE
+    var width=0f
+    var height=0f
     init {
         splitText()
     }
@@ -24,29 +29,41 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
         words.clear()
         val cursor=Vector2f()
         if(paragraphs.isNotEmpty()) {
-            paragraphs.forEach {
-                splitParagraph(it, cursor)
+            for(item in paragraphs){
+                splitParagraph(item, cursor)
+                width= max(cursor.x,width)
+                height=max(cursor.y,height)
                 //move to next line
                 cursor.x=0f
                 cursor.y+=font.lineHeight*fontSize
+
             }
-        }else
+        }else {
             splitParagraph(text, cursor)
+            width= max(cursor.x,width)
+            height=font.lineHeight*fontSize
+
+        }
     }
 
     private fun splitParagraph(text: String,cursor:Vector2f){
         val array=text.split(" ")
         // word spacing
         val space=20f
-        array.forEach {
-            words.add(Word(it,font,cursor,fontSize,color,outline,innerEdge, innerWidth,
-                                           borderWidth, borderEdge, position, maxWidth))
+        for(item in array){
+            words.add(Word(item,font,cursor,fontSize,color,outline,innerEdge, innerWidth,
+                                           borderWidth, borderEdge, position, maxWidth,maxHeight))
             cursor.addX(space*fontSize)
+
         }
     }
+
     fun set(x:Float,y:Float){
-        this.position.set(x,y)
-        splitText()
+        // update only if necessary
+        if(x!=position.x&&position.y!=y) {
+            this.position.set(x, y)
+            splitText()
+        }
     }
 
     fun setX(x:Float){
@@ -62,6 +79,17 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
         splitText()
     }
 
+    fun setMaxHeight(maxHeight:Float){
+        this.maxHeight=maxHeight
+    }
+
+    fun getMaxWidth():Float{
+        return maxWidth
+    }
+
+    fun getMaxHeight():Float{
+        return maxHeight
+    }
     fun setFontSize(fontSize: Float){
         this.fontSize=fontSize
         splitText()

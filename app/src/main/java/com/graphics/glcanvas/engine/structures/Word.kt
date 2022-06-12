@@ -5,7 +5,7 @@ import com.graphics.glcanvas.engine.maths.Vector2f
 
 
 class Word(str:String, font: Font, cursor:Vector2f,size:Float,color: ColorRGBA,outline:ColorRGBA,
-           innerEdge:Float,innerWidth:Float,borderWidth:Float,borderEdge:Float,position:Vector2f,maxWidth:Float) {
+           innerEdge:Float,innerWidth:Float,borderWidth:Float,borderEdge:Float,position:Vector2f,maxWidth:Float,maxHeight:Float) {
     private val characters=ArrayList<Character>()
     init {
         // test if this whole word can fit in this line
@@ -15,7 +15,6 @@ class Word(str:String, font: Font, cursor:Vector2f,size:Float,color: ColorRGBA,o
             //how further this character is spaced to the next
             val advance = meta!!.getAdvanceX() * size
             testWidth+=advance-font.padding[Font.PADDING_LEFT]
-
         }
         //move to next line if the virtual cursor has reached maximum width
         if((cursor.x+testWidth)>=maxWidth){
@@ -23,6 +22,7 @@ class Word(str:String, font: Font, cursor:Vector2f,size:Float,color: ColorRGBA,o
             cursor.y+=font.lineHeight*size
         }
 
+        if(cursor.y<maxHeight-font.lineHeight*size)
         for(i in str.indices){
             val char=Character(str[i],font)
             val meta=font.getCharMetaData(str[i])
@@ -47,6 +47,7 @@ class Word(str:String, font: Font, cursor:Vector2f,size:Float,color: ColorRGBA,o
             char.setBorderWidth(borderWidth)
             // subtract the padding for proper char spacing
             cursor.addX(advance+font.padding[Font.PADDING_LEFT]*0.5f)
+
            //@debug println("char = ${char.getChar()} w $fontSizeX h $fontSizeY advX ${meta!!.getAdvanceX()} OffsetX ${meta.getOffsetX()} OffsetY ${meta.getOffsetY()}")
         }
 

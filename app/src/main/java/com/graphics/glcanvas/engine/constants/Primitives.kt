@@ -1,4 +1,4 @@
-package com.graphics.glcanvas.engine.structures
+package com.graphics.glcanvas.engine.constants
 
 enum class Primitives {
         QUAD,

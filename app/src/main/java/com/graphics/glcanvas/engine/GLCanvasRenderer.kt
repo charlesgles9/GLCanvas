@@ -2,10 +2,10 @@ package com.graphics.glcanvas.engine
 
 import android.content.Context
 import android.opengl.GLES32
-import android.os.SystemClock
 import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.structures.*
-import com.graphics.glcanvas.engine.ui.GLTextButton
+import com.graphics.glcanvas.engine.ui.GLImageButton
+import com.graphics.glcanvas.engine.ui.OnClickEvent.OnClickListener
 import com.graphics.glcanvas.engine.utils.*
 
 class GLCanvasRenderer(private val context: Context,width: Float, height: Float) : GLRendererWrapper(width, height) {
@@ -16,7 +16,8 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
     private val textFPS=Text("FPS: 60",0.8f, Font("fonts/candara.fnt",context))
     private val background=RectF(width/2,height/2,width, height)
     private var atlas:TextureAtlas?=null
-    private var button:GLTextButton?=null
+    private var button:GLImageButton?=null
+    private var button2:GLImageButton?=null
      //init camera here or resources eg textures
     override fun prepare() {
         batch.initShader(context)
@@ -25,10 +26,27 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         TextureLoader.getInstance().getTexture(context,"fonts/harrington.png")
         TextureLoader.getInstance().getTexture(context,"fonts/candara.png")
          atlas= TextureAtlas("textures/ui/wenrexa/wenrexa.atlas",context)
-         button= GLTextButton(100f,50f,atlas!!,"Checked2")
+         button= GLImageButton(100f,50f,atlas!!,"Checked1")
          button?.set(200f,200f)
          button?.setRippleColor(ColorRGBA(1f,0f,0f,1f))
+         button?.setOnClickListener( object :OnClickListener{
+             override fun onClick(){
+
+             }
+         })
+
+         button2= GLImageButton(280f,50f)
+         button2?.set(300f,400f)
+         button2?.setText("Kasarani",Font("fonts/harrington.fnt",context),0.4f)
+         button2?.setBackgroundColor(ColorRGBA(1f,0f,1f,0.5f))
+         button2?.setRippleColor(ColorRGBA(0f,1f,0f,1f))
+         button2?.setOnClickListener( object :OnClickListener{
+             override fun onClick(){
+
+             }
+         })
          getRenderer().getController()?.addEvent(button!!)
+         getRenderer().getController()?.addEvent(button2!!)
         background.setTexture(context,"textures/ui/wenrexa/Background_green.png")
         text.set(100f,690f)
         text.setMaxWidth(600f)
@@ -49,6 +67,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         batch.draw(background)
         text.draw(batch)
         button?.draw(batch)
+        button2?.draw(batch)
         FpsCounter.getInstance().draw(batch)
         batch.end()
 

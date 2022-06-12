@@ -1,18 +1,20 @@
 package com.graphics.glcanvas.engine.ui
 
 import android.view.MotionEvent
-import android.view.View
 import com.graphics.glcanvas.engine.Batch
 import com.graphics.glcanvas.engine.Touch
 import com.graphics.glcanvas.engine.Update
+import com.graphics.glcanvas.engine.maths.AxisABB
 import com.graphics.glcanvas.engine.maths.ColorRGBA
+import com.graphics.glcanvas.engine.maths.Vector2f
 import com.graphics.glcanvas.engine.structures.RectF
 import com.graphics.glcanvas.engine.structures.Text
 import com.graphics.glcanvas.engine.utils.Texture
 import com.graphics.glcanvas.engine.utils.TextureAtlas
+import kotlin.math.abs
 
 
-open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Update,Touch{
+open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Update, Touch{
 
       private var background= RectF(0f,0f,width, height)
       private var foreground=RectF(0f,0f,width, height)
@@ -20,12 +22,17 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
       private var secondary:RectF?=null
       private var ripple=ColorRGBA(0f,0f,0f,0f)
       private var default=ColorRGBA()
+      private var collision=AxisABB()
+      private val thumb=50f
+      private val position=Vector2f()
+      private val onClickEvents= mutableListOf<OnClickEvent>()
       init {
           foreground.setColor(ColorRGBA(1f,1f,1f,0f))
       }
 
       fun setBackgroundColor(color: ColorRGBA){
             background.setColor(color)
+            default.set(color)
       }
 
       private fun setBackgroundImage(texture: Texture?){
@@ -67,24 +74,21 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
         this.ripple.set(color)
     }
       fun set(x:Float,y:Float){
-          background.set(x,y)
-          foreground.set(x,y)
-          secondary?.set(x,y)
+          position.set(x,y)
       }
 
       fun setX(x:Float){
-          background.set(x,background.getY())
-          foreground.set(x,foreground.getY())
-          secondary?.getY()?.let { secondary?.set(x, it) }
+          position.x=x
       }
 
       fun setY(y:Float){
-          background.set(background.getY(),y)
-          foreground.set(foreground.getY(),y)
-          secondary?.getX()?.let { secondary?.set(it, y) }
+          position.y=y
       }
 
       override fun draw(batch: Batch) {
+          background.set(position.x,position.y)
+          foreground.set(position.x,position.y)
+          secondary?.set(position.x,position.y)
           batch.draw(background)
       //    batch.draw(foreground)
           background.setWidth(width)
@@ -92,8 +96,23 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
           foreground.setWidth(width)
           foreground.setHeight(height)
           text?.draw(batch)
-
+          // center the text if available
+          val tw= (text?.width?.times(0.5f)?: 0f)
+          val th=(text?.height?.times(0.5f)?:0f)
+          text?.set(position.x-tw, position.y-th)
+          // update click events
+          onClickEvents.forEach {
+              if(it.getPointerDown())
+                      background.setColor(ripple)
+                  else
+                      background.setColor(default)
+          }
       }
+
+
+    fun clearOnClick(){
+        onClickEvents.clear()
+    }
 
     protected fun getBackground():RectF{
         return background
@@ -102,22 +121,43 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
     protected fun getSecondary():RectF?{
         return secondary
     }
-      override fun update(delta: Long) {
+    override fun update(delta: Long) {
 
-      }
+    }
 
+   fun getX():Float{
+       return position.x
+   }
+
+    fun getY():Float{
+        return position.y
+    }
+
+    fun getThumbSize():Float{
+        return thumb
+    }
+    fun contains(x:Float,y:Float):Boolean{
+        return collision.isIntersecting(background.getX(),
+                                 background.getY(),
+                                 background.getWidth(),
+                                 background.getHeight(),x,y,thumb,thumb)
+
+    }
+
+    fun setOnClickListener(onclick: OnClickEvent.OnClickListener){
+        onClickEvents.add(OnClickEvent(onclick,this))
+    }
 
     override fun onTouchEvent(event: MotionEvent?) {
-
-        when(event?.actionMasked?.and(event.action)){
-            MotionEvent.ACTION_DOWN->{
-               background.setColor(ripple)
+            onClickEvents.forEach {
+                it.onTouchEvent(event)
+           /* MotionEvent.ACTION_DOWN->{
+                if(contains(event.x,event.y))
+                   background.setColor(ripple)
             }
-
             MotionEvent.ACTION_UP->{
                background.setColor(default)
             }
-
             MotionEvent.ACTION_POINTER_DOWN->{
                 println("Second finger Touched")
             }
@@ -126,8 +166,11 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
                 println("Second finger Not Touch")
             }
             MotionEvent.ACTION_MOVE->{
-                println("Moving")
-            }
+                if(contains(event.x,event.y))
+                    background.setColor(ripple)
+                else
+                    background.setColor(default)
+            }*/
 
         }
     }
