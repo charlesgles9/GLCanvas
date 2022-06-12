@@ -31,6 +31,11 @@ class GLImageButton(width:Float, height:Float) : GLView(width, height) {
         if(atlas!=null)
         getBackground().getSpriteSheet().setCurrentFrame(atlas!!.getTextureCoordinate(name))
     }
+
+    fun roundedCorner(value:Float){
+        getBackground().setConnerRadius(value)
+    }
+
     private fun setSecondaryFrame(name:String){
         if(atlas!=null)
         getSecondary()?.getSpriteSheet()?.setCurrentFrame(atlas!!.getTextureCoordinate(name))

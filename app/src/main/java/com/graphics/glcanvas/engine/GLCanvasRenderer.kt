@@ -37,9 +37,9 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
              }
          })
 
-         label= GLLabel(250f,50f, atlas!!,"PanelWindow",candara,"Hello world!",0.3f )
+         label= GLLabel(250f,100f, atlas!!,"PanelWindow",candara,"Hello world!",0.3f )
          label?.set(280f,300f)
-
+         label?.roundedCorner(50f)
          getRenderer().getController()?.addEvent(button!!)
         background.setTexture(context,"textures/ui/wenrexa/Background_green.png")
         text.set(100f,690f)
