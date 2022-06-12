@@ -11,7 +11,6 @@ import com.graphics.glcanvas.engine.structures.RectF
 import com.graphics.glcanvas.engine.structures.Text
 import com.graphics.glcanvas.engine.utils.Texture
 import com.graphics.glcanvas.engine.utils.TextureAtlas
-import kotlin.math.abs
 
 
 open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Update, Touch{
@@ -26,6 +25,8 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
       private val thumb=50f
       private val position=Vector2f()
       private val onClickEvents= mutableListOf<OnClickEvent>()
+      private val constraint=LayoutConstraint(this)
+      private var center=true
       init {
           foreground.setColor(ColorRGBA(1f,1f,1f,0f))
       }
@@ -86,6 +87,7 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
       }
 
       override fun draw(batch: Batch) {
+          constraint.applyConstraints()
           background.set(position.x,position.y)
           foreground.set(position.x,position.y)
           secondary?.set(position.x,position.y)
@@ -96,8 +98,10 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
           foreground.setWidth(width)
           foreground.setHeight(height)
           // center the text if available
-          val tw= (text?.width?.times(0.5f)?: 0f)
-          val th=(text?.height?.times(0.5f)?:0f)
+          var tw= (text?.width?.times(0.5f)?: 0f)
+          var th=(text?.height?.times(0.5f)?:0f)
+          tw=if(center)tw else 0f
+          th=if(center)th else 0f
           text?.set(position.x-tw, position.y-th)
           // make sure this text width is less than the the view width
           if((width-tw)>=0)
@@ -111,6 +115,9 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
           }
       }
 
+    fun centerText(center:Boolean){
+        this.center=center
+    }
 
     fun clearOnClick(){
         onClickEvents.clear()
@@ -135,9 +142,15 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
         return position.y
     }
 
+    fun getConstraints():LayoutConstraint{
+        return constraint
+    }
+
     fun getThumbSize():Float{
         return thumb
     }
+
+
     fun contains(x:Float,y:Float):Boolean{
         return collision.isIntersecting(background.getX(),
                                  background.getY(),
