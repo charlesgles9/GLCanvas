@@ -5,6 +5,7 @@ import android.opengl.GLES32
 import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.structures.*
 import com.graphics.glcanvas.engine.ui.GLImageButton
+import com.graphics.glcanvas.engine.ui.GLLabel
 import com.graphics.glcanvas.engine.ui.OnClickEvent.OnClickListener
 import com.graphics.glcanvas.engine.utils.*
 
@@ -12,12 +13,13 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
 
     private val batch = Batch(width,height)
     private val camera=Camera2D(1.0f)
+    private val candara=Font("fonts/candara.fnt",context)
     private val text=Text("My test paragraph.\n\nDead target zombies and monsters. Charge bro charge and let's kill every one of the scums.Let me test my skills using hardness and courage I am very holy.This is an amazing project good learning experience i am down for amazing work. Hello world people! it takes alot of hard work and commitment to be a good software engineer. one day i know i will triumph and rise above mediocrity. Most people live average mediocre ignorant lives and i must fight this thing inside me that makes me extremely lazy and foolish. I don't come from a rich background but i know I will one day rise to glory. This is the one struggle that i must win because I have tried so many times and failed over and over again. I promised myself that one day I will have a victory at last, all these years of struggle will pay off I can feel it. I must win!",0.3f,Font("fonts/harrington.fnt",context))
-    private val textFPS=Text("FPS: 60",0.8f, Font("fonts/candara.fnt",context))
+    private val textFPS=Text("FPS: 60",0.8f, candara)
     private val background=RectF(width/2,height/2,width, height)
     private var atlas:TextureAtlas?=null
     private var button:GLImageButton?=null
-    private var button2:GLImageButton?=null
+    private var label:GLLabel?=null
      //init camera here or resources eg textures
     override fun prepare() {
         batch.initShader(context)
@@ -35,18 +37,10 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
              }
          })
 
-         button2= GLImageButton(280f,50f)
-         button2?.set(300f,400f)
-         button2?.setText("Kasarani",Font("fonts/harrington.fnt",context),0.4f)
-         button2?.setBackgroundColor(ColorRGBA(1f,0f,1f,0.5f))
-         button2?.setRippleColor(ColorRGBA(0f,1f,0f,1f))
-         button2?.setOnClickListener( object :OnClickListener{
-             override fun onClick(){
+         label= GLLabel(250f,50f, atlas!!,"PanelWindow",candara,"Hello world!",0.3f )
+         label?.set(280f,300f)
 
-             }
-         })
          getRenderer().getController()?.addEvent(button!!)
-         getRenderer().getController()?.addEvent(button2!!)
         background.setTexture(context,"textures/ui/wenrexa/Background_green.png")
         text.set(100f,690f)
         text.setMaxWidth(600f)
@@ -67,7 +61,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         batch.draw(background)
         text.draw(batch)
         button?.draw(batch)
-        button2?.draw(batch)
+        label?.draw(batch)
         FpsCounter.getInstance().draw(batch)
         batch.end()
 

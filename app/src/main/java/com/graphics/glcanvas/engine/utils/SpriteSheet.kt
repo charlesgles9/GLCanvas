@@ -28,6 +28,14 @@ class SpriteSheet( private var WIDTH: Int,  private var HEIGHT: Int) {
             frames.add(getSTMatrix(1,1))
         }
     }
+
+    fun clone():SpriteSheet{
+        val copy=SpriteSheet(1,1)
+            copy.resize(frames.size)
+         for(i in 0 until frames.size)
+            copy.setSTMatrix(frames[i],i)
+       return copy
+    }
     fun getCurrentFrame():FloatArray{
         return frames[position]
     }
@@ -62,7 +70,18 @@ class SpriteSheet( private var WIDTH: Int,  private var HEIGHT: Int) {
         matrix[7]=originT+fSizeY
 
     }
+    private fun setSTMatrix(copy:FloatArray,index: Int){
+        val matrix= frames[index]
+        matrix[0]=copy[0]
+        matrix[1]=copy[1]
+        matrix[2]=copy[2]
+        matrix[3]=copy[3]
+        matrix[4]=copy[4]
+        matrix[5]=copy[5]
+        matrix[6]=copy[6]
+        matrix[7]=copy[7]
 
+    }
     fun setSTMatrix(row:Float,col:Float,width:Float,height:Float,scaleW:Float,scaleH:Float,index:Int){
         WIDTH=width.toInt()
         HEIGHT=height.toInt()

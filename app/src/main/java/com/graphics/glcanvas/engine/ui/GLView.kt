@@ -40,7 +40,7 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
       }
 
       fun setBackgroundTextureAtlas(atlas: TextureAtlas){
-          background.setSpriteSheet(atlas.getSheet())
+          background.setSpriteSheet(atlas.getSheet()?.clone())
           setBackgroundImage(atlas.getTexture())
       }
 
@@ -90,16 +90,18 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
           foreground.set(position.x,position.y)
           secondary?.set(position.x,position.y)
           batch.draw(background)
-      //    batch.draw(foreground)
+          //batch.draw(foreground)
           background.setWidth(width)
           background.setHeight(height)
           foreground.setWidth(width)
           foreground.setHeight(height)
-          text?.draw(batch)
           // center the text if available
           val tw= (text?.width?.times(0.5f)?: 0f)
           val th=(text?.height?.times(0.5f)?:0f)
           text?.set(position.x-tw, position.y-th)
+          // make sure this text width is less than the the view width
+          if((width-tw)>=0)
+           text?.draw(batch)
           // update click events
           onClickEvents.forEach {
               if(it.getPointerDown())
