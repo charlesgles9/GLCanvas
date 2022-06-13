@@ -28,7 +28,7 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
       private val constraint=LayoutConstraint(this)
       private var center=true
       init {
-          foreground.setColor(ColorRGBA(1f,1f,1f,0f))
+          foreground.setColor(ColorRGBA(0f,0f,0f,0f))
       }
 
       fun setBackgroundColor(color: ColorRGBA){
@@ -74,6 +74,11 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
     fun setRippleColor(color: ColorRGBA){
         this.ripple.set(color)
     }
+
+    open fun roundedCorner(value:Float){
+        getBackground().setConnerRadius(value)
+        getForeground().setConnerRadius(value)
+    }
       fun set(x:Float,y:Float){
           position.set(x,y)
       }
@@ -86,13 +91,27 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
           position.y=y
       }
 
+     private fun applyMargin(){
+         position.set(getX()+getConstraints().getMarginLeft(),getY())
+         position.set(getX()-getConstraints().getMarginRight(),getY())
+         position.set(getX(),getY()+getConstraints().getMarginTop())
+         position.set(getX(),getY()-getConstraints().getMarginBottom())
+     }
+
+    private fun removeMargin(){
+        position.set(getX()-getConstraints().getMarginLeft(),getY())
+        position.set(getX()+getConstraints().getMarginRight(),getY())
+        position.set(getX(),getY()-getConstraints().getMarginTop())
+        position.set(getX(),getY()+getConstraints().getMarginBottom())
+    }
       override fun draw(batch: Batch) {
           constraint.applyConstraints()
+          applyMargin()
           background.set(position.x,position.y)
           foreground.set(position.x,position.y)
           secondary?.set(position.x,position.y)
           batch.draw(background)
-          //batch.draw(foreground)
+          batch.draw(foreground)
           background.setWidth(width)
           background.setHeight(height)
           foreground.setWidth(width)
@@ -113,6 +132,7 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
                   else
                       background.setColor(default)
           }
+          removeMargin()
       }
 
     fun centerText(center:Boolean){
@@ -125,6 +145,10 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
 
     protected fun getBackground():RectF{
         return background
+    }
+
+    protected fun getForeground():RectF{
+        return foreground
     }
 
     protected fun getSecondary():RectF?{

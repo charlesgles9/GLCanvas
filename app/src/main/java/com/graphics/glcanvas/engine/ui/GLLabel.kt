@@ -29,9 +29,6 @@ class GLLabel(width:Float,height:Float,private var font: Font,private var string
     }
 
 
-    fun roundedCorner(value:Float){
-        getBackground().setConnerRadius(value)
-    }
     fun setText(string:String, font:Font, size:Float){
         text= Text(string,size,font)
         text?.setMaxWidth(width*0.5f)

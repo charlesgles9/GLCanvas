@@ -4,8 +4,10 @@ import android.content.Context
 import android.opengl.GLES32
 import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.structures.*
+import com.graphics.glcanvas.engine.ui.GLCheckBox
 import com.graphics.glcanvas.engine.ui.GLImageButton
 import com.graphics.glcanvas.engine.ui.GLLabel
+import com.graphics.glcanvas.engine.ui.GLView
 import com.graphics.glcanvas.engine.ui.OnClickEvent.OnClickListener
 import com.graphics.glcanvas.engine.utils.*
 
@@ -20,6 +22,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
     private var atlas:TextureAtlas?=null
     private var button:GLImageButton?=null
     private var label:GLLabel?=null
+    private var checkBox:GLCheckBox?=null
      //init camera here or resources eg textures
     override fun prepare() {
         batch.initShader(context)
@@ -40,7 +43,29 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
          label= GLLabel(250f,100f, atlas!!,"PanelWindow",candara,"Hello world!",0.3f )
          label?.set(280f,300f)
          label?.roundedCorner(50f)
-         getRenderer().getController()?.addEvent(button!!)
+         label?.setRippleColor(ColorRGBA(0f,1f,0.1f,0.5f))
+         label?.getConstraints()?.alignBelow(button as GLView)
+         label?.getConstraints()?.toRightOf(button as GLView)
+         label?.setOnClickListener(object :OnClickListener{
+             override fun onClick() {
+
+             }
+         })
+
+         checkBox= GLCheckBox(60f,60f, ColorRGBA(1f,0f,0.3f,1f))
+         checkBox?.set(300f,460f)
+         checkBox?.roundedCorner(10f)
+         checkBox?.setRippleColor(ColorRGBA(1f,1f,0f,1f))
+         checkBox?.setCheckedBackground(ColorRGBA(0f,1f,1f,1f))
+         checkBox?.setOnClickListener(object :OnClickListener{
+             override fun onClick() {
+
+             }
+         })
+
+         getRenderer().getTouchController()?.addEvent(button!!)
+         getRenderer().getTouchController()?.addEvent(label!!)
+         getRenderer().getTouchController()?.addEvent(checkBox!!)
         background.setTexture(context,"textures/ui/wenrexa/Background_green.png")
         text.set(100f,690f)
         text.setMaxWidth(600f)
@@ -62,6 +87,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         text.draw(batch)
         button?.draw(batch)
         label?.draw(batch)
+        checkBox?.draw(batch)
         FpsCounter.getInstance().draw(batch)
         batch.end()
 

@@ -105,8 +105,10 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
     }
 
     fun setText(text: String){
-        this.text=text
-        splitText()
+        if(text!=this.text) {
+            this.text = text
+            splitText()
+        }
     }
 
     fun getText():String{
