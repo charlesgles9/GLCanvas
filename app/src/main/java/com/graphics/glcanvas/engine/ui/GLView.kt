@@ -18,7 +18,13 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
       private var background= RectF(0f,0f,width, height)
       private var foreground=RectF(0f,0f,width, height)
       protected var text:Text?=null
-      private var secondary:RectF?=null
+      private var tp=""
+      private var ts=""
+      private var check=false
+      protected var isCheckBox=false
+      private   var clicked=false
+      protected var atlas: TextureAtlas?=null
+      protected var name:String?=null
       private var ripple=ColorRGBA(0f,0f,0f,0f)
       private var default=ColorRGBA()
       private var collision=AxisABB()
@@ -47,28 +53,23 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
 
      fun setSecondaryTextureAtlas(atlas: TextureAtlas){
         foreground.setSpriteSheet(atlas.getSheet())
-        setSecondaryImage(atlas.getTexture())
      }
 
-      fun setForegroundColor(color: ColorRGBA){
+     fun setForegroundColor(color: ColorRGBA){
         this.foreground.setColor(color)
       }
 
-      fun setSecondaryColor(color: ColorRGBA?){
-          if(secondary==null&&color!=null){
-              secondary= RectF(background.getX(),background.getY(),width, height)
-              secondary?.setColor(color)
-          }else if(color==null)
-              secondary=null
-      }
+     fun setBackgroundFrame(name:String){
+        if(atlas!=null)
+            getBackground().getSpriteSheet().setCurrentFrame(atlas!!.getTextureCoordinate(name))
+    }
 
+     fun setSecondaryImage(ts:String){
+        this.ts=ts
+    }
 
-    private fun setSecondaryImage(texture: Texture?){
-        if(secondary==null&&texture!=null){
-            secondary= RectF(background.getX(),background.getY(),width, height)
-            secondary?.setTexture(texture )
-        }else if(texture==null)
-            secondary=null
+     fun setPrimaryImage(tp:String){
+        this.tp=tp
     }
 
     fun setRippleColor(color: ColorRGBA){
@@ -91,6 +92,7 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
           position.y=y
       }
 
+
      private fun applyMargin(){
          position.set(getX()+getConstraints().getMarginLeft(),getY())
          position.set(getX()-getConstraints().getMarginRight(),getY())
@@ -109,7 +111,6 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
           applyMargin()
           background.set(position.x,position.y)
           foreground.set(position.x,position.y)
-          secondary?.set(position.x,position.y)
           batch.draw(background)
           batch.draw(foreground)
           background.setWidth(width)
@@ -127,14 +128,35 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
            text?.draw(batch)
           // update click events
           onClickEvents.forEach {
-              if(it.getPointerDown())
-                      background.setColor(ripple)
-                  else
-                      background.setColor(default)
+              clicked = it.getPointerDown()
+
           }
+          //click effects for views
+          changeTextureAndColors(clicked)
+          if(isCheckBox)
+          changeTextureAndColors(check)
+         // prevent the position from changing
           removeMargin()
       }
 
+    fun setChecked(check:Boolean){
+        this.check=check
+    }
+
+    fun getChecked():Boolean{
+        return check
+    }
+    private fun changeTextureAndColors(flag:Boolean){
+        if(flag){
+            background.setColor(ripple)
+            if(!ts.isEmpty())
+                setBackgroundFrame(ts)
+        }else {
+            background.setColor(default)
+            if (!tp.isEmpty())
+                setBackgroundFrame(tp)
+        }
+    }
     fun centerText(center:Boolean){
         this.center=center
     }
@@ -151,9 +173,6 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
         return foreground
     }
 
-    protected fun getSecondary():RectF?{
-        return secondary
-    }
     override fun update(delta: Long) {
 
     }

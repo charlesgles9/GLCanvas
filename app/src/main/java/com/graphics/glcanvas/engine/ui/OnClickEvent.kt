@@ -16,6 +16,8 @@ class OnClickEvent(private val listener:OnClickListener,
              pointerDown= contains(event.x-view.getThumbSize()/2,event.y-view.getThumbSize())
          }else if(event?.action==MotionEvent.ACTION_UP&&pointerDown){
              listener.onClick()
+             //for checkboxes
+             view.setChecked(!view.getChecked())
              pointerDown=false
          }else if(event?.action==MotionEvent.ACTION_MOVE&&pointerDown){
              pointerDown=contains(event.x-view.getThumbSize()/2,event.y-view.getThumbSize())

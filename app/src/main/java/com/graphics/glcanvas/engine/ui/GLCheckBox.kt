@@ -11,6 +11,7 @@ class GLCheckBox(width:Float,height:Float,color: ColorRGBA):GLView(width, height
        getBackground().setHeight(height-10f)
        setBackgroundColor(color)
        getForeground().setColor(ColorRGBA(1f,1f,1f,1f))
+       isCheckBox=true
     }
 
 

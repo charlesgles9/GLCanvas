@@ -4,10 +4,7 @@ import android.content.Context
 import android.opengl.GLES32
 import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.structures.*
-import com.graphics.glcanvas.engine.ui.GLCheckBox
-import com.graphics.glcanvas.engine.ui.GLImageButton
-import com.graphics.glcanvas.engine.ui.GLLabel
-import com.graphics.glcanvas.engine.ui.GLView
+import com.graphics.glcanvas.engine.ui.*
 import com.graphics.glcanvas.engine.ui.OnClickEvent.OnClickListener
 import com.graphics.glcanvas.engine.utils.*
 
@@ -23,6 +20,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
     private var button:GLImageButton?=null
     private var label:GLLabel?=null
     private var checkBox:GLCheckBox?=null
+    private var imageCheckBox:GLImageCheckBox?=null
      //init camera here or resources eg textures
     override fun prepare() {
         batch.initShader(context)
@@ -63,9 +61,17 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
              }
          })
 
+         imageCheckBox=GLImageCheckBox(100f,100f, atlas!!,"Checked1","Checked2")
+         imageCheckBox?.set(300f,600f)
+         imageCheckBox?.setOnClickListener(object :OnClickListener{
+             override fun onClick() {
+
+             }
+         })
          getRenderer().getTouchController()?.addEvent(button!!)
          getRenderer().getTouchController()?.addEvent(label!!)
          getRenderer().getTouchController()?.addEvent(checkBox!!)
+         getRenderer().getTouchController()?.addEvent(imageCheckBox!!)
         background.setTexture(context,"textures/ui/wenrexa/Background_green.png")
         text.set(100f,690f)
         text.setMaxWidth(600f)
@@ -88,6 +94,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         button?.draw(batch)
         label?.draw(batch)
         checkBox?.draw(batch)
+        imageCheckBox?.draw(batch)
         FpsCounter.getInstance().draw(batch)
         batch.end()
 
