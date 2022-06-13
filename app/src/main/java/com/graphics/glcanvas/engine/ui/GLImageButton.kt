@@ -1,5 +1,6 @@
 package com.graphics.glcanvas.engine.ui
 
+import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.structures.Font
 import com.graphics.glcanvas.engine.structures.Text
 import com.graphics.glcanvas.engine.utils.TextureAtlas
@@ -27,6 +28,9 @@ class GLImageButton(width:Float, height:Float) : GLView(width, height) {
        text?.setMaxHeight(height)
     }
 
+    fun setTextColor(color: ColorRGBA){
+        text?.setColor(color)
+    }
 
 
 }

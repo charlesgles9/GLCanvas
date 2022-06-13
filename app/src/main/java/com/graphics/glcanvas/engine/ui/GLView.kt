@@ -15,26 +15,40 @@ import com.graphics.glcanvas.engine.utils.TextureAtlas
 
 open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Update, Touch{
 
+    /*helps us specify the foreground objects position
+     relative to the background image this will help us create progress bars */
+      protected var fOffset=Vector2f()
+     // view position
+      private val position=Vector2f()
       private var background= RectF(0f,0f,width, height)
       private var foreground=RectF(0f,0f,width, height)
-      protected var text:Text?=null
-      private var tp=""
-      private var ts=""
-      private var check=false
-      protected var isCheckBox=false
-      private   var clicked=false
-      protected var atlas: TextureAtlas?=null
-      protected var name:String?=null
+    // click effect color
       private var ripple=ColorRGBA(0f,0f,0f,0f)
+    // default color no click
       private var default=ColorRGBA()
       private var collision=AxisABB()
-      private val thumb=50f
-      private val position=Vector2f()
+      protected var atlas: TextureAtlas?=null
+      protected var name:String?=null
+      protected var text:Text?=null
       private val onClickEvents= mutableListOf<OnClickEvent>()
+    // layout constraints
       private val constraint=LayoutConstraint(this)
+    //primary and secondary texture coordinates for click effects
+      private var tp=""
+      private var ts=""
+    // checkbox variables
+      private var check=false
+      protected var isCheckBox=false
+      private  var clicked=false
+     // finger size or touch area
+      private val thumb=50f
       private var center=true
       init {
           foreground.setColor(ColorRGBA(0f,0f,0f,0f))
+          background.setWidth(width)
+          background.setHeight(height)
+          foreground.setWidth(width)
+          foreground.setHeight(height)
       }
 
       fun setBackgroundColor(color: ColorRGBA){
@@ -80,6 +94,7 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
         getBackground().setConnerRadius(value)
         getForeground().setConnerRadius(value)
     }
+
       fun set(x:Float,y:Float){
           position.set(x,y)
       }
@@ -110,13 +125,10 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
           constraint.applyConstraints()
           applyMargin()
           background.set(position.x,position.y)
-          foreground.set(position.x,position.y)
+          foreground.set(position.x+fOffset.x,position.y+fOffset.y)
           batch.draw(background)
           batch.draw(foreground)
-          background.setWidth(width)
-          background.setHeight(height)
-          foreground.setWidth(width)
-          foreground.setHeight(height)
+
           // center the text if available
           var tw= (text?.width?.times(0.5f)?: 0f)
           var th=(text?.height?.times(0.5f)?:0f)
