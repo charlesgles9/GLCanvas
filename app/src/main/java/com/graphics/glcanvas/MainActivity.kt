@@ -4,6 +4,7 @@ import android.os.Bundle
 import com.graphics.glcanvas.engine.GLCanvasRenderer
 import com.graphics.glcanvas.engine.GLCanvasSurfaceView
 
+
 class MainActivity : AppCompatActivity() {
 
     private var surface:GLCanvasSurfaceView?=null
@@ -13,6 +14,7 @@ class MainActivity : AppCompatActivity() {
         renderer=GLCanvasRenderer(this ,720.0f,1280.0f)
         surface= GLCanvasSurfaceView(this, renderer!!)
         setContentView(surface)
+
 
     }
 }

@@ -108,6 +108,9 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
         reset()
     }
 
+    fun getCamera():Camera2D?{
+        return camera
+    }
     private fun reset(){
         this.entities.clear()
         vcount=0

@@ -26,7 +26,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
      //init camera here or resources eg textures
     override fun prepare() {
         batch.initShader(context)
-        camera.setOrtho( getCanvasWidth(), getCanvasHeight())
+        camera.setOrtho( getCanvasWidth(), getCanvasHeight(),900f,1600f)
         TextureLoader.getInstance().getTexture(context,"fonts/sans.png")
         TextureLoader.getInstance().getTexture(context,"fonts/harrington.png")
         TextureLoader.getInstance().getTexture(context,"fonts/candara.png")
@@ -79,6 +79,11 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
          progressBar?.getTextView()?.setOutlineColor(0f,1f,0f)
          progressBar?.roundedCorner(15f)
          progressBar?.setForegroundColor(ColorRGBA(1f,0f,0f,0.7f))
+         progressBar?.setOnClickListener(object :OnClickListener{
+             override fun onClick() {
+
+             }
+         })
          getRenderer().getTouchController()?.addEvent(button!!)
          getRenderer().getTouchController()?.addEvent(label!!)
          getRenderer().getTouchController()?.addEvent(checkBox!!)
@@ -93,8 +98,8 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         textFPS.setOutlineColor(1f,0f,1f)
         textFPS.setInnerEdge(0.2f)
         textFPS.setInnerWidth(0.4f)
-         textFPS.setBorderEdge(0.2f)
-         textFPS.setBorderWidth(0.4f)
+        textFPS.setBorderEdge(0.2f)
+        textFPS.setBorderWidth(0.4f)
     }
 
 

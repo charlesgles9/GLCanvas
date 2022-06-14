@@ -11,6 +11,8 @@ import com.graphics.glcanvas.engine.structures.RectF
 import com.graphics.glcanvas.engine.structures.Text
 import com.graphics.glcanvas.engine.utils.Texture
 import com.graphics.glcanvas.engine.utils.TextureAtlas
+import kotlin.math.abs
+import kotlin.math.min
 
 
 open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Update, Touch{
@@ -18,6 +20,11 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
     /*helps us specify the foreground objects position
      relative to the background image this will help us create progress bars */
       protected var fOffset=Vector2f()
+      protected var isProgressBar=false
+      protected var horizontalBar=false
+      protected var maxProgressBar=100f
+      protected var currentProgress=0f
+      protected var backgroundThickness=0f
      // view position
       private val position=Vector2f()
       private var background= RectF(0f,0f,width, height)
@@ -107,6 +114,15 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
           position.y=y
       }
 
+    protected fun positionBars(horizontal: Boolean,progress:Float,max:Float){
+        if(horizontal) {
+            getForeground().setWidth(width * ((progress+1) / (max+1)))
+            fOffset.x=((getForeground().getWidth()-width)*0.5f)
+        }else{
+            getForeground().setHeight(height*((progress+1)/(max+1)))
+            fOffset.y=((height-getForeground().getHeight())*0.5f)
+        }
+    }
 
      private fun applyMargin(){
          position.set(getX()+getConstraints().getMarginLeft(),getY())
@@ -121,14 +137,39 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
         position.set(getX(),getY()-getConstraints().getMarginTop())
         position.set(getX(),getY()+getConstraints().getMarginBottom())
     }
+
+    //calculate the progress based on where the user has clicked
+    private fun progressChanged(it:Vector2f){
+        val pw= min(abs(position.x-width/2-it.x),width).toInt()
+        val ph=min(abs(position.y-height/2-it.y),height).toInt()
+        // position the horizontal bar
+        if(horizontalBar&&pw!=getForeground().getWidth().toInt()) {
+            currentProgress = pw / width * maxProgressBar
+            getForeground().setWidth(pw.toFloat() - backgroundThickness * 2f)
+            fOffset.x = ((width - pw.toFloat()) * -0.5f).toInt().toFloat()
+            //position the vertical bar
+        }else if(!horizontalBar&&ph!=getForeground().getHeight().toInt()){
+            currentProgress = pw / width * maxProgressBar
+            getForeground().setHeight(ph.toFloat() - backgroundThickness * 2f)
+            fOffset.y = ((height - ph.toFloat()) * -0.5f).toInt().toFloat()
+        }
+    }
+
       override fun draw(batch: Batch) {
           constraint.applyConstraints()
           applyMargin()
+          // update click events before drawing
+          onClickEvents.forEach {
+              clicked = it.getPointerDown()
+              // if view is a progressbar calculate the progress
+              if (clicked&&isProgressBar&&position.x!=-1f&&position.y!=-1f) {
+                 progressChanged(it.getPosition())
+              }
+          }
           background.set(position.x,position.y)
           foreground.set(position.x+fOffset.x,position.y+fOffset.y)
           batch.draw(background)
           batch.draw(foreground)
-
           // center the text if available
           var tw= (text?.width?.times(0.5f)?: 0f)
           var th=(text?.height?.times(0.5f)?:0f)
@@ -138,11 +179,6 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
           // make sure this text width is less than the the view width
           if((width-tw)>=0)
            text?.draw(batch)
-          // update click events
-          onClickEvents.forEach {
-              clicked = it.getPointerDown()
-
-          }
           //click effects for views
           changeTextureAndColors(clicked)
           if(isCheckBox)
@@ -218,7 +254,7 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
         onClickEvents.add(OnClickEvent(onclick,this))
     }
 
-    override fun onTouchEvent(event: MotionEvent?) {
+    override fun onTouchEvent(event: MotionEvent) {
             onClickEvents.forEach {
                 it.onTouchEvent(event)
            /* MotionEvent.ACTION_DOWN->{

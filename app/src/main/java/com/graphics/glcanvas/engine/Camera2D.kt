@@ -3,10 +3,10 @@ package com.graphics.glcanvas.engine
 import android.opengl.Matrix
 import com.graphics.glcanvas.engine.maths.Vector2f
 
-class Camera2D : Camera {
+class Camera2D(height: Float) : Camera() {
 
-    constructor(height:Float){
-      setHeight2D(height)
+    init {
+        setHeight2D(height)
     }
 
 
@@ -32,7 +32,9 @@ class Camera2D : Camera {
         getLookAt().set(x,y,getLookAt().z)
     }
 
-    fun setOrtho(width:Float,height: Float){
+
+
+    fun setOrtho(width:Float,height: Float,screenWidth:Float,screenHeight:Float){
         val ratio=width/height
         val left=0.0f
         val right=width
