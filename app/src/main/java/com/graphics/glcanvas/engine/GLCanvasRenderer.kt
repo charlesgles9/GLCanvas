@@ -98,6 +98,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
          inner.getConstraints().layoutMarginBottom(20f)
          inner.setOrientation(LinearLayoutConstraint.HORIZONTAL)
          inner.setItems(mutableListOf(labelSound!!,checkBox!!))
+         checkBox?.getConstraints()?.alignCenterVertical(labelSound!!)
          label?.getConstraints()?.alignCenterHorizontal(linearLayout!!)
          linearLayout?.setItems(mutableListOf(label!!,progressBar!!,inner))
 

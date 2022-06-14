@@ -1,6 +1,4 @@
 package com.graphics.glcanvas.engine.ui
-
-import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.structures.Font
 import com.graphics.glcanvas.engine.structures.Text
 import com.graphics.glcanvas.engine.utils.TextureAtlas
@@ -24,7 +22,7 @@ class GLLabel(width:Float,height:Float,private var font: Font,private var string
         setText(string,font,size)
     }
 
-    fun imageFromAtlas(name:String){
+    private fun imageFromAtlas(name:String){
         this.name=name
         setBackgroundFrame(name)
     }

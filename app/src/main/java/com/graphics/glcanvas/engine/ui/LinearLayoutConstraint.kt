@@ -1,8 +1,6 @@
 package com.graphics.glcanvas.engine.ui
 
 import com.graphics.glcanvas.engine.Batch
-import com.graphics.glcanvas.engine.Update
-import com.graphics.glcanvas.engine.constants.Gravity
 import com.graphics.glcanvas.engine.maths.ColorRGBA
 
 
@@ -10,7 +8,6 @@ class LinearLayoutConstraint(width:Float,height:Float):GLView(width ,height) {
 
 
     private var items= mutableListOf<GLView>()
-    private var gravity=Gravity.TOP
     private var orientation= VERTICAL
     companion object{
         const val VERTICAL=0

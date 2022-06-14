@@ -131,19 +131,7 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
         }
     }
 
-     private fun applyMargin(){
-         position.set(getX()+getConstraints().getMarginLeft(),getY())
-         position.set(getX()-getConstraints().getMarginRight(),getY())
-         position.set(getX(),getY()+getConstraints().getMarginTop())
-         position.set(getX(),getY()-getConstraints().getMarginBottom())
-     }
 
-    private fun removeMargin(){
-        position.set(getX()-getConstraints().getMarginLeft(),getY())
-        position.set(getX()+getConstraints().getMarginRight(),getY())
-        position.set(getX(),getY()-getConstraints().getMarginTop())
-        position.set(getX(),getY()+getConstraints().getMarginBottom())
-    }
 
     //calculate the progress based on where the user has clicked
     private fun progressChanged(it:Vector2f){
@@ -190,8 +178,7 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
           changeTextureAndColors(clicked)
           if(isCheckBox)
           changeTextureAndColors(check)
-         // prevent the position from changing
-         // removeMargin()
+
       }
 
     fun setChecked(check:Boolean){
