@@ -12,10 +12,11 @@ class GLImageButton(width:Float, height:Float) : GLView(width, height) {
         this.atlas=atlas
         this.name=name
         setBackgroundTextureAtlas(atlas)
+
         imageFromAtlas(name)
     }
 
-    fun imageFromAtlas(name:String){
+    private fun imageFromAtlas(name:String){
         this.name=name
         setPrimaryImage(name)
         setBackgroundFrame(name)

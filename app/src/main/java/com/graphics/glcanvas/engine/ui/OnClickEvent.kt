@@ -28,7 +28,7 @@ class OnClickEvent(private val listener:OnClickListener,
              view.setChecked(!view.getChecked())
              pointerDown=false
          }else if(event.action ==MotionEvent.ACTION_MOVE&&pointerDown){
-             position.set(event.x-view.getThumbSize()/2,event.y-view.getThumbSize())
+             position.set(event.x-view.getThumbSize()/2,event.y-view.getThumbSize()/2)
              ScreenRatio.getInstance().project(position)
              pointerDown=contains(position.x,position.y)
          }

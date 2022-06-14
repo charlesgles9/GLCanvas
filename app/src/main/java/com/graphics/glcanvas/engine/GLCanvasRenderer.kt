@@ -23,6 +23,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
     private var checkBox:GLCheckBox?=null
     private var imageCheckBox:GLImageCheckBox?=null
     private var progressBar:GLProgressBar?=null
+    private var imageProgress:GLImageProgressBar?=null
      //init camera here or resources eg textures
     override fun prepare() {
         batch.initShader(context)
@@ -71,15 +72,21 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
              }
          })
 
-         progressBar= GLProgressBar(300f,80f,80f,true)
+         progressBar= GLProgressBar(300f,25f,80f,true)
          progressBar?.set(200f,700f)
-         progressBar?.setText("Loading..",candara,0.3f)
-         progressBar?.getTextView()?.setInnerWidth(0.4f)
-         progressBar?.getTextView()?.setInnerEdge(0.1f)
-         progressBar?.getTextView()?.setOutlineColor(0f,1f,0f)
-         progressBar?.roundedCorner(15f)
+         progressBar?.roundedCorner(2f)
          progressBar?.setForegroundColor(ColorRGBA(1f,0f,0f,0.7f))
          progressBar?.setOnClickListener(object :OnClickListener{
+             override fun onClick() {
+
+             }
+         })
+
+         imageProgress= GLImageProgressBar(300f,50f,80f,true,
+             atlas!!,"Panel2_NoOpacity591x975px","Btn_V02")
+         imageProgress?.set(200f,800f)
+         imageProgress?.setForegroundColor(ColorRGBA(1f,1f,1f,1f))
+         imageProgress?.setOnClickListener(object :OnClickListener{
              override fun onClick() {
 
              }
@@ -89,6 +96,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
          getRenderer().getTouchController()?.addEvent(checkBox!!)
          getRenderer().getTouchController()?.addEvent(imageCheckBox!!)
          getRenderer().getTouchController()?.addEvent(progressBar!!)
+         getRenderer().getTouchController()?.addEvent(imageProgress!!)
         background.setTexture(context,"textures/ui/wenrexa/Background_green.png")
         text.set(100f,690f)
         text.setMaxWidth(600f)
@@ -115,6 +123,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         checkBox?.draw(batch)
         progressBar?.draw(batch)
         imageCheckBox?.draw(batch)
+        imageProgress?.draw(batch)
         FpsCounter.getInstance().draw(batch)
         batch.end()
 

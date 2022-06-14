@@ -19,7 +19,7 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
 
     /*helps us specify the foreground objects position
      relative to the background image this will help us create progress bars */
-      protected var fOffset=Vector2f()
+      private var fOffset=Vector2f()
       protected var isProgressBar=false
       protected var horizontalBar=false
       protected var maxProgressBar=100f
@@ -66,14 +66,17 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
       private fun setBackgroundImage(texture: Texture?){
          this.background.setTexture(texture!!)
       }
-
+      private fun setForegroundImage(texture: Texture?){
+        this.foreground.setTexture(texture!!)
+    }
       fun setBackgroundTextureAtlas(atlas: TextureAtlas){
           background.setSpriteSheet(atlas.getSheet()?.clone())
           setBackgroundImage(atlas.getTexture())
       }
 
      fun setSecondaryTextureAtlas(atlas: TextureAtlas){
-        foreground.setSpriteSheet(atlas.getSheet())
+        foreground.setSpriteSheet(atlas.getSheet()?.clone())
+        setForegroundImage(atlas.getTexture())
      }
 
      fun setForegroundColor(color: ColorRGBA){
@@ -83,6 +86,10 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
      fun setBackgroundFrame(name:String){
         if(atlas!=null)
             getBackground().getSpriteSheet().setCurrentFrame(atlas!!.getTextureCoordinate(name))
+      }
+    fun setForegroundFrame(name:String){
+        if(atlas!=null)
+            getForeground().getSpriteSheet().setCurrentFrame(atlas!!.getTextureCoordinate(name))
     }
 
      fun setSecondaryImage(ts:String){

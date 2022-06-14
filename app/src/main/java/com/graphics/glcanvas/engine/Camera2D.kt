@@ -10,7 +10,7 @@ class Camera2D(height: Float) : Camera() {
     }
 
 
-    fun setHeight2D(height: Float){
+    private fun setHeight2D(height: Float){
         getEye().setValueZ(height)
     }
 
@@ -37,11 +37,9 @@ class Camera2D(height: Float) : Camera() {
     fun setOrtho(width:Float,height: Float,screenWidth:Float,screenHeight:Float){
         val ratio=width/height
         val left=0.0f
-        val right=width
-        val bottom=height
         val top=0.0f
         val near=1.0f
         val far=10.0f
-        Matrix.orthoM(getProjectionMatrix(),0,left,right,bottom,top,near, far)
+        Matrix.orthoM(getProjectionMatrix(),0,left, width, height,top,near, far)
     }
 }
