@@ -48,7 +48,7 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
       protected var isCheckBox=false
       private  var clicked=false
      // finger size or touch area
-      private val thumb=50f
+      private val thumb=30f
       private var center=true
       init {
           foreground.setColor(ColorRGBA(0f,0f,0f,0f))
@@ -109,7 +109,7 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
         getForeground().setConnerRadius(value)
     }
 
-      fun set(x:Float,y:Float){
+      open fun set(x:Float, y:Float){
           position.set(x,y)
       }
 
@@ -164,7 +164,7 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
 
       override fun draw(batch: Batch) {
           constraint.applyConstraints()
-          applyMargin()
+        //  applyMargin()
           // update click events before drawing
           onClickEvents.forEach {
               clicked = it.getPointerDown()
@@ -191,7 +191,7 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
           if(isCheckBox)
           changeTextureAndColors(check)
          // prevent the position from changing
-          removeMargin()
+         // removeMargin()
       }
 
     fun setChecked(check:Boolean){

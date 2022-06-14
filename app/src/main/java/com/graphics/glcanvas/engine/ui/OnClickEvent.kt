@@ -8,8 +8,6 @@ class OnClickEvent(private val listener:OnClickListener,
                    private val view:GLView):Touch {
 
     private var pointerDown=false
-    private val screen=Vector2f()
-    private val display=Vector2f()
     private var position=Vector2f(-1f,-1f)
     fun contains(x:Float,y:Float):Boolean{
         return view.contains(x,y)
@@ -18,7 +16,6 @@ class OnClickEvent(private val listener:OnClickListener,
     override fun onTouchEvent(event: MotionEvent) {
          if(event.action ==MotionEvent.ACTION_DOWN){
              position.set(event.x-view.getThumbSize()/2,event.y-view.getThumbSize()/2)
-             println("x "+event.x+" y "+event.y)
              ScreenRatio.getInstance().project(position)
              pointerDown= contains(position.x,position.y)
          }else if(event.action ==MotionEvent.ACTION_UP&&pointerDown){

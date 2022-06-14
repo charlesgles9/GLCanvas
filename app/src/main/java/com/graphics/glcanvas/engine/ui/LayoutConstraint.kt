@@ -1,47 +1,59 @@
 package com.graphics.glcanvas.engine.ui
 
- class LayoutConstraint(private val view:GLView) {
+ open class LayoutConstraint(private val view:GLView) : Constraints() {
 
     private var left:GLView?=null
     private var right:GLView?=null
     private var above:GLView?=null
     private var below:GLView?=null
     private var center:GLView?=null
+    private var center_Horizontal:GLView?=null
+    private var center_Vertical:GLView?=null
     private var MARGIN= floatArrayOf(0f,0f,0f,0f)
-     
-    fun toLeftOf(view: GLView){
+
+
+     fun getView():GLView{
+         return view
+     }
+
+     override fun toLeftOf(view: GLView){
         this.left=view
     }
 
-    fun toRightOf(view:GLView){
+    override fun toRightOf(view:GLView){
         this.right=view
     }
 
-    fun alignAbove(view:GLView){
+    override fun alignAbove(view:GLView){
         this.above=view
     }
 
-    fun alignBelow(view:GLView){
+    override fun alignBelow(view:GLView){
         this.below=view
     }
 
-    fun alignCenter(view:GLView){
+    override fun alignCenter(view:GLView){
         this.center=view
     }
-
-    fun layoutMarginLeft(margin:Float){
+     override fun alignCenterVertical(view:GLView){
+         this.center_Vertical=view
+     }
+     override fun alignCenterHorizontal(view:GLView){
+         this.center_Horizontal=view
+     }
+    override fun layoutMarginLeft(margin:Float){
         MARGIN[0]=margin
     }
 
-    fun layoutMarginRight(margin: Float){
+    override fun layoutMarginRight(margin: Float){
         MARGIN[1]=margin
     }
 
-    fun layoutMarginTop(margin: Float){
+    override fun layoutMarginTop(margin: Float){
         MARGIN[2]=margin
     }
 
-    fun layoutMarginBottom(margin: Float){
+    override fun layoutMarginBottom(margin: Float){
         MARGIN[3]=margin
     }
 
@@ -53,19 +65,19 @@ package com.graphics.glcanvas.engine.ui
 
     private fun applyRight(){
         val width=(right?.width?:0f)
-        val lx= (right?.getX()?.plus(width+view.width*0.5f)?:view.getX())
+        val lx= (right?.getX()?.plus(width*0.5f+view.width*0.5f+getMarginLeft()-getMarginRight())?:view.getX())
         view.set(lx,view.getY())
     }
 
     private fun applyAbove(){
         val height=(above?.height?:0f)
-        val ly= (above?.getY()?.minus(height+view.height*0.5f)?:view.getY())
+        val ly= (above?.getY()?.minus(height*0.5f+view.height*0.5f)?:view.getY())
         view.set(view.getX(),ly)
     }
 
     private fun applyBelow(){
         val height=(below?.height?:0f)
-        val ly= (below?.getY()?.plus(height+view.height*0.5f)?:view.getY())
+        val ly= (below?.getY()?.plus(height*0.5f+view.height*0.5f+getMarginBottom())?:view.getY())
         view.set(view.getX(),ly)
     }
 
@@ -78,27 +90,40 @@ package com.graphics.glcanvas.engine.ui
     }
 
 
-    fun getMarginLeft():Float{
+     private fun applyCenterVertical(){
+             val ly= (center_Vertical?.getY()?:view.getY())
+             view.set(view.getX(),ly)
+     }
+
+     private fun applyCenterHorizontal(){
+             val lx= (center_Horizontal?.getX()?:view.getX())
+             view.set(lx,view.getY())
+     }
+
+    override fun getMarginLeft():Float{
         return MARGIN[0]
     }
 
-    fun getMarginRight():Float{
+    override fun getMarginRight():Float{
          return MARGIN[1]
     }
 
-    fun getMarginTop():Float{
+    override fun getMarginTop():Float{
          return MARGIN[2]
     }
 
-    fun getMarginBottom():Float{
+    override fun getMarginBottom():Float{
          return MARGIN[3]
      }
-    fun applyConstraints(){
+
+    override fun applyConstraints(){
         applyLeft()
         applyRight()
         applyAbove()
         applyBelow()
         applyCenter()
+        applyCenterVertical()
+        applyCenterHorizontal()
 
 
     }

@@ -19,7 +19,6 @@ class ScreenRatio {
         val ratioX=(screen.x+1f)/(display.x+1f)
         val ratioY=(screen.y+1f)/(display.y+1f)
         vector.set(vector.x*ratioX,vector.y*ratioY)
-        println("X "+ vector.x+" Y "+ vector.y)
         return vector
     }
 

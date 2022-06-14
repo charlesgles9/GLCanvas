@@ -2,7 +2,8 @@ package com.graphics.glcanvas.engine.constants
 
 enum class Gravity {
     LEFT,
-    CENTER,
+    CENTER_VERTICAL,
+    CENTER_HORIZONTAL,
     RIGHT,
     TOP,
     BOTTOM

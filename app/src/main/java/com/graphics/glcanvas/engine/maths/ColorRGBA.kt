@@ -7,6 +7,7 @@ class ColorRGBA {
         const val G:Int=1
         const val B:Int=2
         const val A:Int=3
+        val transparent=ColorRGBA(0f,0f,0f,0f)
     }
 
     private var data=arrayOf(1.0f,1.0f,1.0f,1.0f)

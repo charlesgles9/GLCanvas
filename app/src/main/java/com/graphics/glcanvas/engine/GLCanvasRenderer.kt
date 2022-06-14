@@ -23,7 +23,8 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
     private var checkBox:GLCheckBox?=null
     private var imageCheckBox:GLImageCheckBox?=null
     private var progressBar:GLProgressBar?=null
-    private var imageProgress:GLImageProgressBar?=null
+    private var linearLayout:LinearLayoutConstraint?=null
+    private var labelSound:GLLabel?=null
      //init camera here or resources eg textures
     override fun prepare() {
         batch.initShader(context)
@@ -45,14 +46,17 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
          label?.set(280f,300f)
          label?.roundedCorner(50f)
          label?.setRippleColor(ColorRGBA(0f,1f,0.1f,0.5f))
-         label?.getConstraints()?.alignBelow(button as GLView)
-         label?.getConstraints()?.toRightOf(button as GLView)
          label?.setOnClickListener(object :OnClickListener{
              override fun onClick() {
 
              }
          })
 
+         labelSound= GLLabel(150f,80f,candara,"Enable",0.3f)
+         labelSound?.setBackgroundColor(ColorRGBA(1f,1f,0f,0.8f))
+         labelSound?.getTextView()?.setOutlineColor(1f,0f,1f)
+         labelSound?.getTextView()?.setInnerEdge(0.1f)
+         labelSound?.getTextView()?.setInnerWidth(0.4f)
          checkBox= GLCheckBox(60f,60f, ColorRGBA(1f,0f,0.3f,1f))
          checkBox?.set(300f,460f)
          checkBox?.roundedCorner(10f)
@@ -82,21 +86,25 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
              }
          })
 
-         imageProgress= GLImageProgressBar(300f,50f,80f,true,
-             atlas!!,"Panel2_NoOpacity591x975px","Btn_V02")
-         imageProgress?.set(200f,800f)
-         imageProgress?.setForegroundColor(ColorRGBA(1f,1f,1f,1f))
-         imageProgress?.setOnClickListener(object :OnClickListener{
-             override fun onClick() {
 
-             }
-         })
+         linearLayout= LinearLayoutConstraint(500f,500f)
+         linearLayout?.setPosition(50f,100f)
+         linearLayout?.setColor(ColorRGBA(0f,1f,0.3f,0.5f))
+         progressBar?.getConstraints()?.layoutMarginBottom(20f)
+         label?.getConstraints()?.layoutMarginBottom(20f)
+         checkBox?.getConstraints()?.layoutMarginLeft(20f)
+         val inner=LinearLayoutConstraint(250f,180f)
+         inner.setBackgroundColor(ColorRGBA())
+         inner.getConstraints().layoutMarginBottom(20f)
+         inner.setOrientation(LinearLayoutConstraint.HORIZONTAL)
+         inner.setItems(mutableListOf(labelSound!!,checkBox!!))
+         label?.getConstraints()?.alignCenterHorizontal(linearLayout!!)
+         linearLayout?.setItems(mutableListOf(label!!,progressBar!!,inner))
+
          getRenderer().getTouchController()?.addEvent(button!!)
          getRenderer().getTouchController()?.addEvent(label!!)
          getRenderer().getTouchController()?.addEvent(checkBox!!)
-         getRenderer().getTouchController()?.addEvent(imageCheckBox!!)
          getRenderer().getTouchController()?.addEvent(progressBar!!)
-         getRenderer().getTouchController()?.addEvent(imageProgress!!)
         background.setTexture(context,"textures/ui/wenrexa/Background_green.png")
         text.set(100f,690f)
         text.setMaxWidth(600f)
@@ -118,12 +126,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         batch.begin(camera)
         batch.draw(background)
         text.draw(batch)
-        button?.draw(batch)
-        label?.draw(batch)
-        checkBox?.draw(batch)
-        progressBar?.draw(batch)
-        imageCheckBox?.draw(batch)
-        imageProgress?.draw(batch)
+        linearLayout?.draw(batch)
         FpsCounter.getInstance().draw(batch)
         batch.end()
 
