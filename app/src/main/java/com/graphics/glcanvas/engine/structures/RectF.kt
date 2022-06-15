@@ -1,4 +1,5 @@
 package com.graphics.glcanvas.engine.structures
+import com.graphics.glcanvas.engine.maths.Vector2f
 import com.graphics.glcanvas.engine.maths.Vector3f
 import com.graphics.glcanvas.engine.utils.SpriteAnimator
 
@@ -8,6 +9,7 @@ open class RectF :Vertex {
     private var height=0.0f
     private var connerRadius=0.0f
     private var thickness=0.0f
+    private var trim=Vector2f(1f,1f)
     private var animator:SpriteAnimator?=null
     constructor():super(4,4){}
     constructor(x:Float,y:Float,width:Float,height:Float):super(4,4){
@@ -19,6 +21,15 @@ open class RectF :Vertex {
      fun set(x:Float, y:Float){
         position.setValueX(x)
         position.setValueY(y)
+    }
+
+    fun setTrim(x:Float,y:Float){
+        trim.set(x,y)
+
+    }
+
+    fun getTrim():Vector2f{
+        return trim
     }
 
     open fun getX():Float{

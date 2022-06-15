@@ -30,6 +30,8 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
     private var textureBuffer:FloatBuffer?=null
     //center buffer for circles and quads
     private var centerBuffer:FloatBuffer?=null
+    // trim buffer to cut a quad or a shape
+    private var trimBuffer:FloatBuffer?=null
     // sends the extra quad data that will enable us to
     // create rounded edges
     private var roundedPropBuffer:FloatBuffer?=null
@@ -45,6 +47,9 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
     private var mcount=0
     // rounded properties count
     private var rcount=0
+    //trim count
+    private var qcount=0
+
     // draw calls counter
     private var num_draw_calls=0
     private var num_triangles=0
@@ -76,7 +81,8 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
     // also useful to pass in the center position of our quad to create rounded edges
     private var centerVertex=FloatArray(BATCH_SIZE*4*4)
     private var roundedRectProperties=FloatArray(BATCH_SIZE*2*4)
-    private val buffers=IntArray(5)
+    private var trimAttribute=FloatArray(BATCH_SIZE*4*2)
+    private val buffers=IntArray(6)
     private val defaultShader=Shader("shaders/default_vertex_shader.txt","shaders/default_fragment_shader.txt")
     private val circleShader=Shader("shaders/circle_vertex_shader.txt","shaders/circle_fragment_shader.txt")
     private var camera:Camera2D?=null
@@ -85,19 +91,20 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
     private val entities=ArrayList<Vertex>()
 
     init {
-        GLES32.glGenBuffers(5,buffers,0)
+        GLES32.glGenBuffers(6,buffers,0)
         createVertexBuffer()
         createColorBuffer()
         createTextureBuffer()
         createCenterBuffer()
         createRoundedPropertiesBuffer()
+        createTrimBuffer()
         initializeDrawList()
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,0)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,1)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,2)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,3)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,4)
-
+        GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,5)
     }
     
     fun begin(camera: Camera2D){
@@ -108,6 +115,9 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
         reset()
     }
 
+    fun setMode(mode:Int){
+        batchQueue.setMode(mode)
+    }
     fun getCamera():Camera2D?{
         return camera
     }
@@ -119,6 +129,7 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
         tcount=0
         mcount=0
         rcount=0
+        qcount=0
 
     }
 
@@ -295,6 +306,18 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
         vertexes[vcount++]=sizeX+x
         vertexes[vcount++]=sizeY+y
         vertexes[vcount++]=0.0f
+
+        trimAttribute[qcount++]=rect.getTrim().x
+        trimAttribute[qcount++]=rect.getTrim().y
+
+        trimAttribute[qcount++]=rect.getTrim().x
+        trimAttribute[qcount++]=rect.getTrim().y
+
+        trimAttribute[qcount++]=rect.getTrim().x
+        trimAttribute[qcount++]=rect.getTrim().y
+
+        trimAttribute[qcount++]=rect.getTrim().x
+        trimAttribute[qcount++]=rect.getTrim().y
 
         val texture=rect.getTextureCords()
         textures[tcount++]=texture[0]
@@ -542,6 +565,10 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
         roundedPropBuffer=Buffer.createFloatBuffer(buffers[4],0,roundedRectProperties)
     }
 
+    private fun createTrimBuffer(){
+        trimBuffer=Buffer.createFloatBuffer(buffers[5],0,trimAttribute)
+    }
+
     // bind vertex shader attributes
     private fun bindVertexShader(){
         vertexBuffer!!.put(vertexes).position(0)
@@ -562,6 +589,10 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
             GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,rcount*4,roundedPropBuffer)
             defaultShader.enableVertexAttribPointer("v_rounded_properties",2,0,roundedPropBuffer)
         }
+        trimBuffer!!.put(trimAttribute).position(0)
+        GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[5])
+        GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,qcount*4,trimBuffer)
+        defaultShader.enableVertexAttribPointer("v_trim",2,0,trimBuffer)
     }
 
     // bind fragment shader attributes
@@ -621,6 +652,7 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
         Matrix.multiplyMM(mMVPMatrix,0,mViewMatrix,0,mModelMatrix,0)
         Matrix.multiplyMM(mMVPMatrix,0,camera?.getProjectionMatrix(),0,mMVPMatrix,0)
         render()
+
 
     }
 

@@ -19,6 +19,7 @@ class RelativeLayoutConstraint(width:Float,height:Float):GLView(width ,height) {
     fun setItems(items:MutableList<GLView>){
         this.items=items
     }
+
     private fun applyMargin(view:GLView){
         view.set(view.getX()+view.getConstraints().getMarginLeft(),view.getY())
         view.set(view.getX()-view.getConstraints().getMarginRight(),view.getY())
@@ -32,6 +33,7 @@ class RelativeLayoutConstraint(width:Float,height:Float):GLView(width ,height) {
         view.set(view.getX(),view.getY()-view.getConstraints().getMarginTop())
         view.set(view.getX(),view.getY()+view.getConstraints().getMarginBottom())
     }
+
     override fun draw(batch: Batch) {
         super.draw(batch)
         items.forEach {

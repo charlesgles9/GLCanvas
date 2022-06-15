@@ -4,7 +4,7 @@ import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.maths.Vector2f
 
 
-class Word(str:String, font: Font, cursor:Vector2f,size:Float,color: ColorRGBA,outline:ColorRGBA,
+class Word(str:String, font: Font, cursor:Vector2f,size:Float,trim:Vector2f,color: ColorRGBA,outline:ColorRGBA,
            innerEdge:Float,innerWidth:Float,borderWidth:Float,borderEdge:Float,position:Vector2f,maxWidth:Float,maxHeight:Float) {
     private val characters=ArrayList<Character>()
     init {
@@ -45,6 +45,7 @@ class Word(str:String, font: Font, cursor:Vector2f,size:Float,color: ColorRGBA,o
             char.setInnerWidth(innerWidth)
             char.setBorderEdge(borderEdge)
             char.setBorderWidth(borderWidth)
+            char.setTrim(trim.x,trim.y)
             // subtract the padding for proper char spacing
             cursor.addX(advance+font.padding[Font.PADDING_LEFT]*0.5f)
 

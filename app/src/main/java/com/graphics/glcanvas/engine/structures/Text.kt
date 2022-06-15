@@ -12,6 +12,7 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
     private val color=ColorRGBA()
     private val position=Vector2f()
     private var outline=ColorRGBA()
+    private var trim=Vector2f(1f,1f)
     private var innerEdge=0f
     private var innerWidth=0f
     private var borderWidth=0f
@@ -51,7 +52,7 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
         // word spacing
         val space=20f
         for(item in array){
-            words.add(Word(item,font,cursor,fontSize,color,outline,innerEdge, innerWidth,
+            words.add(Word(item,font,cursor,fontSize,trim,color,outline,innerEdge, innerWidth,
                                            borderWidth, borderEdge, position, maxWidth,maxHeight))
             cursor.addX(space*fontSize)
 
@@ -60,7 +61,7 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
 
     fun set(x:Float,y:Float){
         // update only if necessary
-        if(x!=position.x&&position.y!=y) {
+        if(x!=position.x||position.y!=y) {
             this.position.set(x, y)
             splitText()
         }
@@ -111,6 +112,14 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
         }
     }
 
+    fun setTrim(x:Float,y:Float) {
+        trim.set(x,y)
+        words.forEach { word ->
+            word.getCharacter().forEach {char->
+                char.setTrim(x, y)
+            }
+        }
+    }
     fun getText():String{
         return text
     }

@@ -5,6 +5,7 @@ uniform int a_isQuad;
 uniform vec2 srcRes;
 varying vec4 a_center;
 varying vec2 a_rounded_properties;
+varying vec2 a_trim;
 uniform int sampleId;
 uniform int isText;
 uniform sampler2D u_texture;
@@ -78,13 +79,15 @@ void main(){
 
     if(sampleId!=0)
      gl_FragColor=v_color*texture2D(u_texture,v_TexCoordinate);
-        else
+       else
      gl_FragColor=v_color;
 
    gl_FragColor*=1.0-(d_bottomLeft*boolean_bottomLeft+d_topLeft*
                         boolean_topLeft+boolean_topRight*d_topRight+boolean_bottomRight*d_bottomRight);
      // apply thickness
    gl_FragColor*=min(1.0,boolean_inner_min+boolean_inner_max);
+   // apply clip rect
+     gl_FragColor*=1.0-step(((pos.y-size.y)+size.y*a_trim.y*2.01),src.y);
   }else{
     if(isText==1){
       float innerDistance=1.0-texture2D(u_texture,v_TexCoordinate).a;
@@ -93,11 +96,20 @@ void main(){
       float outlineAlpha=1.0-smoothstep(textBorderWidth,textBorderWidth+textBorderEdge,borderDistance);
       float overallAlpha=innerAlpha+(1.0-innerAlpha)*outlineAlpha;
       vec3 overallColor=mix(outlineColor.rgb,v_color.rgb,innerAlpha/overallAlpha);
+
       gl_FragColor=vec4(overallColor.rgb,overallAlpha)*texture2D(u_texture,v_TexCoordinate);
+       // clip rect
+      gl_FragColor*=1.0-step(((pos.y-size.y)+size.y*a_trim.y*2.01),src.y);
+
      }else
-    if(sampleId!=0)
-     gl_FragColor=v_color*texture2D(u_texture,v_TexCoordinate);
-     else
-     gl_FragColor=v_color;
+     if(sampleId!=0)
+       gl_FragColor=v_color*texture2D(u_texture,v_TexCoordinate);
+      else
+       gl_FragColor=v_color;
+
+     // clip rect
+      gl_FragColor*=1.0-step(((pos.y-size.y)+size.y*a_trim.y*2.01),src.y);
+
+
   }
 }

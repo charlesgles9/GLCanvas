@@ -53,7 +53,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
          })
 
          labelSound= GLLabel(150f,80f,candara,"Enable",0.3f)
-         labelSound?.setBackgroundColor(ColorRGBA(1f,1f,0f,0.8f))
+         labelSound?.setBackgroundColor(ColorRGBA(1f,0f,0f,1f))
          labelSound?.getTextView()?.setOutlineColor(1f,0f,1f)
          labelSound?.getTextView()?.setInnerEdge(0.1f)
          labelSound?.getTextView()?.setInnerWidth(0.4f)
@@ -87,7 +87,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
          })
 
 
-         linearLayout= LinearLayoutConstraint(500f,500f)
+         linearLayout= LinearLayoutConstraint(600f,800f)
          linearLayout?.setPosition(50f,100f)
          linearLayout?.setColor(ColorRGBA(0f,1f,0.3f,0.5f))
          progressBar?.getConstraints()?.layoutMarginBottom(20f)
@@ -100,7 +100,14 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
          inner.setItems(mutableListOf(labelSound!!,checkBox!!))
          checkBox?.getConstraints()?.alignCenterVertical(labelSound!!)
          label?.getConstraints()?.alignCenterHorizontal(linearLayout!!)
-         linearLayout?.setItems(mutableListOf(label!!,progressBar!!,inner))
+         val scrollView=GLScrollLayout(350f,350f)
+         scrollView.setBackgroundColor(ColorRGBA.transparent)
+         val scrollList= mutableListOf<GLView>()
+         for(i in 0 until 10){
+             scrollList.add(genLabel("label $i"))
+         }
+         scrollView.setItems(scrollList)
+         linearLayout?.setItems(mutableListOf(label!!,progressBar!!,inner,scrollView))
 
          getRenderer().getTouchController()?.addEvent(button!!)
          getRenderer().getTouchController()?.addEvent(label!!)
@@ -119,17 +126,34 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         textFPS.setBorderWidth(0.4f)
     }
 
+    fun genLabel(message:String):GLLabel{
+        val lbl= GLLabel(150f,80f,harrington,message,0.3f)
+        lbl.setBackgroundColor(ColorRGBA(1f,0f,1f,1f))
+        lbl.getTextView()?.setOutlineColor(1f,0f,1f)
+        lbl.getTextView()?.setInnerEdge(0.1f)
+        lbl.getTextView()?.setInnerWidth(0.4f)
+        return lbl
+    }
 
 
     override fun draw() {
         GLES32.glClear(GLES32.GL_DEPTH_BUFFER_BIT or  GLES32.GL_COLOR_BUFFER_BIT)
         GLES32.glClearColor(0.5f,0.5f,0.5f,0.5f)
+        batch.setMode(BatchQueue.ORDER)
         batch.begin(camera)
         batch.draw(background)
         text.draw(batch)
+        batch.end()
+        // draw ui
+        batch.setMode(BatchQueue.UNORDER)
+        batch.begin(camera)
         linearLayout?.draw(batch)
+        batch.end()
+
+        batch.begin(camera)
         FpsCounter.getInstance().draw(batch)
         batch.end()
+
 
     }
 

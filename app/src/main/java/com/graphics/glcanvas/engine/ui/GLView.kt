@@ -50,6 +50,7 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
      // finger size or touch area
       private val thumb=30f
       private var center=true
+      private var visible=true
       init {
           foreground.setColor(ColorRGBA(0f,0f,0f,0f))
           background.setWidth(width)
@@ -68,6 +69,15 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
       }
       private fun setForegroundImage(texture: Texture?){
         this.foreground.setTexture(texture!!)
+      }
+
+
+      fun trimView(x:Float,y:Float){
+          text?.setTrim(x,y)
+          background.setTrim(x,y)
+          foreground.setTrim(x, y)
+
+
     }
       fun setBackgroundTextureAtlas(atlas: TextureAtlas){
           background.setSpriteSheet(atlas.getSheet()?.clone())
@@ -109,6 +119,13 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
         getForeground().setConnerRadius(value)
     }
 
+    fun setVisibility(visible:Boolean){
+         this.visible=visible
+    }
+
+    fun isVisible():Boolean{
+        return visible
+    }
       open fun set(x:Float, y:Float){
           position.set(x,y)
       }
@@ -163,8 +180,10 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
           }
           background.set(position.x,position.y)
           foreground.set(position.x+fOffset.x,position.y+fOffset.y)
-          batch.draw(background)
-          batch.draw(foreground)
+          if(visible) {
+              batch.draw(background)
+              batch.draw(foreground)
+          }
           // center the text if available
           var tw= (text?.width?.times(0.5f)?: 0f)
           var th=(text?.height?.times(0.5f)?:0f)
@@ -172,7 +191,7 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
           th=if(center)th else 0f
           text?.set(position.x-tw, position.y-th)
           // make sure this text width is less than the the view width
-          if((width-tw)>=0)
+          if((width-tw)>=0&&visible)
            text?.draw(batch)
           //click effects for views
           changeTextureAndColors(clicked)
