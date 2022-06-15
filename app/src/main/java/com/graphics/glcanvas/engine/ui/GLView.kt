@@ -72,13 +72,23 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
       }
 
 
-      fun trimView(x:Float,y:Float){
-          text?.setTrim(x,y)
-          background.setTrim(x,y)
-          foreground.setTrim(x, y)
+      fun clipViewUpper(x:Float,y:Float){
+          text?.setClipUpper(x,y)
+          background.setClipUpper(x,y)
+          foreground.setClipUpper(x, y)
+     }
 
 
+    fun clipViewLower(x:Float,y:Float){
+        text?.setClipLower(x,y)
+        background.setClipLower(x,y)
+        foreground.setClipLower(x,y)
     }
+
+    fun getTextView():Text?{
+        return text
+    }
+
       fun setBackgroundTextureAtlas(atlas: TextureAtlas){
           background.setSpriteSheet(atlas.getSheet()?.clone())
           setBackgroundImage(atlas.getTexture())

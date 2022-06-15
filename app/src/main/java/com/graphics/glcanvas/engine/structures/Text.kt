@@ -4,15 +4,15 @@ import com.graphics.glcanvas.engine.Batch
 import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.maths.Vector2f
 import com.graphics.glcanvas.engine.utils.TextureLoader
-import kotlin.math.abs
 import kotlin.math.max
 
 class Text(private var text:String,private var fontSize:Float,private var font: Font) {
     private val words=ArrayList<Word>()
     private val color=ColorRGBA()
-    private val position=Vector2f()
+    val position=Vector2f()
     private var outline=ColorRGBA()
-    private var trim=Vector2f(1f,1f)
+    private var clipUpper=Vector2f(1f,1f)
+    private var clipLower=Vector2f(1f,1f)
     private var innerEdge=0f
     private var innerWidth=0f
     private var borderWidth=0f
@@ -52,7 +52,7 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
         // word spacing
         val space=20f
         for(item in array){
-            words.add(Word(item,font,cursor,fontSize,trim,color,outline,innerEdge, innerWidth,
+            words.add(Word(item,font,cursor,fontSize,clipUpper,color,outline,innerEdge, innerWidth,
                                            borderWidth, borderEdge, position, maxWidth,maxHeight))
             cursor.addX(space*fontSize)
 
@@ -112,14 +112,15 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
         }
     }
 
-    fun setTrim(x:Float,y:Float) {
-        trim.set(x,y)
-        words.forEach { word ->
-            word.getCharacter().forEach {char->
-                char.setTrim(x, y)
-            }
-        }
+    fun setClipUpper(x:Float,y:Float) {
+        clipUpper.set(x,y)
+
     }
+
+    fun setClipLower(x:Float,y:Float) {
+        clipLower.set(x,y)
+    }
+
     fun getText():String{
         return text
     }

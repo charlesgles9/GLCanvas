@@ -31,7 +31,7 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
     //center buffer for circles and quads
     private var centerBuffer:FloatBuffer?=null
     // trim buffer to cut a quad or a shape
-    private var trimBuffer:FloatBuffer?=null
+    private var clipBuffer:FloatBuffer?=null
     // sends the extra quad data that will enable us to
     // create rounded edges
     private var roundedPropBuffer:FloatBuffer?=null
@@ -81,7 +81,7 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
     // also useful to pass in the center position of our quad to create rounded edges
     private var centerVertex=FloatArray(BATCH_SIZE*4*4)
     private var roundedRectProperties=FloatArray(BATCH_SIZE*2*4)
-    private var trimAttribute=FloatArray(BATCH_SIZE*4*2)
+    private var clipAttribute=FloatArray(BATCH_SIZE*4*4)
     private val buffers=IntArray(6)
     private val defaultShader=Shader("shaders/default_vertex_shader.txt","shaders/default_fragment_shader.txt")
     private val circleShader=Shader("shaders/circle_vertex_shader.txt","shaders/circle_fragment_shader.txt")
@@ -307,17 +307,25 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
         vertexes[vcount++]=sizeY+y
         vertexes[vcount++]=0.0f
 
-        trimAttribute[qcount++]=rect.getTrim().x
-        trimAttribute[qcount++]=rect.getTrim().y
+        clipAttribute[qcount++]=rect.getClipUpper().x
+        clipAttribute[qcount++]=rect.getClipUpper().y
+        clipAttribute[qcount++]=rect.getClipLower().x
+        clipAttribute[qcount++]=rect.getClipLower().y
 
-        trimAttribute[qcount++]=rect.getTrim().x
-        trimAttribute[qcount++]=rect.getTrim().y
+        clipAttribute[qcount++]=rect.getClipUpper().x
+        clipAttribute[qcount++]=rect.getClipUpper().y
+        clipAttribute[qcount++]=rect.getClipLower().x
+        clipAttribute[qcount++]=rect.getClipLower().y
 
-        trimAttribute[qcount++]=rect.getTrim().x
-        trimAttribute[qcount++]=rect.getTrim().y
+        clipAttribute[qcount++]=rect.getClipUpper().x
+        clipAttribute[qcount++]=rect.getClipUpper().y
+        clipAttribute[qcount++]=rect.getClipLower().x
+        clipAttribute[qcount++]=rect.getClipLower().y
 
-        trimAttribute[qcount++]=rect.getTrim().x
-        trimAttribute[qcount++]=rect.getTrim().y
+        clipAttribute[qcount++]=rect.getClipUpper().x
+        clipAttribute[qcount++]=rect.getClipUpper().y
+        clipAttribute[qcount++]=rect.getClipLower().x
+        clipAttribute[qcount++]=rect.getClipLower().y
 
         val texture=rect.getTextureCords()
         textures[tcount++]=texture[0]
@@ -566,7 +574,7 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
     }
 
     private fun createTrimBuffer(){
-        trimBuffer=Buffer.createFloatBuffer(buffers[5],0,trimAttribute)
+        clipBuffer=Buffer.createFloatBuffer(buffers[5],0,clipAttribute)
     }
 
     // bind vertex shader attributes
@@ -589,10 +597,10 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
             GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,rcount*4,roundedPropBuffer)
             defaultShader.enableVertexAttribPointer("v_rounded_properties",2,0,roundedPropBuffer)
         }
-        trimBuffer!!.put(trimAttribute).position(0)
+        clipBuffer!!.put(clipAttribute).position(0)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[5])
-        GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,qcount*4,trimBuffer)
-        defaultShader.enableVertexAttribPointer("v_trim",2,0,trimBuffer)
+        GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,qcount*4,clipBuffer)
+        defaultShader.enableVertexAttribPointer("v_trim",4,0,clipBuffer)
     }
 
     // bind fragment shader attributes

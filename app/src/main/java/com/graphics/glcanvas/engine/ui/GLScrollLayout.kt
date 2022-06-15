@@ -3,6 +3,8 @@ package com.graphics.glcanvas.engine.ui
 import com.graphics.glcanvas.engine.Batch
 import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.maths.Vector2f
+import com.graphics.glcanvas.engine.structures.RectF
+import com.graphics.glcanvas.engine.structures.Text
 import kotlin.math.abs
 
 class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
@@ -72,22 +74,45 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
         }
     }
 
+    private fun clipView(view:GLView){
+        val diff_lower=(view.getY()+view.height*0.5f)-(getY()+height)
+        val diff_upper=(getY()-height)-(view.getY()-view.height*0.5f)
+        view.setVisibility(diff_upper<=0&&diff_lower<=0)
+        if(diff_lower<=0&& abs(diff_lower)<=view.height){
+            val factor=abs(diff_lower+0.1f)/view.height
+            view.clipViewLower(1f,factor)
+        }
+        if(diff_upper<=0&& abs(diff_upper)<=view.height){
+            val factor=abs(diff_upper+0.1f)/view.height
+            view.clipViewUpper(1f,factor)
+        }
+    }
+
+    private fun clipText(text:Text?){
+        val x= (text?.position?.x?:0f)
+        val y= (text?.position?.y?:0f)
+        val w= (text?.width?:0f)
+        val h= (text?.height?:0f)
+        val diff_lower=(y+h)-(getY()+height)
+        val diff_upper=(getY()-height)-(y-h)
+        if(diff_lower<=0&& abs(diff_lower)<=h){
+            val factor=abs(diff_lower+0.1f)/h
+            text?.setClipLower(1f,factor)
+        }
+        if(diff_upper<=0&& abs(diff_upper)<=h){
+            val factor=abs(diff_upper+0.1f)/h
+            text?.setClipUpper(1f,factor)
+        }
+    }
+
     override fun draw(batch: Batch) {
         val first=items.first()
         val last=items.last()
         items.forEach {
-            val diff_lower=(it.getY()+it.height*0.5f)-(getY()+height)
-            val diff_upper=(getY()-height)-(it.getY()-it.height)
-             it.setVisibility(diff_lower<=0||diff_upper>=0)
-             if(diff_lower<=0&& abs(diff_lower)<=it.height){
-                 val factor=abs(diff_lower+0.1f)/it.height
-                 it.trimView(1f,factor)
-             }
-            if(diff_upper<=0&& abs(diff_upper)<=it.height){
-                val factor=abs(diff_upper+0.1f)/it.height
-                it.trimView(1f,factor)
-            }
+             clipView(it)
+            // clipText(it.getTextView())
              it.draw(batch)
+
         }
         super.draw(batch)
         groupItems()

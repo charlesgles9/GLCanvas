@@ -35,7 +35,4 @@ class GLLabel(width:Float,height:Float,private var font: Font,private var string
         text?.setMaxHeight(height)
     }
 
-    fun getTextView():Text?{
-        return text
-    }
 }

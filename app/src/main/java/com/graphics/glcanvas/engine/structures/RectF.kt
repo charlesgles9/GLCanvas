@@ -9,7 +9,8 @@ open class RectF :Vertex {
     private var height=0.0f
     private var connerRadius=0.0f
     private var thickness=0.0f
-    private var trim=Vector2f(1f,1f)
+    private var clipUpper=Vector2f(1f,1f)
+    private var clipLower=Vector2f(1f,1f)
     private var animator:SpriteAnimator?=null
     constructor():super(4,4){}
     constructor(x:Float,y:Float,width:Float,height:Float):super(4,4){
@@ -23,13 +24,20 @@ open class RectF :Vertex {
         position.setValueY(y)
     }
 
-    fun setTrim(x:Float,y:Float){
-        trim.set(x,y)
-
+    fun setClipUpper(upperX:Float,upperY:Float){
+        clipUpper.set(upperX,upperY)
     }
 
-    fun getTrim():Vector2f{
-        return trim
+    fun setClipLower(lowerX:Float,lowerY:Float){
+        clipLower.set(lowerX,lowerY)
+    }
+
+    fun getClipUpper():Vector2f{
+        return clipUpper
+    }
+
+    fun getClipLower():Vector2f{
+        return clipLower
     }
 
     open fun getX():Float{

@@ -42,9 +42,6 @@ class GLProgressBar(width:Float,height:Float, progress:Float,horizontalBar:Boole
         text?.setColor(color)
     }
 
-    fun getTextView():Text?{
-        return text
-    }
 
     fun getProgress():Float{
         return currentProgress
