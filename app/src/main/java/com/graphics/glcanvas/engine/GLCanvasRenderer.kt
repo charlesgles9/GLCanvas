@@ -103,7 +103,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
          val scrollView=GLScrollLayout(350f,350f)
          scrollView.setBackgroundColor(ColorRGBA.transparent)
          val scrollList= mutableListOf<GLView>()
-         for(i in 0 until 10){
+         for(i in 0 until 100){
              scrollList.add(genLabel("label $i"))
          }
          scrollView.setItems(scrollList)

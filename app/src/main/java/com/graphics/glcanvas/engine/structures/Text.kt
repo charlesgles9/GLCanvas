@@ -11,8 +11,8 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
     private val color=ColorRGBA()
     val position=Vector2f()
     private var outline=ColorRGBA()
-    private var clipUpper=Vector2f(1f,1f)
-    private var clipLower=Vector2f(1f,1f)
+    private var clipUpper=Vector2f(1f, Float.MIN_VALUE)
+    private var clipLower=Vector2f(1f, Float.MAX_VALUE)
     private var innerEdge=0f
     private var innerWidth=0f
     private var borderWidth=0f
@@ -52,7 +52,7 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
         // word spacing
         val space=20f
         for(item in array){
-            words.add(Word(item,font,cursor,fontSize,clipUpper,color,outline,innerEdge, innerWidth,
+            words.add(Word(item,font,cursor,fontSize,clipUpper,clipLower,color,outline,innerEdge, innerWidth,
                                            borderWidth, borderEdge, position, maxWidth,maxHeight))
             cursor.addX(space*fontSize)
 

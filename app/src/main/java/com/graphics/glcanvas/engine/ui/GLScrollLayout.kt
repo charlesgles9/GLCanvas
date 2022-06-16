@@ -75,17 +75,16 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
     }
 
     private fun clipView(view:GLView){
-        val diff_lower=(view.getY()+view.height*0.5f)-(getY()+height)
-        val diff_upper=(getY()-height)-(view.getY()-view.height*0.5f)
-        view.setVisibility(diff_upper<=0&&diff_lower<=0)
-        if(diff_lower<=0&& abs(diff_lower)<=view.height){
-            val factor=abs(diff_lower+0.1f)/view.height
-            view.clipViewLower(1f,factor)
-        }
-        if(diff_upper<=0&& abs(diff_upper)<=view.height){
-            val factor=abs(diff_upper+0.1f)/view.height
-            view.clipViewUpper(1f,factor)
-        }
+        val lower_visible=getY()+height*0.5f>=view.getY()-view.height*0.5f
+        val upper_visible=getY()-height*0.5f<=view.getY()+view.height*0.5f
+        val diff_lower=(getY()+height*0.5f)-(view.getY()+view.height*0.5f)
+        val diff_upper=(getY()-height*0.5f)-(view.getY()-view.height*0.5f)
+        view.setVisibility(lower_visible && upper_visible)
+        if(diff_lower<=0&& abs(diff_lower)<=view.height)
+            view.clipViewLower(1f,getY()+(height*0.5f))
+        if(diff_upper<=0&& abs(diff_upper)<=view.height)
+            view.clipViewUpper(1f,getY()-height*0.5f)
+
     }
 
     private fun clipText(text:Text?){

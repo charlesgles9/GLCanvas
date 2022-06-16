@@ -103,8 +103,9 @@ void main(){
        gl_FragColor=v_color;
   }
    // apply clip rect
+    // lower clip
+         gl_FragColor*=1.0-step(a_trim.w,src.y);
     // upper clip
-      gl_FragColor*=1.0-step(src.y,((pos.y+size.y)-size.y*a_trim.y*2.01));
-     // lower clip
-      gl_FragColor*=1.0-step(((pos.y-size.y)+size.y*a_trim.w*2.01),src.y);
+      gl_FragColor*=1.0-step(src.y,a_trim.y);
+
 }
