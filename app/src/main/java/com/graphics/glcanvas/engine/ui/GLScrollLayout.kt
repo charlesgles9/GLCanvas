@@ -63,7 +63,8 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
                 //if its the first item position it at the top
                 if (i == 0)
                     view.set(getX() - width * 0.5f + view.width * 0.5f + view.getConstraints()
-                        .getMarginRight()+offset.x,yOffset + view.height * 0.5f)
+                        .getMarginRight()+offset.x,yOffset + view.height * 0.5f+view.getConstraints()
+                        .getMarginBottom())
                 // set next layout below this layout
                 if (view != items.last()) {
                     val next = items[i + 1]
@@ -81,21 +82,26 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
     }
 
     private fun clipView(view:GLView){
+        //y axis clip test
         val lowerVisibleY=getY()+height*0.5f>=view.getY()-view.height*0.5f
         val upperVisibleY=getY()-height*0.5f<=view.getY()+view.height*0.5f
         val diffLowerY=(getY()+height*0.5f)-(view.getY()+view.height*0.5f)
         val diffUpperY=(getY()-height*0.5f)-(view.getY()-view.height*0.5f)
-
+       //x axis clip test
         val lowerVisibleX=getX()+width*0.5f>=view.getX()-view.width*0.5f
         val upperVisibleX=getX()-width*0.5f<=view.getX()+view.width*0.5f
-        val diffLowerX=(getX()+width*0.5f)-(view.getX()-view.width*0.5f)
+        val diffLowerX=(getX()+width*0.5f)-(view.getX()+view.width*0.5f)
         val diffUpperX=(getX()-width*0.5f)-(view.getX()+view.width*0.5f)
-        view.setVisibility(lowerVisibleY && upperVisibleY&&upperVisibleX&&lowerVisibleX)
-        if(diffLowerY<=0&& abs(diffLowerY)<=view.height)
-            view.clipViewLower(1f,getY()+(height*0.5f))
-        if(diffUpperY<=0&& abs(diffUpperY)<=view.height)
-            view.clipViewUpper(1f,getY()-height*0.5f)
+        val clipLowerY=diffLowerY<=0&& abs(diffLowerY)<=view.height
+        val clipUpperY=diffUpperY<=0&& abs(diffUpperY)<=view.height
+        val clipLowerX=diffLowerX<=0&& abs(diffLowerX)<=view.width
+        val clipUpperX=diffUpperX<=0&& abs(diffUpperX)<=view.width
 
+        view.setVisibility(lowerVisibleY && upperVisibleY&&upperVisibleX&&lowerVisibleX)
+        view.clipViewLower(if(clipLowerX)getX()+(width*0.5f)else Float.MAX_VALUE,
+                           if(clipLowerY)getY()+(height*0.5f)else Float.MAX_VALUE)
+        view.clipViewUpper(if(clipUpperX)getX()-width*0.5f else Float.MIN_VALUE,
+                           if(clipUpperY)getY()-height*0.5f else Float.MIN_VALUE)
 
     }
 
@@ -118,11 +124,11 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
         val first=items.first()
         val last=items.last()
         val vx=(onSwipeEvent?.getVelocity()?.x?:0f)
-        if((first.getX()-first.width+vx)<=getY()-width*0.5f&&onSwipeEvent?.LEFT==true){
+        if((first.getX()-first.width+vx)<=getX()-width*0.5f&&onSwipeEvent?.LEFT==true){
             offset.sub(vx, 0f)
             onSwipeEvent?.getVelocity()?.multiply(GLOnSwipeEvent.friction)
         }else
-            if((last.getX()+last.width+vx)>getY()+width*0.5f&&onSwipeEvent?.RIGHT==true){
+            if((last.getX()+last.width+vx)>getX()+width*0.5f&&onSwipeEvent?.RIGHT==true){
                 offset.sub(vx, 0f)
                 onSwipeEvent?.getVelocity()?.multiply(GLOnSwipeEvent.friction)
                 //@debug  println("last "+last.getY()+" origin "+getY()+height*0.5f+" velocity "+vy)

@@ -140,7 +140,6 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         lbl.getTextView()?.setOutlineColor(1f,0f,1f)
         lbl.getTextView()?.setInnerEdge(0.1f)
         lbl.getTextView()?.setInnerWidth(0.4f)
-        lbl.getConstraints().layoutMarginBottom(5f)
         return lbl
     }
 

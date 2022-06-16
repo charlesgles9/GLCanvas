@@ -9,8 +9,8 @@ open class RectF :Vertex {
     private var height=0.0f
     private var connerRadius=0.0f
     private var thickness=0.0f
-    private var clipUpper=Vector2f(1f, Float.MIN_VALUE)
-    private var clipLower=Vector2f(1f, Float.MAX_VALUE)
+    private var clipUpper=Vector2f(Float.MIN_VALUE, Float.MIN_VALUE)
+    private var clipLower=Vector2f(Float.MAX_VALUE, Float.MAX_VALUE)
     private var animator:SpriteAnimator?=null
     constructor():super(4,4){}
     constructor(x:Float,y:Float,width:Float,height:Float):super(4,4){

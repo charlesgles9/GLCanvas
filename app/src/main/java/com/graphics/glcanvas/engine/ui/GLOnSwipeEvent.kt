@@ -6,10 +6,11 @@ import com.graphics.glcanvas.engine.maths.Vector2f
 import kotlin.math.abs
 
 
-class GLOnSwipeEvent (private val listener: GLOnSwipeEvent.OnSwipeListener,
+
+class GLOnSwipeEvent (private val listener: OnSwipeListener,
                       private val view:GLView): Touch {
-    private val threshHold=2f
-    private val MAX=50f
+    private val threshHold=1f
+    private val MAX=5f
     private val velocity=Vector2f(0f,0f)
     private var origin=Vector2f(-1f,-1f)
     private var move=Vector2f(-1f,-1f)
@@ -18,7 +19,7 @@ class GLOnSwipeEvent (private val listener: GLOnSwipeEvent.OnSwipeListener,
      var LEFT=false
      var RIGHT=false
     companion object {
-        var friction = 0.8f
+        var friction = 0.9f
     }
     private var pointerDown=false
     fun contains(x:Float,y:Float):Boolean{
@@ -39,10 +40,10 @@ class GLOnSwipeEvent (private val listener: GLOnSwipeEvent.OnSwipeListener,
             origin.set(event.x-view.getThumbSize()/2,event.y-view.getThumbSize()/2)
             ScreenRatio.getInstance().project(origin)
             pointerDown= contains(origin.x,origin.y)
+            velocity.set(0f,0f)
            // println("Down!")
         }else if(event.action ==MotionEvent.ACTION_UP&&pointerDown){
             origin.set(-1f,-1f)
-            velocity.set(0f,0f)
             pointerDown=false
         }else if(event.action ==MotionEvent.ACTION_MOVE&&pointerDown){
             move.set(event.x-view.getThumbSize()/2,event.y-view.getThumbSize()/2)
@@ -50,11 +51,14 @@ class GLOnSwipeEvent (private val listener: GLOnSwipeEvent.OnSwipeListener,
             pointerDown=contains(move.x,move.y)
             if(pointerDown) {
                 listener.onSwipe()
-                val dirx=(origin.x - move.x+1 )/ abs(origin.x - move.x +1)
-                val diry=(origin.y - move.y +1)/ abs(origin.y - move.y+1 )
-                velocity.set(
-                    dirx* threshHold,
-                    diry * threshHold
+                val distanceX=abs(origin.x - move.x +1)
+                val distanceY=abs(origin.y - move.y+1 )
+                val dirx=(origin.x - move.x+1 )/ distanceX
+                val diry=(origin.y - move.y +1)/ distanceY
+
+                velocity.add(
+                    dirx*threshHold,
+                    diry*threshHold
                 )
                 UP=velocity.y<0
                 DOWN=velocity.y>0

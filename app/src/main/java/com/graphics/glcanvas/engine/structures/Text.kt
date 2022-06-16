@@ -11,8 +11,8 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
     private val color=ColorRGBA()
     val position=Vector2f()
     private var outline=ColorRGBA()
-    private var clipUpper=Vector2f(1f, Float.MIN_VALUE)
-    private var clipLower=Vector2f(1f, Float.MAX_VALUE)
+    private var clipUpper=Vector2f(Float.MIN_VALUE, Float.MIN_VALUE)
+    private var clipLower=Vector2f(Float.MAX_VALUE, Float.MAX_VALUE)
     private var innerEdge=0f
     private var innerWidth=0f
     private var borderWidth=0f
