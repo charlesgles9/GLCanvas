@@ -17,6 +17,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
     private val harrington=Font("fonts/harrington.fnt",context)
     private val text=Text("My test paragraph.\n\nDead target zombies and monsters. Charge bro charge and let's kill every one of the scums.Let me test my skills using hardness and courage I am very holy.This is an amazing project good learning experience i am down for amazing work. Hello world people! it takes alot of hard work and commitment to be a good software engineer. one day i know i will triumph and rise above mediocrity. Most people live average mediocre ignorant lives and i must fight this thing inside me that makes me extremely lazy and foolish. I don't come from a rich background but i know I will one day rise to glory. This is the one struggle that i must win because I have tried so many times and failed over and over again. I promised myself that one day I will have a victory at last, all these years of struggle will pay off I can feel it. I must win!",0.3f,harrington)
     private val textFPS=Text("FPS: 60",0.8f, candara)
+    private val textDrawCalls=Text("DrawCalls: ",0.3f,harrington)
     private val background=RectF(width/2,height/2,width, height)
     private var atlas:TextureAtlas?=null
     private var button:GLImageButton?=null
@@ -43,7 +44,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
              }
          })
 
-         label= GLLabel(250f,100f, atlas!!,"PanelWindow",candara,"Hello world!",0.3f )
+         label= GLLabel(380f,100f, atlas!!,"PanelWindow",harrington,"Hello world!",0.4f )
          label?.set(280f,300f)
          label?.roundedCorner(50f)
          label?.setRippleColor(ColorRGBA(0f,1f,0.1f,0.5f))
@@ -53,7 +54,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
              }
          })
 
-         labelSound= GLLabel(150f,80f,candara,"Enable",0.3f)
+         labelSound= GLLabel(150f,80f,harrington,"Enable",0.3f)
          labelSound?.setBackgroundColor(ColorRGBA(1f,0f,0f,1f))
          labelSound?.getTextView()?.setOutlineColor(1f,0f,1f)
          labelSound?.getTextView()?.setInnerEdge(0.1f)
@@ -103,9 +104,10 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
          label?.getConstraints()?.alignCenterHorizontal(linearLayout!!)
          val scrollView=GLScrollLayout(350f,350f)
          scrollView.setBackgroundColor(ColorRGBA(1f,1f,1f,1f))
-         scrollView.setOrientation(GLScrollLayout.HORIZONTAL)
+         scrollView.setOrientation(GLScrollLayout.VERTICAL)
+         scrollView.getConstraints().layoutMarginLeft(25f)
          val scrollList= mutableListOf<GLView>()
-         for(i in 0 until 10){
+         for(i in 0 until 50){
              scrollList.add(genLabel("label $i"))
          }
          scrollView.setItems(scrollList)
@@ -123,6 +125,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
          getRenderer().getTouchController()?.addEvent(scrollView)
         background.setTexture(context,"textures/ui/wenrexa/Background_green.png")
         text.set(100f,690f)
+        textDrawCalls.set(400f,50f)
         text.setMaxWidth(600f)
         FpsCounter.setGUITextView(textFPS)
         textFPS.set(30f,30f)
@@ -159,10 +162,13 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         batch.end()
 
         batch.begin(camera)
+        textDrawCalls.draw(batch)
+        batch.end()
+        batch.begin(camera)
         FpsCounter.getInstance().draw(batch)
         batch.end()
-
-
+        textDrawCalls.setText("DrawCalls: "+batch.getDrawCallCount())
+        batch.resetStats()
     }
 
     override fun update(delta: Long) {

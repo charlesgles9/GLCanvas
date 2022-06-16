@@ -110,11 +110,14 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
     fun begin(camera: Camera2D){
         this.camera=camera
         batchQueue.reset()
-        num_draw_calls=0
-        num_triangles=0
+
         reset()
     }
 
+    fun resetStats(){
+        num_draw_calls=0
+        num_triangles=0
+    }
     fun setMode(mode:Int){
         batchQueue.setMode(mode)
     }

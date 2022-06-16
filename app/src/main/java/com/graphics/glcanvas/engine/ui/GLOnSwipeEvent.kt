@@ -64,8 +64,8 @@ class GLOnSwipeEvent (private val listener: OnSwipeListener,
                 DOWN=velocity.y>0
                 LEFT=velocity.x<0
                 RIGHT=velocity.x>0
-                println("LEFT $LEFT")
-                println("RIGHT $RIGHT")
+              //  println("LEFT $LEFT")
+               // println("RIGHT $RIGHT")
                 //println("UP: $UP")
                 //println("DOWN: $DOWN")
                 //origin.set(move)
@@ -76,7 +76,7 @@ class GLOnSwipeEvent (private val listener: OnSwipeListener,
                 println("Velocity")*/
               //  velocity.print()
             }
-            println("Swiped!")
+           // println("Swiped!")
 
         }
     }

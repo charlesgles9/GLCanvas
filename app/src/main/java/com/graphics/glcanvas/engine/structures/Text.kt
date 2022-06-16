@@ -19,19 +19,32 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
     private var borderEdge=0f
     private var maxWidth=Float.MAX_VALUE
     private var maxHeight=Float.MAX_VALUE
+    private var paragraphs= mutableListOf<MutableList<String>>()
     var width=0f
     var height=0f
     init {
-        splitText()
+        initParagraph()
+        initWordList()
     }
 
-    private fun splitText(){
-        val paragraphs=text.split("\n")
+    private fun initParagraph(){
+        paragraphs.clear()
+        val pText=text.split("\n")
+        // paragraph list in text
+        for( p in pText){
+            // words list in text
+            paragraphs.add(p.split(" ").toMutableList())
+        }
+    }
+
+    private fun initWordList(){
+
         words.clear()
         val cursor=Vector2f()
         if(paragraphs.isNotEmpty()) {
-            for(item in paragraphs){
-                splitParagraph(item, cursor)
+            for(p in paragraphs) {
+                for (w in p)
+                    addWord(w, cursor)
                 width= max(cursor.x,width)
                 height=max(cursor.y,height)
                 //move to next line
@@ -39,31 +52,23 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
                 cursor.y+=font.lineHeight*fontSize
 
             }
-        }else {
-            splitParagraph(text, cursor)
-            width= max(cursor.x,width)
-            height=font.lineHeight*fontSize
-
         }
     }
 
-    private fun splitParagraph(text: String,cursor:Vector2f){
-        val array=text.split(" ")
+    private fun addWord(text: String, cursor:Vector2f){
         // word spacing
         val space=20f
-        for(item in array){
-            words.add(Word(item,font,cursor,fontSize,clipUpper,clipLower,color,outline,innerEdge, innerWidth,
+            words.add(Word(text,font,cursor,fontSize,clipUpper,clipLower,color,outline,innerEdge, innerWidth,
                                            borderWidth, borderEdge, position, maxWidth,maxHeight))
             cursor.addX(space*fontSize)
 
-        }
     }
 
     fun set(x:Float,y:Float){
         // update only if necessary
         if(x!=position.x||position.y!=y) {
             this.position.set(x, y)
-            splitText()
+            initWordList()
         }
     }
 
@@ -77,7 +82,7 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
 
     fun setMaxWidth(maxWidth:Float){
         this.maxWidth=maxWidth
-        splitText()
+        initWordList()
     }
 
     fun setMaxHeight(maxHeight:Float){
@@ -93,7 +98,7 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
     }
     fun setFontSize(fontSize: Float){
         this.fontSize=fontSize
-        splitText()
+        initWordList()
     }
 
     fun setColor(color: ColorRGBA){
@@ -108,7 +113,8 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
     fun setText(text: String){
         if(text!=this.text) {
             this.text = text
-            splitText()
+            initParagraph()
+            initWordList()
         }
     }
 

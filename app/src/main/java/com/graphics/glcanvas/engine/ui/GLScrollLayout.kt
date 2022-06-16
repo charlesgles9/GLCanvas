@@ -4,7 +4,6 @@ import android.view.MotionEvent
 import com.graphics.glcanvas.engine.Batch
 import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.maths.Vector2f
-import kotlin.math.abs
 
 class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
 
@@ -36,46 +35,6 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
         this.orientation=orientation
     }
 
-    private fun groupItems(){
-        if(orientation== LinearLayoutConstraint.VERTICAL) {
-            for (i in 0 until items.size) {
-                val view = items[i]
-                val xOffset = getX() - width * 0.5f
-                //if its the first item position it at the top
-                if (i == 0)
-                    view.set(xOffset + view.width * 0.5f,
-                        getY() - height * 0.5f + view.height * 0.5f + view.getConstraints()
-                            .getMarginBottom()+offset.y
-                    )
-                // set next layout below this layout
-                if (view != items.last()) {
-                    val next = items[i + 1]
-                    next.setX(xOffset + next.width * 0.5f)
-                    next.getConstraints().alignBelow(view)
-                    next.setY(next.getY())
-                }
-            }
-            // horizontal orientation code from left to right
-        }else{
-            for (i in 0 until items.size) {
-                val view = items[i]
-                val yOffset = getY() -height * 0.5f
-                //if its the first item position it at the top
-                if (i == 0)
-                    view.set(getX() - width * 0.5f + view.width * 0.5f + view.getConstraints()
-                        .getMarginRight()+offset.x,yOffset + view.height * 0.5f+view.getConstraints()
-                        .getMarginBottom())
-                // set next layout below this layout
-                if (view != items.last()) {
-                    val next = items[i + 1]
-                    next.setY(yOffset + next.height * 0.5f+view.getConstraints()
-                        .getMarginBottom())
-                    next.getConstraints().toRightOf(view)
-                }
-            }
-        }
-    }
-
     fun addOnSwipeEvent(onSwipeListener:GLOnSwipeEvent.OnSwipeListener){
         this.onSwipeEvent= GLOnSwipeEvent(onSwipeListener,this)
         this.onSwipeListener=onSwipeListener
@@ -83,25 +42,17 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
 
     private fun clipView(view:GLView){
         //y axis clip test
-        val lowerVisibleY=getY()+height*0.5f>=view.getY()-view.height*0.5f
-        val upperVisibleY=getY()-height*0.5f<=view.getY()+view.height*0.5f
-        val diffLowerY=(getY()+height*0.5f)-(view.getY()+view.height*0.5f)
-        val diffUpperY=(getY()-height*0.5f)-(view.getY()-view.height*0.5f)
+        val lowerVisibleY=getY()+height*0.5f>view.getY()-view.height*0.5f
+        val upperVisibleY=getY()-height*0.5f<view.getY()+view.height*0.5f
        //x axis clip test
-        val lowerVisibleX=getX()+width*0.5f>=view.getX()-view.width*0.5f
-        val upperVisibleX=getX()-width*0.5f<=view.getX()+view.width*0.5f
-        val diffLowerX=(getX()+width*0.5f)-(view.getX()+view.width*0.5f)
-        val diffUpperX=(getX()-width*0.5f)-(view.getX()+view.width*0.5f)
-        val clipLowerY=diffLowerY<=0&& abs(diffLowerY)<=view.height
-        val clipUpperY=diffUpperY<=0&& abs(diffUpperY)<=view.height
-        val clipLowerX=diffLowerX<=0&& abs(diffLowerX)<=view.width
-        val clipUpperX=diffUpperX<=0&& abs(diffUpperX)<=view.width
+        val lowerVisibleX=getX()+width*0.5f>view.getX()-view.width*0.5f
+        val upperVisibleX=getX()-width*0.5f<view.getX()+view.width*0.5f
 
         view.setVisibility(lowerVisibleY && upperVisibleY&&upperVisibleX&&lowerVisibleX)
-        view.clipViewLower(if(clipLowerX)getX()+(width*0.5f)else Float.MAX_VALUE,
-                           if(clipLowerY)getY()+(height*0.5f)else Float.MAX_VALUE)
-        view.clipViewUpper(if(clipUpperX)getX()-width*0.5f else Float.MIN_VALUE,
-                           if(clipUpperY)getY()-height*0.5f else Float.MIN_VALUE)
+        if(view.isVisible()) {
+            view.clipViewLower(getX() + (width * 0.5f), getY() + (height * 0.5f))
+            view.clipViewUpper(getX() - width * 0.5f, getY() - height * 0.5f)
+        }
 
     }
 
@@ -124,7 +75,7 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
         val first=items.first()
         val last=items.last()
         val vx=(onSwipeEvent?.getVelocity()?.x?:0f)
-        if((first.getX()-first.width+vx)<=getX()-width*0.5f&&onSwipeEvent?.LEFT==true){
+        if((first.getX()-first.width+vx)<getX()-width*0.5f&&onSwipeEvent?.LEFT==true){
             offset.sub(vx, 0f)
             onSwipeEvent?.getVelocity()?.multiply(GLOnSwipeEvent.friction)
         }else
@@ -139,16 +90,17 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
         super.draw(batch)
         //scroll direction
         if(orientation== VERTICAL)
-           scrollVertical()
+            scrollVertical()
         else
-           scrollHorizontal()
-        groupItems()
-
+            scrollHorizontal()
+        LayoutConstraint.groupItems(orientation,offset ,this,items)
         items.forEach {
-             clipView(it)
+            clipView(it)
              it.draw(batch)
-
         }
+
+
+
     }
 
     override fun onTouchEvent(event: MotionEvent) {

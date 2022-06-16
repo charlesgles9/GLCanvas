@@ -1,6 +1,8 @@
 package com.graphics.glcanvas.engine.ui
 
- open class LayoutConstraint(private val view:GLView) : Constraints() {
+import com.graphics.glcanvas.engine.maths.Vector2f
+
+open class LayoutConstraint(private val view:GLView) : Constraints() {
 
     private var left:GLView?=null
     private var right:GLView?=null
@@ -124,7 +126,58 @@ package com.graphics.glcanvas.engine.ui
         applyCenter()
         applyCenterVertical()
         applyCenterHorizontal()
-
-
     }
-}
+    companion object {
+         fun groupItems(
+            orientation: Int,
+            offset: Vector2f,
+            parent: GLView,
+            items: MutableList<GLView>
+        ) {
+            if (orientation == LinearLayoutConstraint.VERTICAL) {
+                for (i in 0 until items.size) {
+                    val view = items[i]
+                    val xOffset = parent.getX() - parent.width * 0.5f
+                    //if its the first item position it at the top
+                    if (i == 0)
+                        view.set(
+                            xOffset + view.width * 0.5f,
+                            parent.getY() - parent.height * 0.5f + view.height * 0.5f + view.getConstraints()
+                                .getMarginBottom() + offset.y
+                        )
+                    // set next layout below this layout
+                    if (view != items.last()) {
+                        val next = items[i + 1]
+                        next.setX(xOffset + next.width * 0.5f)
+                        next.getConstraints().alignBelow(view)
+                        next.setY(next.getY())
+                    }
+                }
+                // horizontal orientation code from left to right
+            } else {
+                for (i in 0 until items.size) {
+                    val view = items[i]
+                    val yOffset = parent.getY() - parent.height * 0.5f
+                    //if its the first item position it at the top
+                    if (i == 0)
+                        view.set(
+                            parent.getX() - parent.width * 0.5f + view.width * 0.5f + view.getConstraints()
+                                .getMarginRight() + offset.x,
+                            yOffset + view.height * 0.5f + view.getConstraints()
+                                .getMarginBottom()
+                        )
+                    // set next layout below this layout
+                    if (view != items.last()) {
+                        val next = items[i + 1]
+                        next.setY(
+                            yOffset + next.height * 0.5f + view.getConstraints()
+                                .getMarginBottom()
+                        )
+                        next.getConstraints().toRightOf(view)
+                    }
+                }
+            }
+        }
+    }
+
+ }
