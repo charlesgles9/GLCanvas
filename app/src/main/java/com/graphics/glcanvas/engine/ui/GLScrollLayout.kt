@@ -63,7 +63,7 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
                 //if its the first item position it at the top
                 if (i == 0)
                     view.set(getX() - width * 0.5f + view.width * 0.5f + view.getConstraints()
-                        .getMarginRight(),yOffset + view.height * 0.5f)
+                        .getMarginRight()+offset.x,yOffset + view.height * 0.5f)
                 // set next layout below this layout
                 if (view != items.last()) {
                     val next = items[i + 1]
@@ -81,35 +81,62 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
     }
 
     private fun clipView(view:GLView){
-        val lowerVisible=getY()+height*0.5f>=view.getY()-view.height*0.5f
-        val upperVisible=getY()-height*0.5f<=view.getY()+view.height*0.5f
-        val diffLower=(getY()+height*0.5f)-(view.getY()+view.height*0.5f)
-        val diffUpper=(getY()-height*0.5f)-(view.getY()-view.height*0.5f)
-        view.setVisibility(lowerVisible && upperVisible)
-        if(diffLower<=0&& abs(diffLower)<=view.height)
+        val lowerVisibleY=getY()+height*0.5f>=view.getY()-view.height*0.5f
+        val upperVisibleY=getY()-height*0.5f<=view.getY()+view.height*0.5f
+        val diffLowerY=(getY()+height*0.5f)-(view.getY()+view.height*0.5f)
+        val diffUpperY=(getY()-height*0.5f)-(view.getY()-view.height*0.5f)
+
+        val lowerVisibleX=getX()+width*0.5f>=view.getX()-view.width*0.5f
+        val upperVisibleX=getX()-width*0.5f<=view.getX()+view.width*0.5f
+        val diffLowerX=(getX()+width*0.5f)-(view.getX()-view.width*0.5f)
+        val diffUpperX=(getX()-width*0.5f)-(view.getX()+view.width*0.5f)
+        view.setVisibility(lowerVisibleY && upperVisibleY&&upperVisibleX&&lowerVisibleX)
+        if(diffLowerY<=0&& abs(diffLowerY)<=view.height)
             view.clipViewLower(1f,getY()+(height*0.5f))
-        if(diffUpper<=0&& abs(diffUpper)<=view.height)
+        if(diffUpperY<=0&& abs(diffUpperY)<=view.height)
             view.clipViewUpper(1f,getY()-height*0.5f)
+
 
     }
 
-    override fun draw(batch: Batch) {
-        super.draw(batch)
+    private fun scrollVertical(){
         val first=items.first()
         val last=items.last()
         val vy=(onSwipeEvent?.getVelocity()?.y?:0f)
         if((first.getY()-first.height+vy)<=getY()-height*0.5f&&onSwipeEvent?.UP==true){
-             offset.sub(0f, vy)
-             onSwipeEvent?.getVelocity()?.multiply(GLOnSwipeEvent.friction)
+            offset.sub(0f, vy)
+            onSwipeEvent?.getVelocity()?.multiply(GLOnSwipeEvent.friction)
         }else
             if((last.getY()+last.height+vy)>getY()+height*0.5f&&onSwipeEvent?.DOWN==true){
                 offset.sub(0f, vy)
                 onSwipeEvent?.getVelocity()?.multiply(GLOnSwipeEvent.friction)
-              //@debug  println("last "+last.getY()+" origin "+getY()+height*0.5f+" velocity "+vy)
-            }else{
-                onSwipeEvent?.setVelocity(0f,0f)
+                //@debug  println("last "+last.getY()+" origin "+getY()+height*0.5f+" velocity "+vy)
             }
-         groupItems()
+    }
+
+    private fun scrollHorizontal(){
+        val first=items.first()
+        val last=items.last()
+        val vx=(onSwipeEvent?.getVelocity()?.x?:0f)
+        if((first.getX()-first.width+vx)<=getY()-width*0.5f&&onSwipeEvent?.LEFT==true){
+            offset.sub(vx, 0f)
+            onSwipeEvent?.getVelocity()?.multiply(GLOnSwipeEvent.friction)
+        }else
+            if((last.getX()+last.width+vx)>getY()+width*0.5f&&onSwipeEvent?.RIGHT==true){
+                offset.sub(vx, 0f)
+                onSwipeEvent?.getVelocity()?.multiply(GLOnSwipeEvent.friction)
+                //@debug  println("last "+last.getY()+" origin "+getY()+height*0.5f+" velocity "+vy)
+            }
+    }
+
+    override fun draw(batch: Batch) {
+        super.draw(batch)
+        //scroll direction
+        if(orientation== VERTICAL)
+           scrollVertical()
+        else
+           scrollHorizontal()
+        groupItems()
 
         items.forEach {
              clipView(it)

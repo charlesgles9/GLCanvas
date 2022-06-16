@@ -103,6 +103,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
          label?.getConstraints()?.alignCenterHorizontal(linearLayout!!)
          val scrollView=GLScrollLayout(350f,350f)
          scrollView.setBackgroundColor(ColorRGBA(1f,1f,1f,1f))
+         scrollView.setOrientation(GLScrollLayout.HORIZONTAL)
          val scrollList= mutableListOf<GLView>()
          for(i in 0 until 10){
              scrollList.add(genLabel("label $i"))
@@ -133,7 +134,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         textFPS.setBorderWidth(0.4f)
     }
 
-    fun genLabel(message:String):GLLabel{
+    private fun genLabel(message:String):GLLabel{
         val lbl= GLLabel(150f,80f,harrington,message,0.3f)
         lbl.setBackgroundColor(ColorRGBA(1f,0f,1f,1f))
         lbl.getTextView()?.setOutlineColor(1f,0f,1f)

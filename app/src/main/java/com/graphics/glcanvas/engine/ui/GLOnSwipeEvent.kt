@@ -15,8 +15,10 @@ class GLOnSwipeEvent (private val listener: GLOnSwipeEvent.OnSwipeListener,
     private var move=Vector2f(-1f,-1f)
      var UP=false
      var DOWN=false
+     var LEFT=false
+     var RIGHT=false
     companion object {
-        var friction = 0.5f
+        var friction = 0.8f
     }
     private var pointerDown=false
     fun contains(x:Float,y:Float):Boolean{
@@ -56,6 +58,10 @@ class GLOnSwipeEvent (private val listener: GLOnSwipeEvent.OnSwipeListener,
                 )
                 UP=velocity.y<0
                 DOWN=velocity.y>0
+                LEFT=velocity.x<0
+                RIGHT=velocity.x>0
+                println("LEFT $LEFT")
+                println("RIGHT $RIGHT")
                 //println("UP: $UP")
                 //println("DOWN: $DOWN")
                 //origin.set(move)
