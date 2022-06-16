@@ -2,6 +2,7 @@ package com.graphics.glcanvas.engine
 
 import android.content.Context
 import android.opengl.GLES32
+import android.view.MotionEvent
 import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.structures.*
 import com.graphics.glcanvas.engine.ui.*
@@ -101,18 +102,24 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
          checkBox?.getConstraints()?.alignCenterVertical(labelSound!!)
          label?.getConstraints()?.alignCenterHorizontal(linearLayout!!)
          val scrollView=GLScrollLayout(350f,350f)
-         scrollView.setBackgroundColor(ColorRGBA.transparent)
+         scrollView.setBackgroundColor(ColorRGBA(1f,1f,1f,1f))
          val scrollList= mutableListOf<GLView>()
-         for(i in 0 until 100){
+         for(i in 0 until 10){
              scrollList.add(genLabel("label $i"))
          }
          scrollView.setItems(scrollList)
          linearLayout?.setItems(mutableListOf(label!!,progressBar!!,inner,scrollView))
 
+         scrollView.addOnSwipeEvent(object :GLOnSwipeEvent.OnSwipeListener{
+             override fun onSwipe() {
+
+             }
+         })
          getRenderer().getTouchController()?.addEvent(button!!)
          getRenderer().getTouchController()?.addEvent(label!!)
          getRenderer().getTouchController()?.addEvent(checkBox!!)
          getRenderer().getTouchController()?.addEvent(progressBar!!)
+         getRenderer().getTouchController()?.addEvent(scrollView)
         background.setTexture(context,"textures/ui/wenrexa/Background_green.png")
         text.set(100f,690f)
         text.setMaxWidth(600f)
@@ -132,6 +139,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         lbl.getTextView()?.setOutlineColor(1f,0f,1f)
         lbl.getTextView()?.setInnerEdge(0.1f)
         lbl.getTextView()?.setInnerWidth(0.4f)
+        lbl.getConstraints().layoutMarginBottom(5f)
         return lbl
     }
 

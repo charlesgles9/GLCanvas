@@ -1,10 +1,9 @@
 package com.graphics.glcanvas.engine.ui
 
+import android.view.MotionEvent
 import com.graphics.glcanvas.engine.Batch
 import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.maths.Vector2f
-import com.graphics.glcanvas.engine.structures.RectF
-import com.graphics.glcanvas.engine.structures.Text
 import kotlin.math.abs
 
 class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
@@ -12,6 +11,8 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
     private var items= mutableListOf<GLView>()
     private var orientation= VERTICAL
     private var offset=Vector2f()
+    private var onSwipeEvent:GLOnSwipeEvent?=null
+    private var onSwipeListener:GLOnSwipeEvent.OnSwipeListener?=null
     companion object{
         const val VERTICAL=0
         const val HORIZONTAL=1
@@ -74,53 +75,52 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
         }
     }
 
+    fun addOnSwipeEvent(onSwipeListener:GLOnSwipeEvent.OnSwipeListener){
+        this.onSwipeEvent= GLOnSwipeEvent(onSwipeListener,this)
+        this.onSwipeListener=onSwipeListener
+    }
+
     private fun clipView(view:GLView){
-        val lower_visible=getY()+height*0.5f>=view.getY()-view.height*0.5f
-        val upper_visible=getY()-height*0.5f<=view.getY()+view.height*0.5f
-        val diff_lower=(getY()+height*0.5f)-(view.getY()+view.height*0.5f)
-        val diff_upper=(getY()-height*0.5f)-(view.getY()-view.height*0.5f)
-        view.setVisibility(lower_visible && upper_visible)
-        if(diff_lower<=0&& abs(diff_lower)<=view.height)
+        val lowerVisible=getY()+height*0.5f>=view.getY()-view.height*0.5f
+        val upperVisible=getY()-height*0.5f<=view.getY()+view.height*0.5f
+        val diffLower=(getY()+height*0.5f)-(view.getY()+view.height*0.5f)
+        val diffUpper=(getY()-height*0.5f)-(view.getY()-view.height*0.5f)
+        view.setVisibility(lowerVisible && upperVisible)
+        if(diffLower<=0&& abs(diffLower)<=view.height)
             view.clipViewLower(1f,getY()+(height*0.5f))
-        if(diff_upper<=0&& abs(diff_upper)<=view.height)
+        if(diffUpper<=0&& abs(diffUpper)<=view.height)
             view.clipViewUpper(1f,getY()-height*0.5f)
 
     }
 
-    private fun clipText(text:Text?){
-        val x= (text?.position?.x?:0f)
-        val y= (text?.position?.y?:0f)
-        val w= (text?.width?:0f)
-        val h= (text?.height?:0f)
-        val diff_lower=(y+h)-(getY()+height)
-        val diff_upper=(getY()-height)-(y-h)
-        if(diff_lower<=0&& abs(diff_lower)<=h){
-            val factor=abs(diff_lower+0.1f)/h
-            text?.setClipLower(1f,factor)
-        }
-        if(diff_upper<=0&& abs(diff_upper)<=h){
-            val factor=abs(diff_upper+0.1f)/h
-            text?.setClipUpper(1f,factor)
-        }
-    }
-
     override fun draw(batch: Batch) {
+        super.draw(batch)
         val first=items.first()
         val last=items.last()
+        val vy=(onSwipeEvent?.getVelocity()?.y?:0f)
+        if((first.getY()-first.height+vy)<=getY()-height*0.5f&&onSwipeEvent?.UP==true){
+             offset.sub(0f, vy)
+             onSwipeEvent?.getVelocity()?.multiply(GLOnSwipeEvent.friction)
+        }else
+            if((last.getY()+last.height+vy)>getY()+height*0.5f&&onSwipeEvent?.DOWN==true){
+                offset.sub(0f, vy)
+                onSwipeEvent?.getVelocity()?.multiply(GLOnSwipeEvent.friction)
+              //@debug  println("last "+last.getY()+" origin "+getY()+height*0.5f+" velocity "+vy)
+            }else{
+                onSwipeEvent?.setVelocity(0f,0f)
+            }
+         groupItems()
+
         items.forEach {
              clipView(it)
-            // clipText(it.getTextView())
              it.draw(batch)
 
         }
-        super.draw(batch)
-        groupItems()
+    }
 
+    override fun onTouchEvent(event: MotionEvent) {
+        super.onTouchEvent(event)
+        onSwipeEvent?.onTouchEvent(event)
 
-        if(last.getY()>=(height*0.5+getY()+last.height*0.5f)){
-            offset.sub(0f,0.5f)
-        }
-
-        //println(offset.y)
     }
 }

@@ -40,7 +40,10 @@ class Vector2f {
         this.x-=other.x
         this.y-=other.y
     }
-
+    fun multiply(other:Float){
+        this.x*=other
+        this.y*=other
+    }
     fun multiply(other:Vector2f){
         this.x*=other.x
         this.y*=other.y
@@ -80,6 +83,10 @@ class Vector2f {
         val dx=x-other.x
         val dy=y-other.y
         return sqrt(dx*dx+dy*dy)
+    }
+
+    fun print(){
+        println("x: $x  y: $y")
     }
 
 }
