@@ -34,7 +34,7 @@ class Camera2D(height: Float) : Camera() {
 
 
 
-    fun setOrtho(width:Float,height: Float,screenWidth:Float,screenHeight:Float){
+    fun setOrtho(width:Float,height: Float){
         val ratio=width/height
         val left=0.0f
         val top=0.0f

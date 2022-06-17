@@ -128,6 +128,63 @@ open class LayoutConstraint(private val view:GLView) : Constraints() {
         applyCenterHorizontal()
     }
     companion object {
+         fun clipView(parent:GLView,view:GLView){
+             //account for layout margins
+             val topBottom=view.getConstraints().getMarginTop()-view.getConstraints().getMarginBottom()
+             val leftRight=view.getConstraints().getMarginLeft()-view.getConstraints().getMarginRight()
+             val mHeight=view.height*0.5f-topBottom
+             val mWidth=view.width*0.5f-leftRight
+            //y axis clip test
+            val lowerVisibleY=parent.getY()+parent.height*0.5f>view.getY()-mHeight
+            val upperVisibleY=parent.getY()-parent.height*0.5f<view.getY()+mHeight
+            //x axis clip test
+            val lowerVisibleX=parent.getX()+parent.width*0.5f>view.getX()-mWidth
+            val upperVisibleX=parent.getX()-parent.width*0.5f<view.getX()+mWidth
+
+            view.setVisibility(lowerVisibleY && upperVisibleY&&upperVisibleX&&lowerVisibleX)
+            view.clipViewLower(parent.getX() + (parent.width * 0.5f), parent.getY() + (parent.height * 0.5f))
+            view.clipViewUpper(parent.getX() - parent.width * 0.5f, parent.getY() - parent.height * 0.5f)
+
+        }
+
+        // in case this view is a nested layout pass in the margin information or
+        // we'll get inaccurate clipping calculations
+        fun clipView(parent:GLView,inner:GLView,view:GLView){
+            //account for layout margins
+            val topBottom=inner.getConstraints().getMarginTop()-inner.getConstraints().getMarginBottom()-
+                    parent.getConstraints().getMarginTop()-parent.getConstraints().getMarginBottom()
+            val leftRight=inner.getConstraints().getMarginLeft()-inner.getConstraints().getMarginRight()-
+                    parent.getConstraints().getMarginLeft()-parent.getConstraints().getMarginRight()
+            val mHeight=view.height*0.5f-topBottom
+            val mWidth=view.width*0.5f-leftRight
+            //y axis clip test
+            val lowerVisibleY=parent.getY()+parent.height*0.5f>view.getY()-mHeight
+            val upperVisibleY=parent.getY()-parent.height*0.5f<view.getY()+mHeight
+            //x axis clip test
+            val lowerVisibleX=parent.getX()+parent.width*0.5f>view.getX()-mWidth
+            val upperVisibleX=parent.getX()-parent.width*0.5f<view.getX()+mWidth
+
+            view.setVisibility(lowerVisibleY && upperVisibleY&&upperVisibleX&&lowerVisibleX)
+            view.clipViewLower(parent.getX() + (parent.width * 0.5f), parent.getY() + (parent.height * 0.5f))
+            view.clipViewUpper(parent.getX() - parent.width * 0.5f, parent.getY() - parent.height * 0.5f)
+
+        }
+        fun groupItems(offset: Vector2f, parent: GLView, items: MutableList<GLView>, rows:Int, cols:Int){
+                 offset.set(parent.getX()-parent.width*0.5f,parent.getY()-parent.height*0.5f)
+
+               for(r in 0 until rows){
+                   for(c in 0 until cols){
+                       val index=r*cols+c
+                       if(index>=items.size) return
+                       val child=items[index]
+                       val topBottom=child.getConstraints().getMarginTop()-child.getConstraints().getMarginBottom()
+                       val leftRight=child.getConstraints().getMarginLeft()-child.getConstraints().getMarginRight()
+                       val width=child.width
+                       val height=child.height
+                       child.set(offset.x+width*0.5f+(width+leftRight)*c,offset.y+height*0.5f+(height-topBottom)*r)
+                   }
+               }
+        }
          fun groupItems(
             orientation: Int,
             offset: Vector2f,
@@ -141,16 +198,18 @@ open class LayoutConstraint(private val view:GLView) : Constraints() {
                     //if its the first item position it at the top
                     if (i == 0)
                         view.set(
-                            xOffset + view.width * 0.5f,
-                            parent.getY() - parent.height * 0.5f + view.height * 0.5f + view.getConstraints()
-                                .getMarginBottom() + offset.y
+                            xOffset + view.width * 0.5f+view.getConstraints().getMarginLeft()-
+                                      view.getConstraints().getMarginRight(),
+                            parent.getY() - parent.height * 0.5f + view.height * 0.5f - view.getConstraints()
+                                .getMarginBottom() + offset.y+view.getConstraints().getMarginTop()
                         )
                     // set next layout below this layout
                     if (view != items.last()) {
                         val next = items[i + 1]
-                        next.setX(xOffset + next.width * 0.5f)
+                        next.setX(xOffset + next.width * 0.5f+next.getConstraints().getMarginLeft()-
+                                   next.getConstraints().getMarginRight())
                         next.getConstraints().alignBelow(view)
-                        next.setY(next.getY())
+                        next.setY(next.getY()-next.getConstraints().getMarginBottom()+next.getConstraints().getMarginTop())
                     }
                 }
                 // horizontal orientation code from left to right

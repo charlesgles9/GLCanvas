@@ -9,6 +9,10 @@ class Texture (){
         load(context, path)
     }
 
+    constructor(path:String) : this() {
+        preLoaded(path)
+    }
+
 
     fun load(context: Context,path:String){
         mTexture=TextureLoader.getInstance().getTexture(context,path)

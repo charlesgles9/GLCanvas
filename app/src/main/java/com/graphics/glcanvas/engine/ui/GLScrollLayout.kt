@@ -40,34 +40,22 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
         this.onSwipeListener=onSwipeListener
     }
 
-    private fun clipView(view:GLView){
-        //y axis clip test
-        val lowerVisibleY=getY()+height*0.5f>view.getY()-view.height*0.5f
-        val upperVisibleY=getY()-height*0.5f<view.getY()+view.height*0.5f
-       //x axis clip test
-        val lowerVisibleX=getX()+width*0.5f>view.getX()-view.width*0.5f
-        val upperVisibleX=getX()-width*0.5f<view.getX()+view.width*0.5f
-
-        view.setVisibility(lowerVisibleY && upperVisibleY&&upperVisibleX&&lowerVisibleX)
-        if(view.isVisible()) {
-            view.clipViewLower(getX() + (width * 0.5f), getY() + (height * 0.5f))
-            view.clipViewUpper(getX() - width * 0.5f, getY() - height * 0.5f)
-        }
-
-    }
 
     private fun scrollVertical(){
         val first=items.first()
         val last=items.last()
         val vy=(onSwipeEvent?.getVelocity()?.y?:0f)
-        if((first.getY()-first.height+vy)<=getY()-height*0.5f&&onSwipeEvent?.UP==true){
+        if((first.getY()-vy-first.height*0.5f)<getY()-height*0.5f&&onSwipeEvent?.UP==true){
             offset.sub(0f, vy)
             onSwipeEvent?.getVelocity()?.multiply(GLOnSwipeEvent.friction)
         }else
-            if((last.getY()+last.height+vy)>getY()+height*0.5f&&onSwipeEvent?.DOWN==true){
+            if((last.getY()+vy+last.height*0.5f)>getY()+height*0.5f&&onSwipeEvent?.DOWN==true){
                 offset.sub(0f, vy)
                 onSwipeEvent?.getVelocity()?.multiply(GLOnSwipeEvent.friction)
                 //@debug  println("last "+last.getY()+" origin "+getY()+height*0.5f+" velocity "+vy)
+            }else{
+                //reset this or we'll get this annoying jagged scrolling effect
+                onSwipeEvent?.getVelocity()?.set(0f,0f)
             }
     }
 
@@ -88,14 +76,16 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
 
     override fun draw(batch: Batch) {
         super.draw(batch)
-        //scroll direction
-        if(orientation== VERTICAL)
-            scrollVertical()
-        else
-            scrollHorizontal()
+
+        when(orientation){
+             VERTICAL->
+                 scrollVertical()
+             HORIZONTAL->
+                 scrollHorizontal()
+        }
         LayoutConstraint.groupItems(orientation,offset ,this,items)
         items.forEach {
-            clipView(it)
+            LayoutConstraint.clipView(this,it)
              it.draw(batch)
         }
 

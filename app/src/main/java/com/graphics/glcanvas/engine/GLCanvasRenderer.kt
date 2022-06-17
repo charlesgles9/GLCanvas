@@ -2,7 +2,6 @@ package com.graphics.glcanvas.engine
 
 import android.content.Context
 import android.opengl.GLES32
-import android.view.MotionEvent
 import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.structures.*
 import com.graphics.glcanvas.engine.ui.*
@@ -16,7 +15,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
     private val candara=Font("fonts/candara.fnt",context)
     private val harrington=Font("fonts/harrington.fnt",context)
     private val text=Text("My test paragraph.\n\nDead target zombies and monsters. Charge bro charge and let's kill every one of the scums.Let me test my skills using hardness and courage I am very holy.This is an amazing project good learning experience i am down for amazing work. Hello world people! it takes alot of hard work and commitment to be a good software engineer. one day i know i will triumph and rise above mediocrity. Most people live average mediocre ignorant lives and i must fight this thing inside me that makes me extremely lazy and foolish. I don't come from a rich background but i know I will one day rise to glory. This is the one struggle that i must win because I have tried so many times and failed over and over again. I promised myself that one day I will have a victory at last, all these years of struggle will pay off I can feel it. I must win!",0.3f,harrington)
-    private val textFPS=Text("FPS: 60",0.8f, candara)
+    private val textFPS=Text("FPS: 60",0.4f, candara)
     private val textDrawCalls=Text("DrawCalls: ",0.3f,harrington)
     private val background=RectF(width/2,height/2,width, height)
     private var atlas:TextureAtlas?=null
@@ -30,10 +29,12 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
      //init camera here or resources eg textures
     override fun prepare() {
         batch.initShader(context)
-        camera.setOrtho( getCanvasWidth(), getCanvasHeight(),900f,1600f)
+        camera.setOrtho( getCanvasWidth(), getCanvasHeight())
         TextureLoader.getInstance().getTexture(context,"fonts/sans.png")
         TextureLoader.getInstance().getTexture(context,"fonts/harrington.png")
         TextureLoader.getInstance().getTexture(context,"fonts/candara.png")
+        TextureLoader.getInstance().getTexture(context,"textures/ui/wenrexa/Background_green.png")
+
          atlas= TextureAtlas("textures/ui/wenrexa/wenrexa.atlas",context)
          button= GLImageButton(100f,50f,atlas!!,"Checked1")
          button?.set(200f,200f)
@@ -89,9 +90,10 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
          })
 
 
-         linearLayout= LinearLayoutConstraint(600f,800f)
-         linearLayout?.setPosition(50f,100f)
+         linearLayout= LinearLayoutConstraint(getCanvasWidth(), getCanvasHeight())
+         linearLayout?.setPosition(0f,0f)
          linearLayout?.setColor(ColorRGBA(0f,1f,0.3f,0.5f))
+         linearLayout?.setTexture("textures/ui/wenrexa/Background_green.png")
          progressBar?.getConstraints()?.layoutMarginBottom(20f)
          label?.getConstraints()?.layoutMarginBottom(20f)
          checkBox?.getConstraints()?.layoutMarginLeft(20f)
@@ -104,20 +106,29 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
          label?.getConstraints()?.alignCenterHorizontal(linearLayout!!)
          val scrollView=GLScrollLayout(350f,350f)
          scrollView.setBackgroundColor(ColorRGBA(1f,1f,1f,1f))
-         scrollView.setOrientation(GLScrollLayout.VERTICAL)
+         scrollView.setOrientation(GLScrollLayout.HORIZONTAL)
          scrollView.getConstraints().layoutMarginLeft(25f)
          val scrollList= mutableListOf<GLView>()
-         for(i in 0 until 50){
-             scrollList.add(genLabel("label $i"))
-         }
          scrollView.setItems(scrollList)
-         linearLayout?.setItems(mutableListOf(label!!,progressBar!!,inner,scrollView))
-
          scrollView.addOnSwipeEvent(object :GLOnSwipeEvent.OnSwipeListener{
              override fun onSwipe() {
 
              }
          })
+
+         val gridView=GLGridLayout(scrollView,scrollView.width,scrollView.height,4,4)
+         gridView.setBackgroundColor(ColorRGBA.transparent)
+         gridView.getConstraints().layoutMarginLeft(25f)
+         val gridList= mutableListOf<GLView>()
+         for(i in 0 until 16)
+             gridList.add(genLabel("label $i"))
+         gridView.setItems(gridList)
+         scrollList.add(gridView)
+         scrollView.setItems(scrollList)
+         linearLayout?.setItems(mutableListOf(label!!,progressBar!!,inner,scrollView))
+
+
+
          getRenderer().getTouchController()?.addEvent(button!!)
          getRenderer().getTouchController()?.addEvent(label!!)
          getRenderer().getTouchController()?.addEvent(checkBox!!)
@@ -125,7 +136,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
          getRenderer().getTouchController()?.addEvent(scrollView)
         background.setTexture(context,"textures/ui/wenrexa/Background_green.png")
         text.set(100f,690f)
-        textDrawCalls.set(400f,50f)
+        textDrawCalls.set(500f,50f)
         text.setMaxWidth(600f)
         FpsCounter.setGUITextView(textFPS)
         textFPS.set(30f,30f)
@@ -138,11 +149,13 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
     }
 
     private fun genLabel(message:String):GLLabel{
-        val lbl= GLLabel(150f,80f,harrington,message,0.3f)
+        val lbl= GLLabel(100f,80f,harrington,message,0.2f)
         lbl.setBackgroundColor(ColorRGBA(1f,0f,1f,1f))
         lbl.getTextView()?.setOutlineColor(1f,0f,1f)
         lbl.getTextView()?.setInnerEdge(0.1f)
         lbl.getTextView()?.setInnerWidth(0.4f)
+        lbl.getConstraints().layoutMarginLeft(25f)
+        lbl.getConstraints().layoutMarginBottom(10f)
         return lbl
     }
 
@@ -150,11 +163,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
     override fun draw() {
         GLES32.glClear(GLES32.GL_DEPTH_BUFFER_BIT or  GLES32.GL_COLOR_BUFFER_BIT)
         GLES32.glClearColor(0.5f,0.5f,0.5f,0.5f)
-        batch.setMode(BatchQueue.ORDER)
-        batch.begin(camera)
-        batch.draw(background)
-        text.draw(batch)
-        batch.end()
+
         // draw ui
         batch.setMode(BatchQueue.UNORDER)
         batch.begin(camera)

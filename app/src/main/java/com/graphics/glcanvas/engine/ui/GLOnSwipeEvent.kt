@@ -9,8 +9,7 @@ import kotlin.math.abs
 
 class GLOnSwipeEvent (private val listener: OnSwipeListener,
                       private val view:GLView): Touch {
-    private val threshHold=1f
-    private val MAX=5f
+    private val threshHold=1.8f
     private val velocity=Vector2f(0f,0f)
     private var origin=Vector2f(-1f,-1f)
     private var move=Vector2f(-1f,-1f)
@@ -19,7 +18,7 @@ class GLOnSwipeEvent (private val listener: OnSwipeListener,
      var LEFT=false
      var RIGHT=false
     companion object {
-        var friction = 0.9f
+        var friction = 0.95f
     }
     private var pointerDown=false
     fun contains(x:Float,y:Float):Boolean{

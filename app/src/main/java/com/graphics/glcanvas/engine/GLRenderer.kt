@@ -12,9 +12,10 @@ class GLRenderer(private val updatable: Updatable) : GLSurfaceView.Renderer {
     private var st=SystemClock.elapsedRealtimeNanos()/1000000L
     //fps limit default at 60 to prevent vsync
     private var cap=60
-    //expected cycle
-    private var ms_per_frame=1000L/cap
+    private var vsync=false
     override fun onDrawFrame(gl: GL10?) {
+        //expected cycle
+        val  ms_per_frame=if(!vsync)1000L/cap else 0L
         val time= SystemClock.elapsedRealtimeNanos()/1000000L
         val elapsed=time-st
         if(elapsed>=ms_per_frame){
@@ -27,6 +28,10 @@ class GLRenderer(private val updatable: Updatable) : GLSurfaceView.Renderer {
 
     fun fpsCap(cap:Int){
         this.cap=cap
+    }
+
+    fun enableVSync(enable:Boolean){
+        this.vsync=enable
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {

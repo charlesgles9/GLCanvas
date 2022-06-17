@@ -1,5 +1,6 @@
 package com.graphics.glcanvas.engine.ui
 
+import android.content.Context
 import android.view.MotionEvent
 import com.graphics.glcanvas.engine.Batch
 import com.graphics.glcanvas.engine.Touch
@@ -25,6 +26,7 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
       protected var maxProgressBar=100f
       protected var currentProgress=0f
       protected var backgroundThickness=0f
+      private var connerRadius=0f
      // view position
       private val position=Vector2f()
       private var background= RectF(0f,0f,width, height)
@@ -99,6 +101,12 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
         setForegroundImage(atlas.getTexture())
      }
 
+     fun setTexture(path:String){
+         background.getSpriteSheet().resize(1,1)
+         background.setTexture(Texture(path))
+         foreground.setColor(ColorRGBA.transparent)
+     }
+
      fun setForegroundColor(color: ColorRGBA){
         this.foreground.setColor(color)
       }
@@ -127,8 +135,12 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
     open fun roundedCorner(value:Float){
         getBackground().setConnerRadius(value)
         getForeground().setConnerRadius(value)
+        connerRadius=value
     }
 
+    fun getCornerRadius():Float{
+        return connerRadius
+    }
     fun setVisibility(visible:Boolean){
          this.visible=visible
     }

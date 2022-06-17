@@ -39,6 +39,7 @@ class LinearLayoutConstraint(width:Float,height:Float):GLView(width ,height) {
         super.draw(batch)
         LayoutConstraint.groupItems(orientation,offset ,this,items)
         items.forEach {
+            LayoutConstraint.clipView(this,it)
             it.draw(batch)
         }
 
