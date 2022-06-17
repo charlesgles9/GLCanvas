@@ -15,12 +15,10 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
     private val candara=Font("fonts/candara.fnt",context)
     private val harrington=Font("fonts/harrington.fnt",context)
     private val text=Text("My test paragraph.\n\nDead target zombies and monsters. Charge bro charge and let's kill every one of the scums.Let me test my skills using hardness and courage I am very holy.This is an amazing project good learning experience i am down for amazing work. Hello world people! it takes alot of hard work and commitment to be a good software engineer. one day i know i will triumph and rise above mediocrity. Most people live average mediocre ignorant lives and i must fight this thing inside me that makes me extremely lazy and foolish. I don't come from a rich background but i know I will one day rise to glory. This is the one struggle that i must win because I have tried so many times and failed over and over again. I promised myself that one day I will have a victory at last, all these years of struggle will pay off I can feel it. I must win!",0.3f,harrington)
-    private val textFPS=Text("FPS: 60",0.4f, candara)
-    private val textDrawCalls=Text("DrawCalls: ",0.3f,harrington)
-    private val background=RectF(width/2,height/2,width, height)
     private var atlas:TextureAtlas?=null
-    private var button:GLImageButton?=null
-    private var label:GLLabel?=null
+    private var titleLabel:GLLabel?=null
+    private var fpsLabel:GLLabel?=null
+    private var labelDrawCall:GLLabel?=null
     private var checkBox:GLCheckBox?=null
     private var imageCheckBox:GLImageCheckBox?=null
     private var progressBar:GLProgressBar?=null
@@ -35,25 +33,20 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         TextureLoader.getInstance().getTexture(context,"fonts/candara.png")
         TextureLoader.getInstance().getTexture(context,"textures/ui/wenrexa/Background_green.png")
 
-         atlas= TextureAtlas("textures/ui/wenrexa/wenrexa.atlas",context)
-         button= GLImageButton(100f,50f,atlas!!,"Checked1")
-         button?.set(200f,200f)
-         button?.setRippleColor(ColorRGBA(1f,0f,0f,1f))
-         button?.setOnClickListener( object :OnClickListener{
-             override fun onClick(){
+         atlas= TextureAtlas("textures/ui/UI.atlas",context)
 
-             }
-         })
-
-         label= GLLabel(380f,100f, atlas!!,"PanelWindow",harrington,"Hello world!",0.4f )
-         label?.set(280f,300f)
-         label?.roundedCorner(50f)
-         label?.setRippleColor(ColorRGBA(0f,1f,0.1f,0.5f))
-         label?.setOnClickListener(object :OnClickListener{
+         titleLabel= GLLabel(380f,100f, atlas!!,"Textfield2",harrington,"HELLO GUI!",0.3f )
+         titleLabel?.setRippleColor(ColorRGBA(0f,1f,0.1f,0.5f))
+         titleLabel?.setOnClickListener(object :OnClickListener{
              override fun onClick() {
 
              }
          })
+
+         fpsLabel= GLLabel(200f,60f,candara,"FPS: 60",0.3f)
+         fpsLabel?.setBackgroundColor(ColorRGBA.transparent)
+         labelDrawCall= GLLabel(getCanvasWidth()*0.8f,60f,atlas!!,"Textfield2",candara,"DrawCalls: ",0.3f)
+         fpsLabel?.setBackgroundColor(ColorRGBA.transparent)
 
          labelSound= GLLabel(150f,80f,harrington,"Enable",0.3f)
          labelSound?.setBackgroundColor(ColorRGBA(1f,0f,0f,1f))
@@ -71,7 +64,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
              }
          })
 
-         imageCheckBox=GLImageCheckBox(100f,100f, atlas!!,"Checked1","Checked2")
+         imageCheckBox=GLImageCheckBox(100f,100f, atlas!!,"Checked2","Checked1")
          imageCheckBox?.set(300f,600f)
          imageCheckBox?.setOnClickListener(object :OnClickListener{
              override fun onClick() {
@@ -90,12 +83,20 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
          })
 
 
-         linearLayout= LinearLayoutConstraint(getCanvasWidth(), getCanvasHeight())
+         val titleLayout=RelativeLayoutConstraint(getCanvasWidth(),250f,atlas!!,"Window1")
+         titleLabel?.getConstraints()?.layoutMarginTop(5f)
+         fpsLabel?.getConstraints()?.layoutMarginLeft(100f)
+         fpsLabel?.getConstraints()?.layoutMarginTop(20f)
+         fpsLabel?.getConstraints()?.alignAbove(titleLabel!!)
+         labelDrawCall?.getConstraints()?.alignCenterHorizontal(titleLayout)
+
+         labelDrawCall?.getConstraints()?.alignBelow(titleLabel!!)
+         titleLayout.setItems(mutableListOf(fpsLabel!!,titleLabel!!,labelDrawCall!!))
+
+         linearLayout= LinearLayoutConstraint(getCanvasWidth(), getCanvasHeight(),atlas!!,"Background3")
          linearLayout?.setPosition(0f,0f)
-         linearLayout?.setColor(ColorRGBA(0f,1f,0.3f,0.5f))
-         linearLayout?.setTexture("textures/ui/wenrexa/Background_green.png")
+         linearLayout?.setColor(ColorRGBA(1f,1f,1f,1f))
          progressBar?.getConstraints()?.layoutMarginBottom(20f)
-         label?.getConstraints()?.layoutMarginBottom(20f)
          checkBox?.getConstraints()?.layoutMarginLeft(20f)
          val inner=LinearLayoutConstraint(250f,180f)
          inner.setBackgroundColor(ColorRGBA())
@@ -103,11 +104,12 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
          inner.setOrientation(LinearLayoutConstraint.HORIZONTAL)
          inner.setItems(mutableListOf(labelSound!!,checkBox!!))
          checkBox?.getConstraints()?.alignCenterVertical(labelSound!!)
-         label?.getConstraints()?.alignCenterHorizontal(linearLayout!!)
-         val scrollView=GLScrollLayout(350f,350f)
+         titleLabel?.getConstraints()?.alignCenterHorizontal(titleLayout)
+         titleLabel?.getConstraints()?.alignCenterVertical(titleLayout)
+
+         val scrollView=GLScrollLayout(getCanvasWidth(),350f,atlas!!,"Window3")
          scrollView.setBackgroundColor(ColorRGBA(1f,1f,1f,1f))
          scrollView.setOrientation(GLScrollLayout.HORIZONTAL)
-         scrollView.getConstraints().layoutMarginLeft(25f)
          val scrollList= mutableListOf<GLView>()
          scrollView.setItems(scrollList)
          scrollView.addOnSwipeEvent(object :GLOnSwipeEvent.OnSwipeListener{
@@ -116,46 +118,40 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
              }
          })
 
-         val gridView=GLGridLayout(scrollView,scrollView.width,scrollView.height,4,4)
-         gridView.setBackgroundColor(ColorRGBA.transparent)
-         gridView.getConstraints().layoutMarginLeft(25f)
+         val gridView=GLGridLayout(scrollView,scrollView.width,scrollView.height,4,10)
+             gridView.setBackgroundColor(ColorRGBA.transparent)
+             gridView.getConstraints().layoutMarginBottom(20f)
          val gridList= mutableListOf<GLView>()
-         for(i in 0 until 16)
+         for(i in 0 until 40)
              gridList.add(genLabel("label $i"))
          gridView.setItems(gridList)
          scrollList.add(gridView)
          scrollView.setItems(scrollList)
-         linearLayout?.setItems(mutableListOf(label!!,progressBar!!,inner,scrollView))
+         linearLayout?.setItems(mutableListOf(titleLayout,scrollView,progressBar!!,inner,imageCheckBox!!))
 
-
-
-         getRenderer().getTouchController()?.addEvent(button!!)
-         getRenderer().getTouchController()?.addEvent(label!!)
+         getRenderer().getTouchController()?.addEvent(titleLabel!!)
          getRenderer().getTouchController()?.addEvent(checkBox!!)
+         getRenderer().getTouchController()?.addEvent(imageCheckBox!!)
          getRenderer().getTouchController()?.addEvent(progressBar!!)
          getRenderer().getTouchController()?.addEvent(scrollView)
-        background.setTexture(context,"textures/ui/wenrexa/Background_green.png")
         text.set(100f,690f)
-        textDrawCalls.set(500f,50f)
         text.setMaxWidth(600f)
-        FpsCounter.setGUITextView(textFPS)
-        textFPS.set(30f,30f)
         getRenderer().fpsCap(60)
-        textFPS.setOutlineColor(1f,0f,1f)
-        textFPS.setInnerEdge(0.2f)
-        textFPS.setInnerWidth(0.4f)
-        textFPS.setBorderEdge(0.2f)
-        textFPS.setBorderWidth(0.4f)
+         fpsLabel?.getTextView()?.setOutlineColor(1f,0f,1f)
+         fpsLabel?.getTextView()?.setInnerEdge(0.2f)
+         fpsLabel?.getTextView()?.setInnerWidth(0.4f)
+         fpsLabel?.getTextView()?.setBorderEdge(0.2f)
+         fpsLabel?.getTextView()?.setBorderWidth(0.4f)
+
     }
 
     private fun genLabel(message:String):GLLabel{
-        val lbl= GLLabel(100f,80f,harrington,message,0.2f)
-        lbl.setBackgroundColor(ColorRGBA(1f,0f,1f,1f))
+        val lbl= GLLabel(120f,70f,harrington,message,0.2f)
+        lbl.setBackgroundColor(ColorRGBA.transparent)
         lbl.getTextView()?.setOutlineColor(1f,0f,1f)
         lbl.getTextView()?.setInnerEdge(0.1f)
         lbl.getTextView()?.setInnerWidth(0.4f)
-        lbl.getConstraints().layoutMarginLeft(25f)
-        lbl.getConstraints().layoutMarginBottom(10f)
+        lbl.getConstraints().layoutMarginTop(5f)
         return lbl
     }
 
@@ -170,13 +166,8 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         linearLayout?.draw(batch)
         batch.end()
 
-        batch.begin(camera)
-        textDrawCalls.draw(batch)
-        batch.end()
-        batch.begin(camera)
-        FpsCounter.getInstance().draw(batch)
-        batch.end()
-        textDrawCalls.setText("DrawCalls: "+batch.getDrawCallCount())
+        fpsLabel?.getTextView()?.setText("FPS: "+FpsCounter.getInstance().getFps())
+        labelDrawCall?.getTextView()?.setText("DrawCalls: "+batch.getDrawCallCount())
         batch.resetStats()
     }
 

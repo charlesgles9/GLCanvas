@@ -1,0 +1,238 @@
+
+textures/ui/UI.png
+size: 4096, 2048
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+Background1
+  rotate: false
+  xy: 2, 6
+  size: 768, 1265
+  orig: 768, 1265
+  offset: 0, 0
+  index: 1
+Background2
+  rotate: false
+  xy: 772, 6
+  size: 768, 1265
+  orig: 768, 1265
+  offset: 0, 0
+  index: 3
+Background3
+  rotate: false
+  xy: 1634, 56
+  size: 768, 1265
+  orig: 768, 1265
+  offset: 0, 0
+  index: 2
+Btn_V01
+  rotate: false
+  xy: 3624, 1354
+  size: 366, 67
+  orig: 366, 67
+  offset: 0, 0
+  index: -1
+Btn_V03
+  rotate: false
+  xy: 3624, 1285
+  size: 366, 67
+  orig: 366, 67
+  offset: 0, 0
+  index: -1
+Btn_V13
+  rotate: false
+  xy: 3788, 1114
+  size: 241, 55
+  orig: 241, 55
+  offset: 0, 0
+  index: -1
+Btn_V14
+  rotate: false
+  xy: 3788, 1228
+  size: 241, 55
+  orig: 241, 55
+  offset: 0, 0
+  index: -1
+Btn_V15
+  rotate: false
+  xy: 3788, 1057
+  size: 241, 55
+  orig: 241, 55
+  offset: 0, 0
+  index: -1
+Btn_V16
+  rotate: false
+  xy: 3788, 1171
+  size: 241, 55
+  orig: 241, 55
+  offset: 0, 0
+  index: -1
+Checkbox1
+  rotate: false
+  xy: 3862, 1851
+  size: 92, 92
+  orig: 92, 92
+  offset: 0, 0
+  index: 1
+Checkbox2
+  rotate: false
+  xy: 3956, 1851
+  size: 92, 92
+  orig: 92, 92
+  offset: 0, 0
+  index: 2
+Checked1
+  rotate: false
+  xy: 3954, 1799
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: 3
+Checked2
+  rotate: false
+  xy: 4006, 1799
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: 5
+Checked3
+  rotate: false
+  xy: 3954, 1747
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: 2
+Checked4
+  rotate: false
+  xy: 4006, 1747
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: 4
+Checked5
+  rotate: false
+  xy: 3862, 1727
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: 1
+Checked6
+  rotate: false
+  xy: 3914, 1695
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: 6
+Checkmark1
+  rotate: false
+  xy: 3862, 1945
+  size: 98, 96
+  orig: 98, 96
+  offset: 0, 0
+  index: 1
+Checkmark2
+  rotate: false
+  xy: 3962, 1945
+  size: 98, 96
+  orig: 98, 96
+  offset: 0, 0
+  index: 2
+Expbar1
+  rotate: false
+  xy: 1370, 1323
+  size: 2252, 60
+  orig: 2252, 60
+  offset: 0, 0
+  index: 1
+Eye1
+  rotate: false
+  xy: 3348, 1733
+  size: 512, 308
+  orig: 512, 308
+  offset: 0, 0
+  index: 2
+Eye2
+  rotate: false
+  xy: 3348, 1423
+  size: 512, 308
+  orig: 512, 308
+  offset: 0, 0
+  index: 1
+Textfield1
+  rotate: false
+  xy: 1370, 1714
+  size: 1976, 327
+  orig: 1976, 327
+  offset: 0, 0
+  index: 2
+Textfield2
+  rotate: false
+  xy: 1370, 1385
+  size: 1976, 327
+  orig: 1976, 327
+  offset: 0, 0
+  index: 1
+Window1
+  rotate: false
+  xy: 2404, 481
+  size: 600, 840
+  orig: 600, 840
+  offset: 0, 0
+  index: 1
+Window2
+  rotate: false
+  xy: 3006, 481
+  size: 600, 840
+  orig: 600, 840
+  offset: 0, 0
+  index: 2
+Window3
+  rotate: false
+  xy: 2404, 72
+  size: 800, 407
+  orig: 800, 407
+  offset: 0, 0
+  index: 3
+arrow1
+  rotate: false
+  xy: 3862, 1779
+  size: 90, 70
+  orig: 90, 70
+  offset: 0, 0
+  index: 7
+background_neutral
+  rotate: false
+  xy: 2, 1273
+  size: 1366, 768
+  orig: 1366, 768
+  offset: 0, 0
+  index: -1
+expbar2
+  rotate: false
+  xy: 1542, 2
+  size: 2244, 52
+  orig: 2244, 52
+  offset: 0, 0
+  index: 2
+input_field1
+  rotate: false
+  xy: 1370, 1278
+  size: 262, 43
+  orig: 262, 43
+  offset: 0, 0
+  index: -1
+namebox
+  rotate: false
+  xy: 3348, 1385
+  size: 225, 36
+  orig: 225, 36
+  offset: 0, 0
+  index: -1
+slide_bar
+  rotate: false
+  xy: 2, 2
+  size: 300, 2
+  orig: 300, 2
+  offset: 0, 0
+  index: -1
+

@@ -2,11 +2,19 @@ package com.graphics.glcanvas.engine.ui
 
 import com.graphics.glcanvas.engine.Batch
 import com.graphics.glcanvas.engine.maths.ColorRGBA
+import com.graphics.glcanvas.engine.utils.TextureAtlas
 
 class RelativeLayoutConstraint(width:Float,height:Float):GLView(width ,height) {
 
 
     private var items= mutableListOf<GLView>()
+    constructor(width:Float, height:Float, atlas: TextureAtlas, name:String):this(width, height){
+        this.atlas=atlas
+        this.name=name
+        setBackgroundTextureAtlas(atlas)
+        setPrimaryImage(name)
+        setBackgroundFrame(name)
+    }
     //push this view from center origin 0.5,0.5 -> 0,0
     fun setPosition(x:Float,y:Float){
         set(x+width*0.5f,y+height*0.5f)
@@ -38,6 +46,7 @@ class RelativeLayoutConstraint(width:Float,height:Float):GLView(width ,height) {
         super.draw(batch)
         items.forEach {
             applyMargin(it)
+            LayoutConstraint.clipView(this,it)
             it.draw(batch)
             removeMargin(it)
         }

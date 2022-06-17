@@ -3,6 +3,7 @@ package com.graphics.glcanvas.engine.ui
 import com.graphics.glcanvas.engine.Batch
 import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.maths.Vector2f
+import com.graphics.glcanvas.engine.utils.TextureAtlas
 
 
 class LinearLayoutConstraint(width:Float,height:Float):GLView(width ,height) {
@@ -11,6 +12,14 @@ class LinearLayoutConstraint(width:Float,height:Float):GLView(width ,height) {
     private var items= mutableListOf<GLView>()
     private var orientation= VERTICAL
     private var offset=Vector2f()
+
+    constructor(width:Float,height:Float,atlas: TextureAtlas,name:String):this(width, height){
+        this.atlas=atlas
+        this.name=name
+        setBackgroundTextureAtlas(atlas)
+        setPrimaryImage(name)
+        setBackgroundFrame(name)
+    }
     companion object{
         const val VERTICAL=0
         const val HORIZONTAL=1

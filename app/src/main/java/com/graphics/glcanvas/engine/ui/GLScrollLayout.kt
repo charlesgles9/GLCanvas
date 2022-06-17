@@ -4,6 +4,7 @@ import android.view.MotionEvent
 import com.graphics.glcanvas.engine.Batch
 import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.maths.Vector2f
+import com.graphics.glcanvas.engine.utils.TextureAtlas
 
 class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
 
@@ -16,7 +17,13 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
         const val VERTICAL=0
         const val HORIZONTAL=1
     }
-
+    constructor(width:Float, height:Float, atlas: TextureAtlas, name:String):this(width, height){
+        this.atlas=atlas
+        this.name=name
+        setBackgroundTextureAtlas(atlas)
+        setPrimaryImage(name)
+        setBackgroundFrame(name)
+    }
     //push this view from center origin 0.5,0.5 -> 0,0
     fun setPosition(x:Float,y:Float){
         set(x+width*0.5f,y+height*0.5f)
@@ -49,7 +56,7 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
             offset.sub(0f, vy)
             onSwipeEvent?.getVelocity()?.multiply(GLOnSwipeEvent.friction)
         }else
-            if((last.getY()+vy+last.height*0.5f)>getY()+height*0.5f&&onSwipeEvent?.DOWN==true){
+            if((last.getY()+vy+last.height*0.5f)>=getY()+height*0.5f&&onSwipeEvent?.DOWN==true){
                 offset.sub(0f, vy)
                 onSwipeEvent?.getVelocity()?.multiply(GLOnSwipeEvent.friction)
                 //@debug  println("last "+last.getY()+" origin "+getY()+height*0.5f+" velocity "+vy)
@@ -71,6 +78,8 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
                 offset.sub(vx, 0f)
                 onSwipeEvent?.getVelocity()?.multiply(GLOnSwipeEvent.friction)
                 //@debug  println("last "+last.getY()+" origin "+getY()+height*0.5f+" velocity "+vy)
+            }else{
+                onSwipeEvent?.getVelocity()?.set(0f,0f)
             }
     }
 
