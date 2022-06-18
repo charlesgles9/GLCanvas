@@ -34,7 +34,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
 
          atlas= TextureAtlas("textures/ui/UI.atlas",context)
 
-         titleLabel= GLLabel(380f,100f, atlas!!,"Textfield2",harrington,"HELLO GUI!",0.3f )
+         titleLabel= GLLabel(380f,100f, atlas!!,"Textfield2",candara,"HELLO GUI!",0.3f )
          titleLabel?.setRippleColor(ColorRGBA(0f,1f,0.1f,0.5f))
          titleLabel?.setOnClickListener(object :OnClickListener{
              override fun onClick() {
@@ -47,7 +47,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
          labelDrawCall= GLLabel(getCanvasWidth()*0.8f,60f,atlas!!,"Textfield2",candara,"DrawCalls: ",0.3f)
          fpsLabel?.setBackgroundColor(ColorRGBA.transparent)
 
-         labelSound= GLLabel(200f,50f,atlas!!,"Textfield1",harrington,"Enable Sound",0.2f)
+         labelSound= GLLabel(200f,50f,atlas!!,"Textfield1",candara,"Enable Sound",0.2f)
          labelSound?.setBackgroundColor(ColorRGBA(1f,0f,0f,1f))
          labelSound?.getTextView()?.setOutlineColor(1f,0f,1f)
          labelSound?.getTextView()?.setInnerEdge(0.1f)
@@ -97,7 +97,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
          progressBar?.getConstraints()?.alignBelow(labelSound!!)
          progressBar?.getConstraints()?.layoutMarginLeft(25f)
 
-         val scrollView=GLScrollLayout(getCanvasWidth(),400f,atlas!!,"Window3")
+         val scrollView=GLScrollLayout(getCanvasWidth(),300f,atlas!!,"Window3")
          scrollView.setBackgroundColor(ColorRGBA(1f,1f,1f,1f))
          scrollView.setOrientation(GLScrollLayout.HORIZONTAL)
          val scrollList= mutableListOf<GLView>()
@@ -108,11 +108,11 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
              }
          })
 
-         val gridView=GLGridLayout(scrollView,scrollView.width,scrollView.height,4,10)
+         val gridView=GLGridLayout(scrollView,scrollView.width,scrollView.height,3,20)
              gridView.setBackgroundColor(ColorRGBA.transparent)
              gridView.getConstraints().layoutMarginBottom(20f)
          val gridList= mutableListOf<GLView>()
-         for(i in 0 until 40)
+         for(i in 0 until 60)
              gridList.add(genLabel("label"))
          gridView.setItems(gridList)
          scrollList.add(gridView)
@@ -136,7 +136,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
     }
 
     private fun genLabel(message:String):GLLabel{
-        val lbl= GLLabel(120f,70f,harrington,message,0.3f)
+        val lbl= GLLabel(120f,70f,candara,message,0.3f)
         lbl.setBackgroundColor(ColorRGBA.transparent)
         lbl.getTextView()?.setOutlineColor(1f,0f,1f)
         lbl.getTextView()?.setInnerEdge(0.1f)

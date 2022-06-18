@@ -665,6 +665,7 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
         render()
 
 
+
     }
 
     fun initShader(context: Context){

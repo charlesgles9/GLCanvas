@@ -10,6 +10,9 @@ class ColorRGBA {
         val transparent=ColorRGBA(0f,0f,0f,0f)
     }
 
+
+
+
     private var data=arrayOf(1.0f,1.0f,1.0f,1.0f)
     constructor( value:Float)  {
         set(value,value,value,value)

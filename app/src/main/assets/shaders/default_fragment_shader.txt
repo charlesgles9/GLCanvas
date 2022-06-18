@@ -91,13 +91,15 @@ void main(){
                                                 boolean_topLeft+boolean_topRight*d_topRight+boolean_bottomRight*d_bottomRight);
    // apply thickness
    float booleanThickness=min(1.0,boolean_inner_min+boolean_inner_max);
+
     if(sampleId!=0)
      gl_FragColor=v_color*texture2D(u_texture,v_TexCoordinate)*booleanBounds*booleanThickness*clip;
        else
      gl_FragColor=v_color*booleanBounds*booleanThickness*clip;
 
 
-  }else{
+  }
+
     if(isText==1){
       float innerDistance=1.0-texture2D(u_texture,v_TexCoordinate).a;
       float innerAlpha=1.0-smoothstep(textWidth,textWidth+textEdge,innerDistance);
@@ -112,8 +114,6 @@ void main(){
        gl_FragColor=v_color*texture2D(u_texture,v_TexCoordinate)*clip;
       else
        gl_FragColor=v_color*clip;
-  }
-
 
 
 }
