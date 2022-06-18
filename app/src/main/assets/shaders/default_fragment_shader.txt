@@ -35,7 +35,7 @@ void main(){
    thickness=size.x*size.y;
   min_v.x=size.x-radius;
   min_v.y=size.y-radius;
-  // apply clip rect
+        // apply clip rect
         // lower clip Y
          float booleanLowerY=1.0-step(a_trim.w,src.y);
         // upper clip Y
@@ -44,7 +44,7 @@ void main(){
          float booleanLowerX=1.0-step(a_trim.z,src.x);
             // upper clip X
          float booleanUpperX=1.0-step(src.x,a_trim.x);
-         float clip=min(booleanLowerY+booleanUpperY+booleanLowerX+booleanUpperX,1.0);
+         float clip=booleanLowerX*booleanUpperX*booleanLowerY*booleanUpperY;
 
   /* if its a quad test if it has rounded corners
     ignore text objects since texts are also quads*/
@@ -92,9 +92,9 @@ void main(){
    // apply thickness
    float booleanThickness=min(1.0,boolean_inner_min+boolean_inner_max);
     if(sampleId!=0)
-     gl_FragColor=v_color*texture2D(u_texture,v_TexCoordinate)*booleanBounds*booleanThickness;
+     gl_FragColor=v_color*texture2D(u_texture,v_TexCoordinate)*booleanBounds*booleanThickness*clip;
        else
-     gl_FragColor=v_color*booleanBounds*booleanThickness;
+     gl_FragColor=v_color*booleanBounds*booleanThickness*clip;
 
 
   }else{
@@ -106,6 +106,7 @@ void main(){
       float overallAlpha=innerAlpha+(1.0-innerAlpha)*outlineAlpha;
       vec3 overallColor=mix(outlineColor.rgb,v_color.rgb,innerAlpha/overallAlpha);
       gl_FragColor=vec4(overallColor.rgb,overallAlpha)*texture2D(u_texture,v_TexCoordinate)*clip;
+
      }else
      if(sampleId!=0)
        gl_FragColor=v_color*texture2D(u_texture,v_TexCoordinate)*clip;

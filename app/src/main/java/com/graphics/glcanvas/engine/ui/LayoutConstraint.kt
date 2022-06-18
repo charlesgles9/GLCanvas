@@ -95,7 +95,7 @@ open class LayoutConstraint(private val view:GLView) : Constraints() {
 
 
      private fun applyCenterVertical(){
-             val ly= (center_Vertical?.getY()?.minus(((center_Vertical?.height?:0f)-view.height)*0.5f)?:view.getY())
+             val ly= (center_Vertical?.getY()?:view.getY())
 
              view.set(view.getX(),ly)
      }

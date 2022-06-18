@@ -22,7 +22,7 @@ class TextureLoader {
         GLES32.glGenTextures(1,textureHandle,0)
         if(textureHandle[0]!=0){
             val options=BitmapFactory.Options()
-            options.inScaled=false // no pre-scaling
+            options.inScaled=true // no pre-scaling
             // get bitmap from resource loader
             val bitmap:Bitmap?=ResourceLoader().loadBitmapFromAssets(context,PATH)
             // bind the texture to openGL
