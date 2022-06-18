@@ -9,7 +9,7 @@ import kotlin.math.abs
 
 class GLOnSwipeEvent (private val listener: OnSwipeListener,
                       private val view:GLView): Touch {
-    private val threshHold=1.8f
+    private val threshHold=1.3f
     private val velocity=Vector2f(0f,0f)
     private var origin=Vector2f(-1f,-1f)
     private var move=Vector2f(-1f,-1f)

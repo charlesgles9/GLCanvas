@@ -19,7 +19,6 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
     private var titleLabel:GLLabel?=null
     private var fpsLabel:GLLabel?=null
     private var labelDrawCall:GLLabel?=null
-    private var checkBox:GLCheckBox?=null
     private var imageCheckBox:GLImageCheckBox?=null
     private var progressBar:GLProgressBar?=null
     private var linearLayout:LinearLayoutConstraint?=null
@@ -48,23 +47,14 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
          labelDrawCall= GLLabel(getCanvasWidth()*0.8f,60f,atlas!!,"Textfield2",candara,"DrawCalls: ",0.3f)
          fpsLabel?.setBackgroundColor(ColorRGBA.transparent)
 
-         labelSound= GLLabel(150f,80f,harrington,"Enable",0.3f)
+         labelSound= GLLabel(200f,50f,atlas!!,"Textfield1",harrington,"Enable Sound",0.2f)
          labelSound?.setBackgroundColor(ColorRGBA(1f,0f,0f,1f))
          labelSound?.getTextView()?.setOutlineColor(1f,0f,1f)
          labelSound?.getTextView()?.setInnerEdge(0.1f)
          labelSound?.getTextView()?.setInnerWidth(0.4f)
-         checkBox= GLCheckBox(60f,60f, ColorRGBA(1f,0f,0.3f,1f))
-         checkBox?.set(300f,460f)
-         checkBox?.roundedCorner(10f)
-         checkBox?.setRippleColor(ColorRGBA(1f,1f,0f,1f))
-         checkBox?.setCheckedBackground(ColorRGBA(0f,1f,1f,1f))
-         checkBox?.setOnClickListener(object :OnClickListener{
-             override fun onClick() {
+         labelSound?.getConstraints()?.layoutMarginRight(15f)
 
-             }
-         })
-
-         imageCheckBox=GLImageCheckBox(100f,100f, atlas!!,"Checked2","Checked1")
+         imageCheckBox=GLImageCheckBox(50f,50f, atlas!!,"Checkbox1","Checkmark1")
          imageCheckBox?.set(300f,600f)
          imageCheckBox?.setOnClickListener(object :OnClickListener{
              override fun onClick() {
@@ -87,27 +77,26 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
          titleLabel?.getConstraints()?.layoutMarginTop(5f)
          fpsLabel?.getConstraints()?.layoutMarginLeft(100f)
          fpsLabel?.getConstraints()?.layoutMarginTop(20f)
-         fpsLabel?.getConstraints()?.alignAbove(titleLabel!!)
+         fpsLabel?.getConstraints()?.alignBelow(labelDrawCall!!)
+         fpsLabel?.getConstraints()?.alignCenterHorizontal(titleLayout)
          labelDrawCall?.getConstraints()?.alignCenterHorizontal(titleLayout)
-
          labelDrawCall?.getConstraints()?.alignBelow(titleLabel!!)
-         titleLayout.setItems(mutableListOf(fpsLabel!!,titleLabel!!,labelDrawCall!!))
+         titleLayout.setItems(mutableListOf(titleLabel!!,labelDrawCall!!,fpsLabel!!))
 
          linearLayout= LinearLayoutConstraint(getCanvasWidth(), getCanvasHeight(),atlas!!,"Background3")
          linearLayout?.setPosition(0f,0f)
          linearLayout?.setColor(ColorRGBA(1f,1f,1f,1f))
          progressBar?.getConstraints()?.layoutMarginBottom(20f)
-         checkBox?.getConstraints()?.layoutMarginLeft(20f)
-         val inner=LinearLayoutConstraint(250f,180f)
+         imageCheckBox?.getConstraints()?.layoutMarginLeft(20f)
+         val inner=RelativeLayoutConstraint(400f,180f,atlas!!,"Window2")
          inner.setBackgroundColor(ColorRGBA())
-         inner.getConstraints().layoutMarginBottom(20f)
-         inner.setOrientation(LinearLayoutConstraint.HORIZONTAL)
-         inner.setItems(mutableListOf(labelSound!!,checkBox!!))
-         checkBox?.getConstraints()?.alignCenterVertical(labelSound!!)
+         inner.setItems(mutableListOf(labelSound!!,imageCheckBox!!))
+         labelSound?.getConstraints()?.layoutMarginLeft(35f)
+         imageCheckBox?.getConstraints()?.toRightOf(labelSound!!)
          titleLabel?.getConstraints()?.alignCenterHorizontal(titleLayout)
          titleLabel?.getConstraints()?.alignCenterVertical(titleLayout)
 
-         val scrollView=GLScrollLayout(getCanvasWidth(),350f,atlas!!,"Window3")
+         val scrollView=GLScrollLayout(getCanvasWidth(),200f,atlas!!,"Window3")
          scrollView.setBackgroundColor(ColorRGBA(1f,1f,1f,1f))
          scrollView.setOrientation(GLScrollLayout.HORIZONTAL)
          val scrollList= mutableListOf<GLView>()
@@ -118,19 +107,19 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
              }
          })
 
-         val gridView=GLGridLayout(scrollView,scrollView.width,scrollView.height,4,10)
+         val gridView=GLGridLayout(scrollView,scrollView.width,scrollView.height,2,10)
              gridView.setBackgroundColor(ColorRGBA.transparent)
              gridView.getConstraints().layoutMarginBottom(20f)
          val gridList= mutableListOf<GLView>()
-         for(i in 0 until 40)
-             gridList.add(genLabel("label $i"))
+         for(i in 0 until 20)
+             gridList.add(genLabel("label"))
          gridView.setItems(gridList)
          scrollList.add(gridView)
          scrollView.setItems(scrollList)
-         linearLayout?.setItems(mutableListOf(titleLayout,scrollView,progressBar!!,inner,imageCheckBox!!))
+         linearLayout?.setItems(mutableListOf(titleLayout,scrollView,inner,progressBar!!))
 
          getRenderer().getTouchController()?.addEvent(titleLabel!!)
-         getRenderer().getTouchController()?.addEvent(checkBox!!)
+         getRenderer().getTouchController()?.addEvent(imageCheckBox!!)
          getRenderer().getTouchController()?.addEvent(imageCheckBox!!)
          getRenderer().getTouchController()?.addEvent(progressBar!!)
          getRenderer().getTouchController()?.addEvent(scrollView)
@@ -146,7 +135,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
     }
 
     private fun genLabel(message:String):GLLabel{
-        val lbl= GLLabel(120f,70f,harrington,message,0.2f)
+        val lbl= GLLabel(120f,70f,harrington,message,0.3f)
         lbl.setBackgroundColor(ColorRGBA.transparent)
         lbl.getTextView()?.setOutlineColor(1f,0f,1f)
         lbl.getTextView()?.setInnerEdge(0.1f)

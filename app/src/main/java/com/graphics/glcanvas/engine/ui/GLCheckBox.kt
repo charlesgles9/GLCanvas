@@ -6,11 +6,11 @@ class GLCheckBox(width:Float,height:Float,color: ColorRGBA):GLView(width, height
 
 
     init {
-       getForeground().setThickness(10f)
-       getBackground().setWidth(width-10f)
-       getBackground().setHeight(height-10f)
-       setBackgroundColor(color)
-       getForeground().setColor(ColorRGBA(1f,1f,1f,1f))
+        getBackground().setThickness(width*0.1f)
+        getForeground().setWidth(width*0.9f)
+        getForeground().setHeight(height*0.9f)
+        getBackground().setColor(color)
+       // getBackground().setColor(ColorRGBA.transparent)
        isCheckBox=true
     }
 
@@ -19,9 +19,6 @@ class GLCheckBox(width:Float,height:Float,color: ColorRGBA):GLView(width, height
         setRippleColor(color)
     }
 
-    fun setCheckedBackground(color: ColorRGBA){
-        setForegroundColor(color)
-    }
 
 
 

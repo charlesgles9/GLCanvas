@@ -44,10 +44,16 @@ class RelativeLayoutConstraint(width:Float,height:Float):GLView(width ,height) {
 
     override fun draw(batch: Batch) {
         super.draw(batch)
+
         items.forEach {
+            it.set(getX()-width*0.5f+it.width*0.5f,getY()-height*0.5f+it.height)
             applyMargin(it)
+        }
+        items.forEach {
             LayoutConstraint.clipView(this,it)
             it.draw(batch)
+        }
+        items.forEach {
             removeMargin(it)
         }
 

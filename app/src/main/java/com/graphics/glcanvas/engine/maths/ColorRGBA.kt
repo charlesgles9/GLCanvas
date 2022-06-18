@@ -11,7 +11,9 @@ class ColorRGBA {
     }
 
     private var data=arrayOf(1.0f,1.0f,1.0f,1.0f)
-
+    constructor( value:Float)  {
+        set(value,value,value,value)
+    }
     constructor()  {}
     constructor(r:Float,g:Float,b:Float,a:Float){
           set(r,g,b,a)

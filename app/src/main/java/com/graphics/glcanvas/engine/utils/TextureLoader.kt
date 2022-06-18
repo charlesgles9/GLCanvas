@@ -19,8 +19,7 @@ class TextureLoader {
     }
    private fun loadTexture(context: Context,PATH: String):Int{
        val textureHandle=IntArray(1)
-
-       GLES32.glGenTextures(1,textureHandle,0)
+        GLES32.glGenTextures(1,textureHandle,0)
         if(textureHandle[0]!=0){
             val options=BitmapFactory.Options()
             options.inScaled=false // no pre-scaling
@@ -29,8 +28,8 @@ class TextureLoader {
             // bind the texture to openGL
             GLES32.glBindTexture(GLES32.GL_TEXTURE_2D,textureHandle[0])
             //filtering
-            GLES32.glTexParameteri(GLES32.GL_TEXTURE_2D,GLES32.GL_TEXTURE_MIN_FILTER,GLES32.GL_NEAREST)
-            GLES32.glTexParameteri(GLES32.GL_TEXTURE_2D,GLES32.GL_TEXTURE_MAG_FILTER,GLES32.GL_NEAREST)
+            GLES32.glTexParameteri(GLES32.GL_TEXTURE_2D,GLES32.GL_TEXTURE_MIN_FILTER,GLES32.GL_LINEAR)
+            GLES32.glTexParameteri(GLES32.GL_TEXTURE_2D,GLES32.GL_TEXTURE_MAG_FILTER,GLES32.GL_LINEAR)
             //load the bitmap into the bound texture
             GLUtils.texImage2D(GLES32.GL_TEXTURE_2D,0,bitmap,0)
             bitmap?.recycle()

@@ -1,6 +1,8 @@
 package com.graphics.glcanvas.engine.ui
 
 import com.graphics.glcanvas.engine.maths.Vector2f
+import kotlin.math.abs
+import kotlin.math.max
 
 open class LayoutConstraint(private val view:GLView) : Constraints() {
 
@@ -93,7 +95,8 @@ open class LayoutConstraint(private val view:GLView) : Constraints() {
 
 
      private fun applyCenterVertical(){
-             val ly= (center_Vertical?.getY()?:view.getY())
+             val ly= (center_Vertical?.getY()?.minus(((center_Vertical?.height?:0f)-view.height)*0.5f)?:view.getY())
+
              view.set(view.getX(),ly)
      }
 
@@ -171,7 +174,9 @@ open class LayoutConstraint(private val view:GLView) : Constraints() {
         }
         fun groupItems(offset: Vector2f, parent: GLView, items: MutableList<GLView>, rows:Int, cols:Int){
                  offset.set(parent.getX()-parent.width*0.5f,parent.getY()-parent.height*0.5f)
-
+            // layout warps around the items
+                 var maxWidth=parent.width
+                 var maxHeight=parent.height
                for(r in 0 until rows){
                    for(c in 0 until cols){
                        val index=r*cols+c
@@ -182,8 +187,13 @@ open class LayoutConstraint(private val view:GLView) : Constraints() {
                        val width=child.width
                        val height=child.height
                        child.set(offset.x+(width+leftRight)*0.5f+(width)*c,offset.y+(height+topBottom)*0.5f+(height+topBottom)*r)
+                       maxWidth= max(child.getX()-offset.x,maxWidth)
+                       maxHeight=max(child.getY()-offset.y,maxHeight)
                    }
                }
+              parent.setWidthPixels(maxWidth)
+              parent.setHeightPixels(maxHeight)
+
         }
          fun groupItems(
             orientation: Int,

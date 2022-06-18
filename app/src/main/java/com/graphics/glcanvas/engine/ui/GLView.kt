@@ -66,6 +66,9 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
             default.set(color)
       }
 
+      protected fun setDefaultColor(color:ColorRGBA){
+          default.set(color)
+    }
       private fun setBackgroundImage(texture: Texture?){
          this.background.setTexture(texture!!)
       }
@@ -96,11 +99,21 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
           setBackgroundImage(atlas.getTexture())
       }
 
-     fun setSecondaryTextureAtlas(atlas: TextureAtlas){
+     fun setForegroundTextureAtlas(atlas: TextureAtlas){
         foreground.setSpriteSheet(atlas.getSheet()?.clone())
         setForegroundImage(atlas.getTexture())
      }
 
+    fun setWidthPixels(width: Float){
+        background.setWidth(width)
+        foreground.setWidth(width)
+        this.width=width
+    }
+    fun setHeightPixels(height: Float){
+        background.setHeight(width)
+        foreground.setHeight(width)
+        this.height=height
+    }
      fun setTexture(path:String){
          background.getSpriteSheet().resize(1,1)
          background.setTexture(Texture(path))
@@ -215,10 +228,12 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
           // make sure this text width is less than the the view width
           if((width-tw)>=0&&visible)
            text?.draw(batch)
-          //click effects for views
-          changeTextureAndColors(clicked)
+         //click events for checkbox
           if(isCheckBox)
-          changeTextureAndColors(check)
+              checkBoxToggle(check)
+          else
+          //click effects for views
+              changeTextureAndColors(clicked)
 
       }
 
@@ -240,6 +255,18 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
                 setBackgroundFrame(tp)
         }
     }
+    private fun checkBoxToggle(flag:Boolean){
+        if(flag){
+            foreground.setColor(ripple)
+            if(!ts.isEmpty())
+                setForegroundFrame(ts)
+        }else {
+            foreground.setColor(default)
+            if (!tp.isEmpty())
+                setForegroundFrame(tp)
+        }
+    }
+
     fun centerText(center:Boolean){
         this.center=center
     }
