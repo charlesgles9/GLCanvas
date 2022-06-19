@@ -4,7 +4,11 @@ import android.view.MotionEvent
 import com.graphics.glcanvas.engine.Batch
 import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.maths.Vector2f
+import com.graphics.glcanvas.engine.structures.RectF
 import com.graphics.glcanvas.engine.utils.TextureAtlas
+import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 
 class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
 
@@ -13,6 +17,11 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
     private var offset=Vector2f()
     private var onSwipeEvent:GLOnSwipeEvent?=null
     private var onSwipeListener:GLOnSwipeEvent.OnSwipeListener?=null
+    private val scrollBarProgress=RectF()
+    private val scrollBarBackground=RectF()
+    private var scrollBarHeight=10f
+    private var enableScrollBar=false
+
     companion object{
         const val VERTICAL=0
         const val HORIZONTAL=1
@@ -24,6 +33,35 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
         setPrimaryImage(name)
         setBackgroundFrame(name)
     }
+
+    fun showScrollBar(enableScrollBar:Boolean){
+        this.enableScrollBar=enableScrollBar
+    }
+
+    fun setScrollBarProgressColor(color: ColorRGBA){
+        scrollBarProgress.setColor(color)
+    }
+
+    fun setScrollBarBackgroundColor(color: ColorRGBA){
+        scrollBarBackground.setColor(color)
+    }
+
+    fun setScrollBarProgressFromAtlas(name: String){
+        scrollBarProgress.setSpriteSheet(atlas?.getSheet()?.clone())
+        scrollBarProgress.setTexture(atlas?.getTexture()!!)
+        scrollBarProgress.getSpriteSheet().setCurrentFrame(atlas?.getTextureCoordinate(name)?:0)
+    }
+
+    fun setScrollBarBackgroundFromAtlas(name: String){
+        scrollBarBackground.setSpriteSheet(atlas?.getSheet()?.clone())
+        scrollBarBackground.setTexture(atlas?.getTexture()!!)
+        scrollBarBackground.getSpriteSheet().setCurrentFrame(atlas?.getTextureCoordinate(name)?:0)
+    }
+
+    fun setScrollBarHeight(height: Float){
+        scrollBarHeight=height
+    }
+
     //push this view from center origin 0.5,0.5 -> 0,0
     fun setPosition(x:Float,y:Float){
         set(x+width*0.5f,y+height*0.5f)
@@ -52,7 +90,7 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
         val first=items.first()
         val last=items.last()
         val vy=(onSwipeEvent?.getVelocity()?.y?:0f)
-        if((first.getY()-vy-first.height*0.5f)<getY()-height*0.5f&&onSwipeEvent?.UP==true){
+        if((first.getY()-vy-first.height*0.5f)<=getY()-height*0.5f&&onSwipeEvent?.UP==true){
             offset.sub(0f, vy)
             onSwipeEvent?.getVelocity()?.multiply(GLOnSwipeEvent.friction)
         }else
@@ -83,6 +121,30 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
             }
     }
 
+    private fun drawScrollBar(batch: Batch){
+        val last=items.last()
+        val minWidth=getX()+last.width*0.5f+width*0.5f
+        val farWidth=min(minWidth, max(last.getX()+last.width*0.5f-width,1f))
+        val percent=(1.0f-farWidth/minWidth)
+        // println(percent)
+        //println(getX())
+      //  println(last.width)
+        //println(factor*100f)
+        scrollBarBackground.setHeight(scrollBarHeight)
+        scrollBarProgress.setHeight(scrollBarHeight*0.8f)
+        scrollBarBackground.setWidth(width*0.8f)
+        scrollBarProgress.setWidth(50f)
+        scrollBarBackground.set(getX()+width*0.1f*0.5f,getY()+height*0.4f)
+        val offset=(scrollBarBackground.getWidth())*percent+scrollBarProgress.getWidth()
+        val px=min(scrollBarBackground.getX()-scrollBarBackground.getWidth()*0.5f+offset,
+             scrollBarBackground.getX()+scrollBarBackground.getWidth()*0.5f)
+
+        scrollBarProgress.set(px,getY()+height*0.4f)
+        batch.draw(scrollBarBackground)
+        batch.draw(scrollBarProgress)
+
+
+    }
     override fun draw(batch: Batch) {
         super.draw(batch)
 
@@ -97,7 +159,7 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
             LayoutConstraint.clipView(this,it)
              it.draw(batch)
         }
-
+        drawScrollBar(batch)
 
 
     }
