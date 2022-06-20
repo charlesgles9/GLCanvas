@@ -188,7 +188,7 @@ open class LayoutConstraint(private val view:GLView) : Constraints() {
                        val height=child.height
                        child.set(offset.x+(width+leftRight)*0.5f+(width)*c,offset.y+(height+topBottom)*0.5f+(height+topBottom)*r)
                        maxWidth= max(child.getX()-offset.x+width*0.5f,maxWidth)
-                       maxHeight=max(child.getY()-offset.y,maxHeight)
+                       maxHeight=max(child.getY()-offset.y+height*0.5f,maxHeight)
                    }
                }
               parent.setWidthPixels(maxWidth)

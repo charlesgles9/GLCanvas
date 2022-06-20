@@ -6,7 +6,6 @@ import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.maths.Vector2f
 import com.graphics.glcanvas.engine.structures.RectF
 import com.graphics.glcanvas.engine.utils.TextureAtlas
-import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
@@ -20,6 +19,7 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
     private val scrollBarProgress=RectF()
     private val scrollBarBackground=RectF()
     private var scrollBarHeight=10f
+    private var scrollBarWidth=10f
     private var enableScrollBar=false
 
     companion object{
@@ -121,27 +121,55 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
             }
     }
 
-    private fun drawScrollBar(batch: Batch){
-        val last=items.last()
-        val minWidth=getX()+last.width*0.5f+width*0.5f
-        val farWidth=min(minWidth, max(last.getX()+last.width*0.5f-width,1f))
-        val percent=(1.0f-farWidth/minWidth)
-        // println(percent)
-        //println(getX())
-      //  println(last.width)
-        //println(factor*100f)
+
+    private fun drawHorizontalProgress(batch: Batch,lastY: Float,oHeight: Float){
+        val minHeight=getY()+oHeight*0.5f+height*0.5f
+        val farHeight=min(minHeight, max(lastY+oHeight*0.5f-height,1f))
+        // were in 2D space is this progress bar located relative to the last scrolling position
+        val farPercent=(1.0f-farHeight/minHeight)
+        // how large is the scroll progress bar relative to the background progress bar
+        val scrollPercent=height/minHeight
+        scrollBarBackground.setWidth(scrollBarWidth)
+        scrollBarProgress.setWidth(scrollBarWidth*0.8f)
+        scrollBarBackground.setHeight(height*0.8f)
+        scrollBarProgress.setHeight(scrollBarBackground.getHeight()*scrollPercent)
+        scrollBarBackground.set(getX()+width*0.5f-scrollBarWidth,getY())
+        val sH=scrollBarBackground.getHeight()-scrollBarProgress.getHeight()
+        val offset=(sH)*farPercent
+        val py=scrollBarBackground.getY()-sH*0.5f+offset
+
+        scrollBarProgress.set(scrollBarBackground.getX(),py)
+        batch.draw(scrollBarBackground)
+        batch.draw(scrollBarProgress)
+
+    }
+
+    private fun drawVerticalProgress(batch: Batch,lastX:Float,oWidth: Float){
+        val minWidth=getX()+oWidth*0.5f+width*0.5f
+        val farWidth=min(minWidth, max(lastX+oWidth*0.5f-width,1f))
+        // were in 2D space is this progress bar located relative to the last scrolling position
+        val farPercent=(1.0f-farWidth/minWidth)
+        // how large is the scroll progress bar relative to the background progress bar
+        val scrollPercent=width/minWidth
         scrollBarBackground.setHeight(scrollBarHeight)
         scrollBarProgress.setHeight(scrollBarHeight*0.8f)
         scrollBarBackground.setWidth(width*0.8f)
-        scrollBarProgress.setWidth(50f)
+        scrollBarProgress.setWidth(scrollBarBackground.getWidth()*scrollPercent)
         scrollBarBackground.set(getX()+width*0.1f*0.5f,getY()+height*0.4f)
-        val offset=(scrollBarBackground.getWidth())*percent+scrollBarProgress.getWidth()
-        val px=min(scrollBarBackground.getX()-scrollBarBackground.getWidth()*0.5f+offset,
-             scrollBarBackground.getX()+scrollBarBackground.getWidth()*0.5f)
+        val sW=scrollBarBackground.getWidth()-scrollBarProgress.getWidth()*1.2f
+        val offset=(sW)*farPercent
+        val px=scrollBarBackground.getX()-sW*0.5f+offset
 
         scrollBarProgress.set(px,getY()+height*0.4f)
         batch.draw(scrollBarBackground)
         batch.draw(scrollBarProgress)
+
+    }
+    private fun drawScrollBar(batch: Batch,itemWidth:Float,itemHeight:Float){
+        val last=items.last()
+         if(orientation== HORIZONTAL)
+         drawVerticalProgress(batch,last.getX(),itemWidth)
+        else drawHorizontalProgress(batch,last.getY(),itemHeight)
 
 
     }
@@ -155,11 +183,16 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
                  scrollHorizontal()
         }
         LayoutConstraint.groupItems(orientation,offset ,this,items)
+        var itemWidth=0f
+        var itemHeight=0f
         items.forEach {
             LayoutConstraint.clipView(this,it)
+            itemWidth+=it.width
+            itemHeight+=it.height
              it.draw(batch)
         }
-        drawScrollBar(batch)
+
+        drawScrollBar(batch,itemWidth,itemHeight)
 
 
     }
