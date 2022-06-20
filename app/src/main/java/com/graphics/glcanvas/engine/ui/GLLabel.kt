@@ -31,7 +31,7 @@ class GLLabel(width:Float,height:Float,private var font: Font,private var string
 
     fun setText(string:String, font:Font, size:Float){
         text= Text(string,size,font)
-        text?.setMaxWidth(width*0.5f)
+        text?.setMaxWidth(width*0.9f)
         text?.setMaxHeight(height)
     }
 

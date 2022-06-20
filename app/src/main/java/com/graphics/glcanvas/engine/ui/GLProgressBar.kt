@@ -3,6 +3,7 @@ package com.graphics.glcanvas.engine.ui
 import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.structures.Font
 import com.graphics.glcanvas.engine.structures.Text
+import com.graphics.glcanvas.engine.utils.TextureAtlas
 
 class GLProgressBar(width:Float,height:Float, progress:Float,horizontalBar:Boolean):GLView(width, height) {
 
@@ -15,6 +16,17 @@ class GLProgressBar(width:Float,height:Float, progress:Float,horizontalBar:Boole
            isProgressBar=true
        }
 
+    constructor(width: Float, height: Float,progress: Float,horizontalBar:Boolean, atlas: TextureAtlas,
+                primary: String,secondary:String):this(width, height,progress, horizontalBar) {
+        this.atlas=atlas
+        this.name=secondary
+        setBackgroundTextureAtlas(atlas)
+        setPrimaryImage(secondary)
+        setBackgroundFrame(secondary)
+        setForegroundTextureAtlas(atlas)
+        setForegroundFrame(primary)
+
+    }
 
     override fun roundedCorner(value: Float) {
         this.backgroundThickness=value

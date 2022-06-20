@@ -4,6 +4,7 @@ import com.graphics.glcanvas.engine.Batch
 import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.maths.Vector2f
 import com.graphics.glcanvas.engine.utils.TextureLoader
+import kotlin.concurrent.thread
 import kotlin.math.max
 
 class Text(private var text:String,private var fontSize:Float,private var font: Font) {
@@ -25,6 +26,7 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
     init {
         initParagraph()
         initWordList()
+
     }
 
     private fun initParagraph(){
@@ -55,6 +57,9 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
         }
     }
 
+
+
+
     private fun addWord(text: String, cursor:Vector2f){
         // word spacing
         val space=20f
@@ -63,12 +68,19 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
             cursor.addX(space*fontSize)
 
     }
+    private fun modifyWord(word:Word, cursor:Vector2f){
+        val space=20f
+        word.updateWord(font,cursor,fontSize,clipUpper,clipLower,color,outline,innerEdge, innerWidth,
+            borderWidth, borderEdge, position)
+        cursor.addX(space*fontSize)
+    }
 
     fun set(x:Float,y:Float){
         // update only if necessary
         if(x!=position.x||position.y!=y) {
             this.position.set(x, y)
             initWordList()
+
         }
     }
 
@@ -157,12 +169,14 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
 
     fun draw(batch: Batch){
         val id=TextureLoader.getInstance().getTexture(font.getTextureAtlasPath())
+
         words.forEach { word->
             word.getCharacter().forEach {
                 it.getTexture().setId(id)
                 batch.draw(it)
             }
         }
+
     }
 
 }

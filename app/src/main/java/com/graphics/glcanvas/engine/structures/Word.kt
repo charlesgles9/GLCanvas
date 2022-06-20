@@ -52,8 +52,41 @@ class Word(str:String, font: Font, cursor:Vector2f, size:Float, clipUpper:Vector
 
            //@debug println("char = ${char.getChar()} w $fontSizeX h $fontSizeY advX ${meta!!.getAdvanceX()} OffsetX ${meta.getOffsetX()} OffsetY ${meta.getOffsetY()}")
         }
-
     }
+
+
+    fun updateWord(font: Font, cursor:Vector2f, size:Float, clipUpper:Vector2f,clipLower:Vector2f, color: ColorRGBA, outline:ColorRGBA,
+                   innerEdge:Float, innerWidth:Float, borderWidth:Float, borderEdge:Float, position:Vector2f){
+
+            for(char in characters){
+                val meta=font.getCharMetaData(char.getChar())
+                //how further this character is spaced to the next
+                val advance=meta!!.getAdvanceX()* size
+                //character width and height
+                val fontSizeX=meta.getWidth()* size
+                val fontSizeY=meta.getHeight()* size
+                char.setColor(color)
+                char.set(
+                    /* lets offset of x and y by advance/2 since our origin
+                       is at the center of each quad. Took me hours to figure this shit out
+                     */
+                    position.x+cursor.x+advance*0.5f+(meta.getOffsetX()*size)*0.5f,position.y+cursor.y+(meta.getOffsetY()* size)*0.5f,
+                    fontSizeX,
+                    fontSizeY )
+                char.setOutlineColor(outline)
+                char.setInnerEdge(innerEdge)
+                char.setInnerWidth(innerWidth)
+                char.setBorderEdge(borderEdge)
+                char.setBorderWidth(borderWidth)
+                char.setClipUpper(clipUpper.x,clipUpper.y)
+                char.setClipLower(clipLower.x,clipLower.y)
+                // subtract the padding for proper char spacing
+                cursor.addX(advance+font.padding[Font.PADDING_LEFT]*0.5f)
+
+                //@debug println("char = ${char.getChar()} w $fontSizeX h $fontSizeY advX ${meta!!.getAdvanceX()} OffsetX ${meta.getOffsetX()} OffsetY ${meta.getOffsetY()}")
+            }
+    }
+
     fun getCharacter():ArrayList<Character>{
         return characters
     }

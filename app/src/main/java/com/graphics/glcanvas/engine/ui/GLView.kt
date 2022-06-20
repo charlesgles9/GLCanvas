@@ -1,6 +1,5 @@
 package com.graphics.glcanvas.engine.ui
 
-import android.content.Context
 import android.view.MotionEvent
 import com.graphics.glcanvas.engine.Batch
 import com.graphics.glcanvas.engine.Touch
@@ -51,7 +50,7 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
       private  var clicked=false
      // finger size or touch area
       private val thumb=30f
-      private var center=true
+      private var centerText=true
       private var visible=true
       init {
           foreground.setColor(ColorRGBA(0f,0f,0f,0f))
@@ -220,13 +219,15 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
               batch.draw(foreground)
           }
           // center the text if available
-          var tw= (text?.width?.times(0.5f)?: 0f)
-          var th=(text?.height?.times(0.5f)?:0f)
-          tw=if(center)tw else 0f
-          th=if(center)th else 0f
+          val tw= (text?.width?.times(0.5f)?: 0f)
+          val th=(text?.height?.times(0.5f)?:0f)
+          if(centerText)
           text?.set(position.x-tw, position.y-th)
-          // make sure this text width is less than the the view width
-          if((width-tw)>=0&&visible)
+          else
+              text?.set(position.x-width*0.45f,position.y-height*0.45f)
+
+          LayoutConstraint.clipView(position.x,position.y,width,height,
+                                    text?.position?.x?:0f,text?.position?.y?:0f,text?.width?:0f,text?.height?:0f,text)
            text?.draw(batch)
          //click events for checkbox
           if(isCheckBox)
@@ -237,6 +238,9 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
 
       }
 
+    fun setCenterText(centerText:Boolean){
+        this.centerText=centerText
+    }
     fun setChecked(check:Boolean){
         this.check=check
     }
@@ -247,29 +251,26 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
     private fun changeTextureAndColors(flag:Boolean){
         if(flag){
             background.setColor(ripple)
-            if(!ts.isEmpty())
+            if(ts.isNotEmpty())
                 setBackgroundFrame(ts)
         }else {
             background.setColor(default)
-            if (!tp.isEmpty())
+            if (tp.isNotEmpty())
                 setBackgroundFrame(tp)
         }
     }
     private fun checkBoxToggle(flag:Boolean){
         if(flag){
             foreground.setColor(ripple)
-            if(!ts.isEmpty())
+            if(ts.isNotEmpty())
                 setForegroundFrame(ts)
         }else {
             foreground.setColor(default)
-            if (!tp.isEmpty())
+            if (tp.isNotEmpty())
                 setForegroundFrame(tp)
         }
     }
 
-    fun centerText(center:Boolean){
-        this.center=center
-    }
 
     fun clearOnClick(){
         onClickEvents.clear()

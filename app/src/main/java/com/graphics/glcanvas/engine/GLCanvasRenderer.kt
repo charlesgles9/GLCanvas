@@ -23,6 +23,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
     private var progressBar:GLProgressBar?=null
     private var linearLayout:LinearLayoutConstraint?=null
     private var labelSound:GLLabel?=null
+    private var labelParagraph:GLLabel?=null
      //init camera here or resources eg textures
     override fun prepare() {
         batch.initShader(context)
@@ -62,10 +63,9 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
              }
          })
 
-         progressBar= GLProgressBar(300f,25f,80f,true)
+         progressBar= GLProgressBar(300f,25f,80f,true,atlas!!,"Expbar2","Expbar1")
          progressBar?.set(200f,700f)
-         progressBar?.roundedCorner(2f)
-         progressBar?.setForegroundColor(ColorRGBA(1f,0f,0f,0.7f))
+         progressBar?.setForegroundColor(ColorRGBA(1f,1f,1f,1f))
          progressBar?.setOnClickListener(object :OnClickListener{
              override fun onClick() {
 
@@ -82,7 +82,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
          labelDrawCall?.getConstraints()?.alignBelow(titleLabel!!)
          titleLayout.setItems(mutableListOf(titleLabel!!,labelDrawCall!!,fpsLabel!!))
 
-         linearLayout= LinearLayoutConstraint(getCanvasWidth(), getCanvasHeight(),atlas!!,"Background2")
+         linearLayout= LinearLayoutConstraint(null,getCanvasWidth(), getCanvasHeight(),atlas!!,"Background2")
          linearLayout?.setPosition(0f,0f)
          linearLayout?.setColor(ColorRGBA(1f,1f,1f,1f))
          progressBar?.getConstraints()?.layoutMarginBottom(20f)
@@ -97,11 +97,11 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
          progressBar?.getConstraints()?.alignBelow(labelSound!!)
          progressBar?.getConstraints()?.layoutMarginLeft(25f)
 
-         val scrollView=GLScrollLayout(getCanvasWidth(),300f,atlas!!,"Window3")
+         val scrollView=GLScrollLayout(getCanvasWidth(),350f,atlas!!,"Window2")
          scrollView.setBackgroundColor(ColorRGBA(1f,1f,1f,1f))
          scrollView.setScrollBarBackgroundFromAtlas("Button1")
          scrollView.setScrollBarProgressFromAtlas("Button2")
-         scrollView.setOrientation(GLScrollLayout.VERTICAL)
+         scrollView.setOrientation(GLScrollLayout.HORIZONTAL)
          val scrollList= mutableListOf<GLView>()
          scrollView.setItems(scrollList)
          scrollView.addOnSwipeEvent(object :GLOnSwipeEvent.OnSwipeListener{
@@ -110,7 +110,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
              }
          })
 
-         val gridView=GLGridLayout(scrollView,scrollView.width,scrollView.height,10,10)
+         val gridView=GLGridLayout(scrollView,scrollView.width,scrollView.height,4,20)
              gridView.setBackgroundColor(ColorRGBA.transparent)
              gridView.getConstraints().layoutMarginBottom(20f)
          val gridList= mutableListOf<GLView>()
@@ -119,13 +119,32 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
          gridView.setItems(gridList)
          scrollList.add(gridView)
          scrollView.setItems(scrollList)
-         linearLayout?.setItems(mutableListOf(titleLayout,scrollView,inner))
+
+         val paraScrollView=GLScrollLayout(getCanvasWidth(),300f,atlas!!,"Window1")
+              paraScrollView.setOrientation(GLScrollLayout.VERTICAL)
+         val paraInner=LinearLayoutConstraint(paraScrollView,paraScrollView.width,600f)
+             paraInner.setOrientation(LinearLayoutConstraint.VERTICAL)
+             paraInner.setColor(ColorRGBA.transparent)
+
+         labelParagraph= GLLabel(paraInner.width*0.8f,paraInner.height,candara,text.getText(),0.2f)
+         labelParagraph?.setBackgroundColor(ColorRGBA.transparent)
+         labelParagraph?.setCenterText(false)
+          paraInner.setItems(mutableListOf(labelParagraph!!))
+          paraScrollView.setItems(mutableListOf(paraInner))
+          paraScrollView.addOnSwipeEvent(object :GLOnSwipeEvent.OnSwipeListener{
+              override fun onSwipe() {
+
+              }
+          })
+
+         linearLayout?.setItems(mutableListOf(titleLayout,scrollView,inner,paraScrollView))
 
          getRenderer().getTouchController()?.addEvent(titleLabel!!)
          getRenderer().getTouchController()?.addEvent(imageCheckBox!!)
          getRenderer().getTouchController()?.addEvent(imageCheckBox!!)
          getRenderer().getTouchController()?.addEvent(progressBar!!)
          getRenderer().getTouchController()?.addEvent(scrollView)
+         getRenderer().getTouchController()?.addEvent(paraScrollView)
         text.set(100f,690f)
         text.setMaxWidth(600f)
         getRenderer().fpsCap(60)

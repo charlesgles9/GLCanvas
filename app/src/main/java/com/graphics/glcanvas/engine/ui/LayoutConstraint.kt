@@ -1,6 +1,7 @@
 package com.graphics.glcanvas.engine.ui
 
 import com.graphics.glcanvas.engine.maths.Vector2f
+import com.graphics.glcanvas.engine.structures.Text
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -131,6 +132,20 @@ open class LayoutConstraint(private val view:GLView) : Constraints() {
         applyCenterHorizontal()
     }
     companion object {
+        fun clipView(parentX:Float,parentY:Float,parentW:Float,parentH:Float
+                     ,viewX:Float,viewY:Float,viewW:Float,viewH:Float,text:Text?){
+            //account for layout margins
+            //y axis clip test
+            val lowerVisibleY=parentY+parentH*0.5f>viewY-viewH
+            val upperVisibleY=parentY-parentH*0.5f<viewY+viewH
+            //x axis clip test
+            val lowerVisibleX=parentX+parentW*0.5f>viewX-viewW
+            val upperVisibleX=parentX-parentW*0.5f<viewX+viewW
+
+            text?.setClipLower(parentX + (parentW * 0.5f), parentY + (parentH * 0.5f))
+            text?.setClipUpper(parentX - parentW* 0.5f, parentY - parentH * 0.5f)
+
+        }
          fun clipView(parent:GLView,view:GLView){
              //account for layout margins
              val topBottom=view.getConstraints().getMarginTop()-view.getConstraints().getMarginBottom()
@@ -187,8 +202,8 @@ open class LayoutConstraint(private val view:GLView) : Constraints() {
                        val width=child.width
                        val height=child.height
                        child.set(offset.x+(width+leftRight)*0.5f+(width)*c,offset.y+(height+topBottom)*0.5f+(height+topBottom)*r)
-                       maxWidth= max(child.getX()-offset.x+width*0.5f,maxWidth)
-                       maxHeight=max(child.getY()-offset.y+height*0.5f,maxHeight)
+                       maxWidth= max(child.getX()-offset.x+width,maxWidth)
+                       maxHeight=max(child.getY()-offset.y+height,maxHeight)
                    }
                }
               parent.setWidthPixels(maxWidth)

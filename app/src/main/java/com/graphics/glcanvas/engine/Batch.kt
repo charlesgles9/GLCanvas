@@ -63,7 +63,7 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
     private val rotation=Vector3f()
 
     // mesh data
-    private val BATCH_SIZE=1000
+    private val BATCH_SIZE=2000
     private var vertexes= FloatArray(BATCH_SIZE*VERTEX_COORDS_PER_VERTEX*4)
     private var indices=ShortArray(BATCH_SIZE*6)
     private var colors=FloatArray(BATCH_SIZE*COLOR_COORDS_PER_VERTEX*4)
