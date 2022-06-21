@@ -139,6 +139,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
               }
           })
 
+
          linearLayout?.setItems(mutableListOf(titleLayout,scrollView,inner,paraScrollView))
 
          getRenderer().getTouchController()?.addEvent(titleLabel!!)

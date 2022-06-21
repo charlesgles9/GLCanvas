@@ -15,11 +15,20 @@ class GLGridLayout(private val parent:GLView?,width:Float,height:Float,private v
     fun setColor(color: ColorRGBA){
         setBackgroundColor(color)
     }
+
     fun setItems(items:MutableList<GLView>){
         this.items=items
     }
+
     fun getItems():MutableList<GLView>{
         return items
+    }
+
+    override fun setEnabled(enable: Boolean) {
+        super.setEnabled(enable)
+        items.forEach {
+            it.setEnabled(enable)
+        }
     }
 
     override fun draw(batch: Batch) {

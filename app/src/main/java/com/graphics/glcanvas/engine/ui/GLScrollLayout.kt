@@ -176,6 +176,7 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
             else
              drawHorizontalProgress(batch,itemHeight)
     }
+
     override fun draw(batch: Batch) {
         super.draw(batch)
 
@@ -203,7 +204,8 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
 
     override fun onTouchEvent(event: MotionEvent):Boolean {
         super.onTouchEvent(event)
-        return onSwipeEvent?.onTouchEvent(event)!!
-
+        if(isEnabled())
+         return onSwipeEvent?.onTouchEvent(event)!!
+        return false
     }
 }

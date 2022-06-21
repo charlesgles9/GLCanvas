@@ -42,6 +42,13 @@ class RelativeLayoutConstraint(width:Float,height:Float):GLView(width ,height) {
         view.set(view.getX(),view.getY()+view.getConstraints().getMarginBottom())
     }
 
+    override fun setEnabled(enable: Boolean) {
+        super.setEnabled(enable)
+        items.forEach {
+            it.setEnabled(enable)
+        }
+    }
+
     override fun draw(batch: Batch) {
         super.draw(batch)
 

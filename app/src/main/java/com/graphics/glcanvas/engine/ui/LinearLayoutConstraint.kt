@@ -12,7 +12,6 @@ class LinearLayoutConstraint(private val parent:GLView?,width:Float,height:Float
     private var items= mutableListOf<GLView>()
     private var orientation= VERTICAL
     private var offset=Vector2f()
-
     constructor(parent:GLView?,width:Float,height:Float,atlas: TextureAtlas,name:String):this(parent,width, height){
         this.atlas=atlas
         this.name=name
@@ -32,17 +31,29 @@ class LinearLayoutConstraint(private val parent:GLView?,width:Float,height:Float
     fun setColor(color:ColorRGBA){
         setBackgroundColor(color)
     }
+
+
     fun setItems(items:MutableList<GLView>){
         this.items=items
         LayoutConstraint.groupItems(orientation,offset ,this,items)
     }
+
+
    fun getItems():MutableList<GLView>{
        return items
    }
+
     fun setOrientation(orientation:Int){
         this.orientation=orientation
     }
 
+
+    override fun setEnabled(enable: Boolean) {
+        super.setEnabled(enable)
+        items.forEach {
+                it.setEnabled(enable)
+        }
+    }
 
     override fun draw(batch: Batch) {
         super.draw(batch)

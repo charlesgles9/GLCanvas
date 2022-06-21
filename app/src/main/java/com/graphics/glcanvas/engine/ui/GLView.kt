@@ -52,6 +52,7 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
       private val thumb=30f
       private var centerText=true
       private var visible=true
+      private var enabled=true
       init {
           foreground.setColor(ColorRGBA(0f,0f,0f,0f))
           background.setWidth(width)
@@ -159,6 +160,14 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
 
     fun isVisible():Boolean{
         return visible
+    }
+
+    open fun setEnabled(enable:Boolean){
+        this.enabled=enable
+    }
+
+    fun isEnabled():Boolean{
+        return enabled
     }
       open fun set(x:Float, y:Float){
           position.set(x,y)
@@ -325,6 +334,7 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
 
     override fun onTouchEvent(event: MotionEvent):Boolean{
             onClickEvents.forEach{
+                if(enabled)
                 it.onTouchEvent(event)
            /* MotionEvent.ACTION_DOWN->{
                 if(contains(event.x,event.y))
