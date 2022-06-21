@@ -204,7 +204,7 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
 
     override fun onTouchEvent(event: MotionEvent):Boolean {
         super.onTouchEvent(event)
-        if(isEnabled())
+        if(isEnabled()&&isVisible())
          return onSwipeEvent?.onTouchEvent(event)!!
         return false
     }

@@ -334,7 +334,7 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
 
     override fun onTouchEvent(event: MotionEvent):Boolean{
             onClickEvents.forEach{
-                if(enabled)
+                if(enabled&&isVisible())
                 it.onTouchEvent(event)
            /* MotionEvent.ACTION_DOWN->{
                 if(contains(event.x,event.y))
