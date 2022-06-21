@@ -226,8 +226,8 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
           else
               text?.set(position.x-width*0.45f,position.y-height*0.45f)
 
-          LayoutConstraint.clipView(position.x,position.y,width,height,
-                                    text?.position?.x?:0f,text?.position?.y?:0f,text?.width?:0f,text?.height?:0f,text)
+         // LayoutConstraint.clipView(position.x,position.y,width,height,
+                                    //text?.position?.x?:0f,text?.position?.y?:0f,text?.width?:0f,text?.height?:0f,text)
            text?.draw(batch)
          //click events for checkbox
           if(isCheckBox)

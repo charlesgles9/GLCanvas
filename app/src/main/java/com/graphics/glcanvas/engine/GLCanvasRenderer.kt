@@ -14,7 +14,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
     private val camera=Camera2D(1.0f)
     private val candara=Font("fonts/candara.fnt",context)
     private val harrington=Font("fonts/harrington.fnt",context)
-    private val text=Text("My test paragraph.\n\nDead target zombies and monsters. Charge bro charge and let's kill every one of the scums.Let me test my skills using hardness and courage I am very holy.This is an amazing project good learning experience i am down for amazing work. Hello world people! it takes alot of hard work and commitment to be a good software engineer. one day i know i will triumph and rise above mediocrity. Most people live average mediocre ignorant lives and i must fight this thing inside me that makes me extremely lazy and foolish. I don't come from a rich background but i know I will one day rise to glory. This is the one struggle that i must win because I have tried so many times and failed over and over again. I promised myself that one day I will have a victory at last, all these years of struggle will pay off I can feel it. I must win!",0.3f,harrington)
+    private val text=Text("Hello friend don't you dare go hollow. It's very easy to give up after you've fought the same battles over and over again with no success. Keep you loins up like a man and keep on fighting.\n\n Keep thine eyes on the prize brother we will win hopefully, and if we lose at least we tried rather than be like the crestfallen warrior.",0.3f,harrington)
     private var atlas:TextureAtlas?=null
     private var titleLabel:GLLabel?=null
     private var fpsLabel:GLLabel?=null
@@ -97,7 +97,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
          progressBar?.getConstraints()?.alignBelow(labelSound!!)
          progressBar?.getConstraints()?.layoutMarginLeft(25f)
 
-         val scrollView=GLScrollLayout(getCanvasWidth(),350f,atlas!!,"Window2")
+         val scrollView=GLScrollLayout(getCanvasWidth(),180f,atlas!!,"Window2")
          scrollView.setBackgroundColor(ColorRGBA(1f,1f,1f,1f))
          scrollView.setScrollBarBackgroundFromAtlas("Button1")
          scrollView.setScrollBarProgressFromAtlas("Button2")
@@ -110,19 +110,21 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
              }
          })
 
-         val gridView=GLGridLayout(scrollView,scrollView.width,scrollView.height,4,20)
+         val gridView=GLGridLayout(scrollView,scrollView.width,scrollView.height,2,20)
              gridView.setBackgroundColor(ColorRGBA.transparent)
              gridView.getConstraints().layoutMarginBottom(20f)
          val gridList= mutableListOf<GLView>()
-         for(i in 0 until 100)
+         for(i in 0 until 40)
              gridList.add(genLabel("label"))
          gridView.setItems(gridList)
          scrollList.add(gridView)
          scrollView.setItems(scrollList)
 
-         val paraScrollView=GLScrollLayout(getCanvasWidth(),300f,atlas!!,"Window1")
+         val paraScrollView=GLScrollLayout(getCanvasWidth(),400f,atlas!!,"Window1")
               paraScrollView.setOrientation(GLScrollLayout.VERTICAL)
-         val paraInner=LinearLayoutConstraint(paraScrollView,paraScrollView.width,600f)
+         paraScrollView.setScrollBarBackgroundColor(ColorRGBA(1f,0f,0f,1f))
+
+         val paraInner=LinearLayoutConstraint(paraScrollView,paraScrollView.height,600f)
              paraInner.setOrientation(LinearLayoutConstraint.VERTICAL)
              paraInner.setColor(ColorRGBA.transparent)
 

@@ -6,8 +6,10 @@ import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.maths.Vector2f
 import com.graphics.glcanvas.engine.structures.RectF
 import com.graphics.glcanvas.engine.utils.TextureAtlas
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.round
 
 class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
 
@@ -20,7 +22,7 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
     private val scrollBarBackground=RectF()
     private var scrollBarHeight=10f
     private var scrollBarWidth=10f
-    private var enableScrollBar=false
+    private var enableScrollBar=true
 
     companion object{
         const val VERTICAL=0
@@ -122,44 +124,46 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
     }
 
 
-    private fun drawHorizontalProgress(batch: Batch,lastY: Float,oHeight: Float){
-        val minHeight=getY()+oHeight*0.5f+height*0.5f
-        val farHeight=min(minHeight, max(lastY+oHeight*0.5f-height,0.1f))
+    private fun drawHorizontalProgress(batch: Batch,oHeight: Float){
+        val minHeight=oHeight-height
+        val farHeight= max(offset.y*-1f,1f)
         // were in 2D space is this progress bar located relative to the last scrolling position
-        val farPercent=(1.0f-farHeight/minHeight)
+        val farPercent=(farHeight/minHeight)
         // how large is the scroll progress bar relative to the background progress bar
-        val scrollPercent=height/minHeight
+        val scrollPercent=height/oHeight
         scrollBarBackground.setWidth(scrollBarWidth)
         scrollBarProgress.setWidth(scrollBarWidth*0.8f)
         scrollBarBackground.setHeight(height*0.8f)
         scrollBarProgress.setHeight(scrollBarBackground.getHeight()*scrollPercent)
         scrollBarBackground.set(getX()+width*0.5f-scrollBarWidth,getY())
-        val sH=scrollBarBackground.getHeight()-scrollBarProgress.getHeight()
+        val sH=scrollBarBackground.getHeight()
         val offset=(sH)*farPercent
-        val py=scrollBarBackground.getY()-sH*0.5f+offset
-
+        var py=scrollBarBackground.getY()+offset-scrollBarProgress.getHeight()*0.5f
+            py= max(scrollBarBackground.getY()-scrollBarBackground.getHeight()*0.5f+scrollBarProgress.getHeight()*0.5f,py)
+            py= min(scrollBarBackground.getY()+scrollBarBackground.getHeight()*0.5f-scrollBarProgress.getHeight()*0.5f,py)
         scrollBarProgress.set(scrollBarBackground.getX(),py)
         batch.draw(scrollBarBackground)
         batch.draw(scrollBarProgress)
 
     }
 
-    private fun drawVerticalProgress(batch: Batch,lastX:Float,oWidth: Float){
-        val minWidth=getX()+oWidth*0.5f+width*0.5f
-        val farWidth=min(minWidth, max(lastX+oWidth*0.5f-width,1f))
-        // were in 2D space is this progress bar located relative to the last scrolling position
-        val farPercent=(1.0f-farWidth/minWidth)
+    private fun drawVerticalProgress(batch: Batch,oWidth: Float){
+        val minWidth=oWidth-width
         // how large is the scroll progress bar relative to the background progress bar
-        val scrollPercent=width/minWidth
+        val scrollPercent=width/oWidth
+        val farHeight=min(minWidth,max(offset.x*-1f,1f))
+        // were in 2D space is this progress bar located relative to the last scrolling position
+        val farPercent=(farHeight/minWidth)
+        scrollBarBackground.setWidth(width)
+        scrollBarProgress.setWidth(scrollBarBackground.getWidth()*scrollPercent)
         scrollBarBackground.setHeight(scrollBarHeight)
         scrollBarProgress.setHeight(scrollBarHeight*0.8f)
-        scrollBarBackground.setWidth(width*0.8f)
-        scrollBarProgress.setWidth(scrollBarBackground.getWidth()*scrollPercent)
         scrollBarBackground.set(getX(),getY()+height*0.5f-scrollBarHeight)
-        val sW=scrollBarBackground.getWidth()-scrollBarProgress.getWidth()*1.0f
-        val offset=(sW)*farPercent
-        val px=scrollBarBackground.getX()-sW*0.5f+offset
-
+        val sW=scrollBarBackground.getWidth()
+        val offset=sW*farPercent
+        var px=scrollBarBackground.getX()-scrollBarBackground.getWidth()*0.5f+offset
+            px= max(scrollBarBackground.getX()-scrollBarBackground.getWidth()*0.5f+scrollBarProgress.getWidth()*0.5f,px)
+            px= min(scrollBarBackground.getX()+scrollBarBackground.getWidth()*0.5f-scrollBarProgress.getWidth()*0.5f,px)
         scrollBarProgress.set(px,scrollBarBackground.getY())
         batch.draw(scrollBarBackground)
         batch.draw(scrollBarProgress)
@@ -168,10 +172,9 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
     private fun drawScrollBar(batch: Batch,itemWidth:Float,itemHeight:Float){
         val last=items.last()
          if(orientation== HORIZONTAL)
-         drawVerticalProgress(batch,last.getX(),itemWidth)
-        else drawHorizontalProgress(batch,last.getY(),itemHeight)
-
-
+             drawVerticalProgress(batch,itemWidth)
+            else
+             drawHorizontalProgress(batch,itemHeight)
     }
     override fun draw(batch: Batch) {
         super.draw(batch)
@@ -192,6 +195,7 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
              it.draw(batch)
         }
 
+        if(enableScrollBar)
         drawScrollBar(batch,itemWidth,itemHeight)
 
 
