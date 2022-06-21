@@ -25,7 +25,7 @@ class GLCanvasSurfaceView(context: Context, private val renderer: GLCanvasRender
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         controller.getEvents().forEach{
-            it.onTouchEvent(event)
+             it.onTouchEvent(event)
         }
         return true
     }

@@ -172,6 +172,11 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
           position.y=y
       }
 
+    fun setZ(z:Float){
+        background.setZ(z)
+        foreground.setZ(z)
+    }
+
     protected fun positionBars(horizontal: Boolean,progress:Float,max:Float){
         if(horizontal) {
             getForeground().setWidth(width * ((progress+1) / (max+1)))
@@ -318,8 +323,8 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
         onClickEvents.add(OnClickEvent(onclick,this))
     }
 
-    override fun onTouchEvent(event: MotionEvent) {
-            onClickEvents.forEach {
+    override fun onTouchEvent(event: MotionEvent):Boolean{
+            onClickEvents.forEach{
                 it.onTouchEvent(event)
            /* MotionEvent.ACTION_DOWN->{
                 if(contains(event.x,event.y))
@@ -343,6 +348,7 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
             }*/
 
         }
+        return true
     }
 
 

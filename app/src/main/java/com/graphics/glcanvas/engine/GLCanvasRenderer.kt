@@ -173,6 +173,8 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         GLES32.glClear(GLES32.GL_DEPTH_BUFFER_BIT or  GLES32.GL_COLOR_BUFFER_BIT)
         GLES32.glClearColor(0.5f,0.5f,0.5f,0.5f)
 
+
+
         // draw ui
         batch.setMode(BatchQueue.UNORDER)
         batch.begin(camera)

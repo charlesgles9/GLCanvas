@@ -12,6 +12,7 @@ open class RectF :Vertex {
     private var clipUpper=Vector2f(Float.MIN_VALUE, Float.MIN_VALUE)
     private var clipLower=Vector2f(Float.MAX_VALUE, Float.MAX_VALUE)
     private var animator:SpriteAnimator?=null
+    private var z=0.0f
     constructor():super(4,4){}
     constructor(x:Float,y:Float,width:Float,height:Float):super(4,4){
         this.width=width
@@ -24,6 +25,10 @@ open class RectF :Vertex {
         position.setValueY(y)
     }
 
+
+    fun setZ(z:Float){
+        this.z=z
+    }
     fun setClipUpper(upperX:Float,upperY:Float){
         clipUpper.set(upperX,upperY)
     }
@@ -48,6 +53,9 @@ open class RectF :Vertex {
         return position.y
     }
 
+    open fun getZ():Float{
+        return z
+    }
     open fun setWidth(width: Float){
         this.width=width
     }

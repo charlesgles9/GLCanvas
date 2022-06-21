@@ -38,7 +38,7 @@ class Camera2D(height: Float) : Camera() {
         val ratio=width/height
         val left=0.0f
         val top=0.0f
-        val near=1.0f
+        val near=-1.0f
         val far=10.0f
         Matrix.orthoM(getProjectionMatrix(),0,left, width, height,top,near, far)
     }

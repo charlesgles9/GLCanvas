@@ -230,6 +230,7 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
         val x=rect.getX()
         val y=rect.getY()
 
+
         //top left
         vertexes[vcount++]=-sizeX+x
         vertexes[vcount++]=sizeY+y
@@ -309,23 +310,24 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
         val sizeY=rect.getHeight()/2
         val x=rect.getX()
         val y=rect.getY()
+        val z=rect.getZ()
 
         //top left
         vertexes[vcount++]=-sizeX+x
         vertexes[vcount++]=sizeY+y
-        vertexes[vcount++]=0.0f
+        vertexes[vcount++]=z
         //bottom left
         vertexes[vcount++]=-sizeX+x
         vertexes[vcount++]=-sizeY+y
-        vertexes[vcount++]=0.0f
+        vertexes[vcount++]=z
         //bottom right
         vertexes[vcount++]=sizeX+x
         vertexes[vcount++]=-sizeY+y
-        vertexes[vcount++]=0.0f
+        vertexes[vcount++]=z
         //top right
         vertexes[vcount++]=sizeX+x
         vertexes[vcount++]=sizeY+y
-        vertexes[vcount++]=0.0f
+        vertexes[vcount++]=z
 
         clipAttribute[qcount++]=rect.getClipUpper().x
         clipAttribute[qcount++]=rect.getClipUpper().y

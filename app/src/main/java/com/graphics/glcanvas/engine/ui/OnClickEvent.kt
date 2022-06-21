@@ -13,11 +13,12 @@ class OnClickEvent(private val listener:OnClickListener,
         return view.contains(x,y)
     }
 
-    override fun onTouchEvent(event: MotionEvent) {
+    override fun onTouchEvent(event: MotionEvent):Boolean {
          if(event.action ==MotionEvent.ACTION_DOWN){
              position.set(event.x-view.getThumbSize()/2,event.y-view.getThumbSize()/2)
              ScreenRatio.getInstance().project(position)
              pointerDown= contains(position.x,position.y)
+                 return true
          }else if(event.action ==MotionEvent.ACTION_UP&&pointerDown){
              position.set(-1f,-1f)
              listener.onClick()
@@ -28,7 +29,9 @@ class OnClickEvent(private val listener:OnClickListener,
              position.set(event.x-view.getThumbSize()/2,event.y-view.getThumbSize()/2)
              ScreenRatio.getInstance().project(position)
              pointerDown=contains(position.x,position.y)
+             return true
          }
+        return false
     }
 
     fun getPointerDown():Boolean{

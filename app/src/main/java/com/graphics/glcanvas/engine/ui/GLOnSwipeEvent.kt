@@ -9,7 +9,7 @@ import kotlin.math.abs
 
 class GLOnSwipeEvent (private val listener: OnSwipeListener,
                       private val view:GLView): Touch {
-    private val threshHold=1.3f
+    private val threshHold=1.0f
     private val velocity=Vector2f(0f,0f)
     private var origin=Vector2f(-1f,-1f)
     private var move=Vector2f(-1f,-1f)
@@ -18,7 +18,7 @@ class GLOnSwipeEvent (private val listener: OnSwipeListener,
      var LEFT=false
      var RIGHT=false
     companion object {
-        var friction = 0.95f
+        var friction = 0.96f
     }
     private var pointerDown=false
     fun contains(x:Float,y:Float):Boolean{
@@ -34,13 +34,12 @@ class GLOnSwipeEvent (private val listener: OnSwipeListener,
     }
 
 
-    override fun onTouchEvent(event: MotionEvent) {
+    override fun onTouchEvent(event: MotionEvent):Boolean {
         if(event.action ==MotionEvent.ACTION_DOWN){
             origin.set(event.x-view.getThumbSize()/2,event.y-view.getThumbSize()/2)
             ScreenRatio.getInstance().project(origin)
             pointerDown= contains(origin.x,origin.y)
-            velocity.set(0f,0f)
-           // println("Down!")
+
         }else if(event.action ==MotionEvent.ACTION_UP&&pointerDown){
             origin.set(-1f,-1f)
             pointerDown=false
@@ -63,21 +62,12 @@ class GLOnSwipeEvent (private val listener: OnSwipeListener,
                 DOWN=velocity.y>0
                 LEFT=velocity.x<0
                 RIGHT=velocity.x>0
-              //  println("LEFT $LEFT")
-               // println("RIGHT $RIGHT")
-                //println("UP: $UP")
-                //println("DOWN: $DOWN")
-                //origin.set(move)
-              /*  println("Move")
-                move.print()
-                println("Origin")
-                origin.print()
-                println("Velocity")*/
-              //  velocity.print()
+
             }
-           // println("Swiped!")
+
 
         }
+        return false
     }
 
     interface OnSwipeListener{

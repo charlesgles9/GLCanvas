@@ -110,11 +110,11 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
         val first=items.first()
         val last=items.last()
         val vx=(onSwipeEvent?.getVelocity()?.x?:0f)
-        if((first.getX()-first.width+vx)<getX()-width*0.5f&&onSwipeEvent?.LEFT==true){
+        if((first.getX()-first.width*0.5f+vx)<getX()-width*0.5f&&onSwipeEvent?.LEFT==true){
             offset.sub(vx, 0f)
             onSwipeEvent?.getVelocity()?.multiply(GLOnSwipeEvent.friction)
         }else
-            if((last.getX()+last.width+vx)>getX()+width*0.5f&&onSwipeEvent?.RIGHT==true){
+            if((last.getX()+last.width*0.5f+vx)>getX()+width*0.5f&&onSwipeEvent?.RIGHT==true){
                 offset.sub(vx, 0f)
                 onSwipeEvent?.getVelocity()?.multiply(GLOnSwipeEvent.friction)
                 //@debug  println("last "+last.getY()+" origin "+getY()+height*0.5f+" velocity "+vy)
@@ -201,9 +201,9 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
 
     }
 
-    override fun onTouchEvent(event: MotionEvent) {
+    override fun onTouchEvent(event: MotionEvent):Boolean {
         super.onTouchEvent(event)
-        onSwipeEvent?.onTouchEvent(event)
+        return onSwipeEvent?.onTouchEvent(event)!!
 
     }
 }
