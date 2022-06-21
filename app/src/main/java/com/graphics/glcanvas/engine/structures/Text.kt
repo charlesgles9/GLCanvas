@@ -4,7 +4,6 @@ import com.graphics.glcanvas.engine.Batch
 import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.maths.Vector2f
 import com.graphics.glcanvas.engine.utils.TextureLoader
-import kotlin.concurrent.thread
 import kotlin.math.max
 
 class Text(private var text:String,private var fontSize:Float,private var font: Font) {
@@ -84,13 +83,6 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
         }
     }
 
-    fun setX(x:Float){
-        this.position.x=x
-    }
-
-    fun setY(y:Float){
-        this.position.y=y
-    }
 
     fun setMaxWidth(maxWidth:Float){
         this.maxWidth=maxWidth
@@ -101,13 +93,6 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
         this.maxHeight=maxHeight
     }
 
-    fun getMaxWidth():Float{
-        return maxWidth
-    }
-
-    fun getMaxHeight():Float{
-        return maxHeight
-    }
     fun setFontSize(fontSize: Float){
         this.fontSize=fontSize
         initWordList()

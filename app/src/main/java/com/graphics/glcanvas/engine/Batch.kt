@@ -63,7 +63,7 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
     private val rotation=Vector3f()
 
     // mesh data
-    private val BATCH_SIZE=2000
+    private val BATCH_SIZE=1000
     private var vertexes= FloatArray(BATCH_SIZE*VERTEX_COORDS_PER_VERTEX*4)
     private var indices=ShortArray(BATCH_SIZE*6)
     private var colors=FloatArray(BATCH_SIZE*COLOR_COORDS_PER_VERTEX*4)
@@ -167,7 +167,7 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
             }
              batchQueue.addVertex(entity,type)
         }
-        num_draw_calls+=batchQueue.getBatchedQueue().size
+
         while (!batchQueue.getBatchedQueue().isEmpty()){
             val bucket=batchQueue.getBatchedQueue().remove()
             val list=bucket.getBatchList()
@@ -181,16 +181,32 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
                  textWidth=char.getInnerWidth()
                  outlineColor.set(char.getOutlineColor())
              }
-               for(i in 0 until list.size){
-                   when(bucket.getPrimitiveType()){
-                       Primitives.QUAD ->  addRectF(i, list[i])
-                       Primitives.TRIANGLE -> addPolygon(i, list[i])
-                       Primitives.CIRCLE ->  addCircle(i,list[i])
-                       Primitives.LINE ->  addLine(i,list[i])
-                       Primitives.POLYLINE -> addPolyLine(i, list[i])
+               var i=0
+               for(vertex in list){
+                   if(vcount>=BATCH_SIZE*12){
+                       primitiveType = when(bucket.getPrimitiveType()){
+                           Primitives.QUAD -> Primitives.QUAD
+                           Primitives.TRIANGLE -> Primitives.TRIANGLE
+                           Primitives.CIRCLE -> Primitives.CIRCLE
+                           Primitives.LINE -> Primitives.LINE
+                           Primitives.POLYLINE -> Primitives.POLYLINE
+                       }
+                       draw()
+                       reset()
+                       i=0
+
                    }
+                   when(bucket.getPrimitiveType()){
+
+                       Primitives.QUAD ->  addRectF(i, vertex)
+                       Primitives.TRIANGLE -> addPolygon(i, vertex)
+                       Primitives.CIRCLE ->  addCircle(i,vertex)
+                       Primitives.LINE ->  addLine(i,vertex)
+                       Primitives.POLYLINE -> addPolyLine(i, vertex)
+                   }
+                   i++
                }
-            if(list.isNotEmpty()) {
+            if(i!=0) {
                 primitiveType = when(bucket.getPrimitiveType()){
                     Primitives.QUAD -> Primitives.QUAD
                     Primitives.TRIANGLE -> Primitives.TRIANGLE
@@ -203,6 +219,7 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
 
         }
     }
+
 
 
 
@@ -663,7 +680,7 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
         Matrix.multiplyMM(mMVPMatrix,0,mViewMatrix,0,mModelMatrix,0)
         Matrix.multiplyMM(mMVPMatrix,0,camera?.getProjectionMatrix(),0,mMVPMatrix,0)
         render()
-
+         num_draw_calls++
 
 
     }
