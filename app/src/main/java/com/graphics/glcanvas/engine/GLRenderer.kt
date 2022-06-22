@@ -37,6 +37,10 @@ class GLRenderer(private val updatable: Updatable) : GLSurfaceView.Renderer {
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
 
         GLES32.glViewport(0,0,width, height)
+        GLES32.glEnable(GLES32.GL_DEPTH_TEST)
+        GLES32.glDepthFunc(GLES32.GL_LEQUAL)
+        GLES32.glDepthMask(true)
+
     }
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {

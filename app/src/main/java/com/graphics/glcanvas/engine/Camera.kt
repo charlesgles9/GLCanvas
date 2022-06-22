@@ -10,7 +10,7 @@ open class Camera {
     // projects the scene to a 2D viewPort
     private val projectionMatrix=FloatArray(16)
     //eye position
-    private val eye= Vector3f(0.0f,0.0f,1.0f)
+    private val eye= Vector3f(0.0f,0.0f,10.0f)
     //we are looking towards the distance
     private val lookAt= Vector3f(ORIGIN)
     // where the head is pointing towards the camera

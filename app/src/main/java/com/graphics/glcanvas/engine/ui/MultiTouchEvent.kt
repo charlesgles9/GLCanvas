@@ -31,9 +31,6 @@ class MultiTouchEvent(private val listener:OnMultiTouchListener,private val rect
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
       val action=event.actionMasked
-      val points=event.pointerCount
-
-      println(points)
               val i=event.actionIndex
               val x=event.getX(i)-thumb*0.5f
               val y=event.getY(i)-thumb*0.5f

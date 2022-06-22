@@ -12,7 +12,7 @@ import com.graphics.glcanvas.engine.utils.*
 class GLCanvasRenderer(private val context: Context,width: Float, height: Float) : GLRendererWrapper(width, height) {
 
     private val batch = Batch(width,height)
-    private val camera=Camera2D(1.0f)
+    private val camera=Camera2D(10.0f)
     private val candara=Font("fonts/candara.fnt",context)
     private val harrington=Font("fonts/harrington.fnt",context)
     private val text=Text("Hello friend don't you dare go hollow. It's very easy to give up after you've fought the same battles over and over again with no success. Keep you loins up like a man and keep on fighting.\n\n Keep thine eyes on the prize brother we will win hopefully, and if we lose at least we tried rather than be like the crestfallen warrior.",0.3f,harrington)
@@ -47,6 +47,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
 
              }
          })
+
 
          fpsLabel= GLLabel(200f,60f,candara,"FPS: 60",0.3f)
          fpsLabel?.setBackgroundColor(ColorRGBA.transparent)
@@ -178,6 +179,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
     override fun draw() {
         GLES32.glClear(GLES32.GL_DEPTH_BUFFER_BIT or  GLES32.GL_COLOR_BUFFER_BIT)
         GLES32.glClearColor(0.5f,0.5f,0.5f,0.5f)
+
         // draw ui
         batch.setMode(BatchQueue.UNORDER)
         batch.begin(camera)
