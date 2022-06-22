@@ -39,6 +39,7 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
       protected var name:String?=null
       protected var text:Text?=null
       private val onClickEvents= mutableListOf<OnClickEvent>()
+      private val onMultiTouchEvents= mutableListOf<MultiTouchEvent>()
     // layout constraints
       private val constraint=LayoutConstraint(this)
     //primary and secondary texture coordinates for click effects
@@ -226,6 +227,11 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
                  progressChanged(it.getPosition())
               }
           }
+          // if there's a multi touch event instead
+          onMultiTouchEvents.forEach {
+              clicked=it.getTouchDown()
+
+          }
           background.set(position.x,position.y)
           foreground.set(position.x+fOffset.x,position.y+fOffset.y)
           if(visible) {
@@ -332,10 +338,20 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
         onClickEvents.add(OnClickEvent(onclick,this))
     }
 
+    fun setMultiTouchListener(touch:MultiTouchEvent.OnMultiTouchListener){
+        onMultiTouchEvents.add(MultiTouchEvent(touch,background))
+    }
+
     override fun onTouchEvent(event: MotionEvent):Boolean{
+
+        onMultiTouchEvents.forEach {
+            if(enabled&&isVisible())
+                it.onTouchEvent(event)
+        }
             onClickEvents.forEach{
                 if(enabled&&isVisible())
                 it.onTouchEvent(event)
+
            /* MotionEvent.ACTION_DOWN->{
                 if(contains(event.x,event.y))
                    background.setColor(ripple)

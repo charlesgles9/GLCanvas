@@ -3,6 +3,7 @@ package com.graphics.glcanvas.engine
 import android.content.Context
 import android.opengl.GLES32
 import com.graphics.glcanvas.engine.maths.ColorRGBA
+import com.graphics.glcanvas.engine.maths.Vector2f
 import com.graphics.glcanvas.engine.structures.*
 import com.graphics.glcanvas.engine.ui.*
 import com.graphics.glcanvas.engine.ui.OnClickEvent.OnClickListener
@@ -37,8 +38,12 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
 
          titleLabel= GLLabel(380f,100f, atlas!!,"Textfield2",candara,"HELLO GUI!",0.3f )
          titleLabel?.setRippleColor(ColorRGBA(0f,1f,0.1f,0.5f))
-         titleLabel?.setOnClickListener(object :OnClickListener{
-             override fun onClick() {
+         titleLabel?.setMultiTouchListener(object :MultiTouchEvent.OnMultiTouchListener{
+             override fun onTouch(vector2f: Vector2f) {
+
+             }
+
+             override fun onRelease() {
 
              }
          })
@@ -173,9 +178,6 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
     override fun draw() {
         GLES32.glClear(GLES32.GL_DEPTH_BUFFER_BIT or  GLES32.GL_COLOR_BUFFER_BIT)
         GLES32.glClearColor(0.5f,0.5f,0.5f,0.5f)
-
-
-
         // draw ui
         batch.setMode(BatchQueue.UNORDER)
         batch.begin(camera)
