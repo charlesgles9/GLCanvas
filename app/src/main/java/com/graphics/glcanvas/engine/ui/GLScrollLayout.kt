@@ -29,12 +29,16 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
         const val HORIZONTAL=1
     }
     constructor(width:Float, height:Float, atlas: TextureAtlas, name:String):this(width, height){
-        this.atlas=atlas
-        this.name=name
-        setBackgroundTextureAtlas(atlas)
-        setPrimaryImage(name)
-        setBackgroundFrame(name)
+        setBackgroundAtlas(atlas, name)
     }
+
+     fun setBackgroundAtlas(atlas: TextureAtlas, name:String){
+         this.atlas=atlas
+         this.name=name
+         setBackgroundTextureAtlas(atlas)
+         setPrimaryImage(name)
+         setBackgroundFrame(name)
+     }
 
     fun showScrollBar(enableScrollBar:Boolean){
         this.enableScrollBar=enableScrollBar
@@ -78,6 +82,20 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
 
     }
 
+    override fun setVisibility(visible: Boolean) {
+        super.setVisibility(visible)
+        for(view in items){
+            view.setVisibility(visible)
+        }
+    }
+    override fun setZ(z: Float) {
+        super.setZ(z)
+        scrollBarProgress.setZ(z)
+        scrollBarBackground.setZ(z)
+        items.forEach{
+            it.setZ(z)
+        }
+    }
     fun setOrientation(orientation:Int){
         this.orientation=orientation
     }
@@ -130,7 +148,9 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
         // were in 2D space is this progress bar located relative to the last scrolling position
         val farPercent=(farHeight/minHeight)
         // how large is the scroll progress bar relative to the background progress bar
-        val scrollPercent=height/oHeight
+        var scrollPercent=height/minHeight
+        if(scrollPercent>1.0f)
+            scrollPercent=1.0f-(scrollPercent-1.0f)
         scrollBarBackground.setWidth(scrollBarWidth)
         scrollBarProgress.setWidth(scrollBarWidth*0.8f)
         scrollBarBackground.setHeight(height*0.8f)
@@ -150,10 +170,12 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
     private fun drawVerticalProgress(batch: Batch,oWidth: Float){
         val minWidth=oWidth-width
         // how large is the scroll progress bar relative to the background progress bar
-        val scrollPercent=width/oWidth
+        var scrollPercent=width/minWidth
         val farHeight=min(minWidth,max(offset.x*-1f,1f))
         // were in 2D space is this progress bar located relative to the last scrolling position
         val farPercent=(farHeight/minWidth)
+        if(scrollPercent>1.0f)
+            scrollPercent=1.0f
         scrollBarBackground.setWidth(width)
         scrollBarProgress.setWidth(scrollBarBackground.getWidth()*scrollPercent)
         scrollBarBackground.setHeight(scrollBarHeight)
@@ -189,14 +211,16 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
         LayoutConstraint.groupItems(orientation,offset ,this,items)
         var itemWidth=0f
         var itemHeight=0f
+        if(isVisible())
         items.forEach {
             LayoutConstraint.clipView(this,it)
             itemWidth+=it.width
             itemHeight+=it.height
              it.draw(batch)
         }
-
-        if(enableScrollBar)
+        scrollBarBackground.setConnerRadius(5f)
+        scrollBarProgress.setConnerRadius(5f)
+        if(enableScrollBar&&isVisible())
         drawScrollBar(batch,itemWidth,itemHeight)
 
 
@@ -205,7 +229,7 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
     override fun onTouchEvent(event: MotionEvent):Boolean {
         super.onTouchEvent(event)
         if(isEnabled()&&isVisible())
-         return onSwipeEvent?.onTouchEvent(event)!!
-        return false
+          onSwipeEvent?.onTouchEvent(event)!!
+        return true
     }
 }

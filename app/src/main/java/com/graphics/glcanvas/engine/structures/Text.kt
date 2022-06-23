@@ -3,13 +3,14 @@ package com.graphics.glcanvas.engine.structures
 import com.graphics.glcanvas.engine.Batch
 import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.maths.Vector2f
+import com.graphics.glcanvas.engine.maths.Vector3f
 import com.graphics.glcanvas.engine.utils.TextureLoader
 import kotlin.math.max
 
 class Text(private var text:String,private var fontSize:Float,private var font: Font) {
     private val words=ArrayList<Word>()
     private val color=ColorRGBA()
-    val position=Vector2f()
+    val position=Vector3f()
     private var outline=ColorRGBA()
     private var clipUpper=Vector2f(Float.MIN_VALUE, Float.MIN_VALUE)
     private var clipLower=Vector2f(Float.MAX_VALUE, Float.MAX_VALUE)
@@ -19,6 +20,7 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
     private var borderEdge=0f
     private var maxWidth=Float.MAX_VALUE
     private var maxHeight=Float.MAX_VALUE
+    private var visible=true
     private var paragraphs= mutableListOf<MutableList<String>>()
     var width=0f
     var height=0f
@@ -74,10 +76,10 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
         cursor.addX(space*fontSize)
     }
 
-    fun set(x:Float,y:Float){
+    fun set(x:Float,y:Float,z:Float){
         // update only if necessary
-        if(x!=position.x||position.y!=y) {
-            this.position.set(x, y)
+        if(x!=position.x||position.y!=y||position.z!=z) {
+            this.position.set(x, y,z)
             initWordList()
 
         }
@@ -152,9 +154,16 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
         this.borderEdge=borderEdge
     }
 
+    fun setVisibility(visible:Boolean){
+        this.visible=visible
+    }
+
+    fun isVisible():Boolean{
+        return visible
+    }
     fun draw(batch: Batch){
         val id=TextureLoader.getInstance().getTexture(font.getTextureAtlasPath())
-
+        if(visible)
         words.forEach { word->
             word.getCharacter().forEach {
                 it.getTexture().setId(id)

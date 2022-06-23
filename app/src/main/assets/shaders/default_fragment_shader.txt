@@ -15,8 +15,14 @@ uniform float textWidth;
 uniform float textBorderWidth;
 uniform float textBorderEdge;
 uniform vec3 outlineColor;
-vec2 pixel_min(float ySrc,float xSrc,float yEdge,float xEdge){
-  return vec2(1.0-step(xSrc,xEdge),1.0-step(ySrc,yEdge));
+
+float roundedEdge(vec2 pos,vec2 center,vec2 size,float radius,float thickness){
+    float hyp=sqrt(size.x*size.x+size.y*size.y);
+    float maxHyp=hyp-radius*0.5;
+    vec2 pd=abs(pos-center);
+    float pd_hyp=sqrt(pd.x*pd.x+pd.y*pd.y);
+    float max_pd_hyp=pd_hyp;
+    return 1.0-min(step(maxHyp,max_pd_hyp)*radius,1.0);
 }
 
 void main(){
@@ -45,58 +51,20 @@ void main(){
             // upper clip X
          float booleanUpperX=1.0-step(src.x,a_trim.x);
          float clip=booleanLowerX*booleanUpperX*booleanLowerY*booleanUpperY;
-
+         float quadV=1.0;
   /* if its a quad test if it has rounded corners
     ignore text objects since texts are also quads*/
- if(a_isQuad==1&&isText==0){
-  topLeft.x=pos.x-min_v.x;
-  topLeft.y=pos.y-min_v.y;
-  topRight.x=pos.x+min_v.x;
-  topRight.y=pos.y-min_v.y;
-  bottomLeft.x=pos.x-min_v.x;
-  bottomLeft.y=pos.y+min_v.y;
-  bottomRight.x=pos.x+min_v.x;
-  bottomRight.y=pos.y+min_v.y;
-
-  vec2 diff_topLeft=src-topLeft;
-  vec2 diff_topRight=src-topRight;
-  vec2 diff_bottomLeft=src-bottomLeft;
-  vec2 diff_bottomRight=src-bottomRight;
-
- // test if this pixel is within the radius region
-  vec2 topLeft_ppx_min=pixel_min(src.y,src.x,topLeft.y,topLeft.x);
-  vec2 topRight_ppx_min=pixel_min(src.y,topRight.x,topRight.y,src.x);
-  vec2 bottomLeft_ppx_min=pixel_min(bottomLeft.y,src.x,src.y,bottomLeft.x);
-  vec2 bottomRight_ppx_min=pixel_min(bottomRight.y,bottomRight.x,src.y,src.x);
-
- // test if distance between pixel and origin is within the radius
-  float boolean_topLeft=1.0-step(1.0,min(1.0,topLeft_ppx_min.x+topLeft_ppx_min.y));
-  float boolean_topRight=1.0-step(1.0,min(1.0,topRight_ppx_min.x+topRight_ppx_min.y));
-  float boolean_bottomLeft=1.0-step(1.0,min(1.0,bottomLeft_ppx_min.x+bottomLeft_ppx_min.y));
-  float boolean_bottomRight=1.0-step(1.0,min(1.0,bottomRight_ppx_min.x+bottomRight_ppx_min.y));
-
-  float d_topLeft=1.0-step(sqrt(dot(diff_topLeft,diff_topLeft)),radius);
-  float d_topRight=1.0-step(sqrt(dot(diff_topRight,diff_topRight)),radius);
-  float d_bottomLeft=1.0-step(sqrt(dot(diff_bottomLeft,diff_bottomLeft)),radius);
-  float d_bottomRight=1.0-step(sqrt(dot(diff_bottomRight,diff_bottomRight)),radius);
-
-   // if there is thickness  then let's make the quad hollow
-   vec2 innerLength=size-thickness;
-   vec2 inner_quad=pos+innerLength;
-   vec2 inner_min=pixel_min(pos.y-innerLength.y,pos.x-innerLength.x,src.y,src.x);
-   vec2 inner_max=pixel_min(src.y,src.x,pos.y+innerLength.y,pos.x+innerLength.x);
-   float boolean_inner_min=step(1.0,min(1.0,inner_min.y+inner_min.x));
-   float boolean_inner_max=step(1.0,min(1.0,inner_max.y+inner_max.x));
-   float booleanBounds= 1.0-(d_bottomLeft*boolean_bottomLeft+d_topLeft*
-                                                boolean_topLeft+boolean_topRight*d_topRight+boolean_bottomRight*d_bottomRight);
-   // apply thickness
-   float booleanThickness=min(1.0,boolean_inner_min+boolean_inner_max);
-
-    if(sampleId!=0)
-     gl_FragColor=v_color*texture2D(u_texture,v_TexCoordinate)*booleanBounds*booleanThickness*clip;
-       else
-     gl_FragColor=v_color*booleanBounds*booleanThickness*clip;
-
+ if(a_isQuad==1){
+    float rounded=roundedEdge(src,pos,size,radius,thickness);
+    quadV=clip;//*booleanBounds*booleanThickness;
+    vec4 quad_color=v_color*clip*rounded;
+    if(quad_color.a<(1.0/255.0))
+      discard;
+    if(sampleId!=0){
+     gl_FragColor=quad_color*texture2D(u_texture,v_TexCoordinate)*quadV;
+      } else{
+     gl_FragColor=quad_color;
+     }
 
   }
 
@@ -107,13 +75,12 @@ void main(){
       float outlineAlpha=1.0-smoothstep(textBorderWidth,textBorderWidth+textBorderEdge,borderDistance);
       float overallAlpha=innerAlpha+(1.0-innerAlpha)*outlineAlpha;
       vec3 overallColor=mix(outlineColor.rgb,v_color.rgb,innerAlpha/overallAlpha);
-      gl_FragColor=vec4(overallColor.rgb,overallAlpha)*texture2D(u_texture,v_TexCoordinate)*clip;
+      vec4 quad_color=vec4(overallColor.rgb,overallAlpha)*clip;
+          if(quad_color.a<(1.0/255.0))
+            discard;
+      gl_FragColor=quad_color*texture2D(u_texture,v_TexCoordinate);
 
-     }else
-     if(sampleId!=0)
-       gl_FragColor=v_color*texture2D(u_texture,v_TexCoordinate)*clip;
-      else
-       gl_FragColor=v_color*clip;
+     }
 
 
 }

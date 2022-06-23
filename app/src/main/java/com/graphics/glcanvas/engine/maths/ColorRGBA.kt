@@ -8,6 +8,10 @@ class ColorRGBA {
         const val B:Int=2
         const val A:Int=3
         val transparent=ColorRGBA(0f,0f,0f,0f)
+        val red=ColorRGBA(1f,0f,0f,1f)
+        val white=ColorRGBA(1f,1f,1f,1f)
+        val blue=ColorRGBA(0f,0f,1f,1f)
+        val green=ColorRGBA(0f,1f,0f,1f)
     }
 
 

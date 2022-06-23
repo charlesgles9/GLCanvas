@@ -648,6 +648,7 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
     }
 
     private fun render(){
+
         // use different shader is it's a circle
         if(primitiveType== Primitives.CIRCLE)
             circleShader.use()
@@ -655,7 +656,7 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
             defaultShader.use()
         defaultShader.getUniformMatrix4fv("u_MVPMatrix",mMVPMatrix)
         circleShader.uniform2f("srcRes",ResolutionX,ResolutionY)
-        defaultShader.uniformLi("a_isQuad",if(primitiveType== Primitives.QUAD)1 else 0)
+        defaultShader.uniformLi("a_isQuad",if(primitiveType== Primitives.QUAD&&!isText)1 else 0)
         defaultShader.uniformLi("isText",if(isText)1 else 0)
         // distance field uniforms for text rendering
         defaultShader.uniform1f("textEdge",textEdge)

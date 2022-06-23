@@ -9,11 +9,7 @@ class RelativeLayoutConstraint(width:Float,height:Float):GLView(width ,height) {
 
     private var items= mutableListOf<GLView>()
     constructor(width:Float, height:Float, atlas: TextureAtlas, name:String):this(width, height){
-        this.atlas=atlas
-        this.name=name
-        setBackgroundTextureAtlas(atlas)
-        setPrimaryImage(name)
-        setBackgroundFrame(name)
+       setBackgroundAtlas(atlas, name)
     }
     //push this view from center origin 0.5,0.5 -> 0,0
     fun setPosition(x:Float,y:Float){
@@ -27,7 +23,13 @@ class RelativeLayoutConstraint(width:Float,height:Float):GLView(width ,height) {
     fun setItems(items:MutableList<GLView>){
         this.items=items
     }
-
+    fun setBackgroundAtlas(atlas: TextureAtlas, name:String){
+        this.atlas=atlas
+        this.name=name
+        setBackgroundTextureAtlas(atlas)
+        setPrimaryImage(name)
+        setBackgroundFrame(name)
+    }
     private fun applyMargin(view:GLView){
         view.set(view.getX()+view.getConstraints().getMarginLeft(),view.getY())
         view.set(view.getX()-view.getConstraints().getMarginRight(),view.getY())
@@ -48,7 +50,18 @@ class RelativeLayoutConstraint(width:Float,height:Float):GLView(width ,height) {
             it.setEnabled(enable)
         }
     }
-
+    override fun setVisibility(visible: Boolean) {
+        super.setVisibility(visible)
+        for(view in items){
+            view.setVisibility(visible)
+        }
+    }
+    override fun setZ(z: Float) {
+        super.setZ(z)
+        items.forEach{
+            it.setZ(z)
+        }
+    }
     override fun draw(batch: Batch) {
         super.draw(batch)
 
@@ -56,6 +69,7 @@ class RelativeLayoutConstraint(width:Float,height:Float):GLView(width ,height) {
             it.set(getX()-width*0.5f+it.width*0.5f,getY()-height*0.5f+it.height)
             applyMargin(it)
         }
+        if(isVisible())
         items.forEach {
             LayoutConstraint.clipView(this,it)
             it.draw(batch)

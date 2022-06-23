@@ -2,10 +2,11 @@ package com.graphics.glcanvas.engine.structures
 
 import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.maths.Vector2f
+import com.graphics.glcanvas.engine.maths.Vector3f
 
 
-class Word(str:String, font: Font, cursor:Vector2f, size:Float, clipUpper:Vector2f,clipLower:Vector2f, color: ColorRGBA, outline:ColorRGBA,
-           innerEdge:Float, innerWidth:Float, borderWidth:Float, borderEdge:Float, position:Vector2f, maxWidth:Float, maxHeight:Float) {
+class Word(str:String, font: Font, cursor:Vector2f, size:Float, clipUpper:Vector2f, clipLower:Vector2f, color: ColorRGBA, outline:ColorRGBA,
+           innerEdge:Float, innerWidth:Float, borderWidth:Float, borderEdge:Float, position: Vector3f, maxWidth:Float, maxHeight:Float) {
     private val characters=ArrayList<Character>()
     init {
         // test if this whole word can fit in this line
@@ -36,7 +37,7 @@ class Word(str:String, font: Font, cursor:Vector2f, size:Float, clipUpper:Vector
                 /* lets offset of x and y by advance/2 since our origin
                    is at the center of each quad. Took me hours to figure this shit out
                  */
-                position.x+cursor.x+advance*0.5f+(meta.getOffsetX()*size)*0.5f,position.y+cursor.y+(meta.getOffsetY()* size)*0.5f,
+                position.x+cursor.x+advance*0.5f+(meta.getOffsetX()*size)*0.5f,position.y+cursor.y+(meta.getOffsetY()* size)*0.5f,position.z,
                 fontSizeX,
                 fontSizeY )
                 characters.add(char)
@@ -56,7 +57,7 @@ class Word(str:String, font: Font, cursor:Vector2f, size:Float, clipUpper:Vector
 
 
     fun updateWord(font: Font, cursor:Vector2f, size:Float, clipUpper:Vector2f,clipLower:Vector2f, color: ColorRGBA, outline:ColorRGBA,
-                   innerEdge:Float, innerWidth:Float, borderWidth:Float, borderEdge:Float, position:Vector2f){
+                   innerEdge:Float, innerWidth:Float, borderWidth:Float, borderEdge:Float, position:Vector3f){
 
             for(char in characters){
                 val meta=font.getCharMetaData(char.getChar())
@@ -70,7 +71,7 @@ class Word(str:String, font: Font, cursor:Vector2f, size:Float, clipUpper:Vector
                     /* lets offset of x and y by advance/2 since our origin
                        is at the center of each quad. Took me hours to figure this shit out
                      */
-                    position.x+cursor.x+advance*0.5f+(meta.getOffsetX()*size)*0.5f,position.y+cursor.y+(meta.getOffsetY()* size)*0.5f,
+                    position.x+cursor.x+advance*0.5f+(meta.getOffsetX()*size)*0.5f,position.y+cursor.y+(meta.getOffsetY()* size)*0.5f,position.z,
                     fontSizeX,
                     fontSizeY )
                 char.setOutlineColor(outline)

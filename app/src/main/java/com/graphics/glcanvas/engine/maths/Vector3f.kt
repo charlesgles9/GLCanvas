@@ -21,7 +21,10 @@ class Vector3f {
         this.y=y
         this.z=z
     }
-
+    fun set(x:Float,y:Float){
+        this.x=x
+        this.y=y
+    }
     fun set(other: Vector3f){
         this.x=other.x
         this.y=other.y

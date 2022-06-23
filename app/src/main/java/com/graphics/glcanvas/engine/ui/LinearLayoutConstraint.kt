@@ -15,6 +15,10 @@ class LinearLayoutConstraint(private val parent:GLView?,width:Float,height:Float
     constructor(parent:GLView?,width:Float,height:Float,atlas: TextureAtlas,name:String):this(parent,width, height){
         this.atlas=atlas
         this.name=name
+       setBackgroundAtlas(atlas, name)
+    }
+
+    fun setBackgroundAtlas(atlas: TextureAtlas, name:String){
         setBackgroundTextureAtlas(atlas)
         setPrimaryImage(name)
         setBackgroundFrame(name)
@@ -38,6 +42,18 @@ class LinearLayoutConstraint(private val parent:GLView?,width:Float,height:Float
         LayoutConstraint.groupItems(orientation,offset ,this,items)
     }
 
+    override fun setVisibility(visible: Boolean) {
+        super.setVisibility(visible)
+        for(view in items){
+            view.setVisibility(visible)
+        }
+    }
+    override fun setZ(z: Float) {
+        super.setZ(z)
+        items.forEach{
+            it.setZ(z)
+        }
+    }
 
    fun getItems():MutableList<GLView>{
        return items
@@ -58,7 +74,9 @@ class LinearLayoutConstraint(private val parent:GLView?,width:Float,height:Float
     override fun draw(batch: Batch) {
         super.draw(batch)
         LayoutConstraint.groupItems(orientation,offset ,this,items)
+        if(isVisible())
         items.forEach {
+
             LayoutConstraint.clipView(parent?:this,this,it)
             it.draw(batch)
         }

@@ -10,9 +10,10 @@ class Character(private var char:Char,private val font:Font): RectF(0f,0f,50f,50
     private var borderWidth=0f
     private var borderEdge=0f
 
-     fun set(x:Float, y:Float,width: Float,height: Float){
+     fun set(x:Float, y:Float,z:Float,width: Float,height: Float){
          val meta=font.getCharMetaData(char)
           set(x,y)
+          setZ(z)
           setWidth(width)
           setHeight(height)
         getSpriteSheet().setSTMatrix(meta!!.getX(),meta.getY(),

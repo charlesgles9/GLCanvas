@@ -1,9 +1,10 @@
 package com.graphics.glcanvas.engine.ui
+import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.structures.Font
 import com.graphics.glcanvas.engine.structures.Text
 import com.graphics.glcanvas.engine.utils.TextureAtlas
 
-class GLLabel(width:Float,height:Float,private var font: Font,private var string:String,private var size: Float) : GLView(width,height) {
+open class GLLabel(width:Float, height:Float, private var font: Font, private var string:String, private var size: Float) : GLView(width,height) {
 
 
     init {
@@ -20,9 +21,10 @@ class GLLabel(width:Float,height:Float,private var font: Font,private var string
         setBackgroundTextureAtlas(atlas)
         imageFromAtlas(name)
         setText(string,font,size)
+        setRippleColor(ColorRGBA.white)
     }
 
-    private fun imageFromAtlas(name:String){
+    protected fun imageFromAtlas(name:String){
         this.name=name
         setBackgroundFrame(name)
     }

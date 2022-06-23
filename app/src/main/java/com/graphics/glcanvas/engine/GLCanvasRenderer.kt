@@ -15,7 +15,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
     private val camera=Camera2D(10.0f)
     private val candara=Font("fonts/candara.fnt",context)
     private val harrington=Font("fonts/harrington.fnt",context)
-    private val text=Text("Hello friend don't you dare go hollow. It's very easy to give up after you've fought the same battles over and over again with no success. Keep you loins up like a man and keep on fighting.\n\n Keep thine eyes on the prize brother we will win hopefully, and if we lose at least we tried rather than be like the crestfallen warrior.",0.3f,harrington)
+    private val text=Text("Ideas are shit and worthless what really matters is execution. The idea focuses mostly on the event, execution is the difficult process that makes the event possible.\n\nTime passes, dreams die and what remains? An old withered body forlorn for what could have been.\n\n I once heard that a smart man learns from his mistakes. A wise man learns from the mistakes of others. The fear of failure is normal yet failure creates experince and experience breeds wisdom.\n\n All skill growth is derived from the friction and the struggle in the process. There will be no growth if you are spoon fed the answers with zero struggles of your own. You can't move boulders until you've learnt how to move the pebbles.",0.3f,harrington)
     private var atlas:TextureAtlas?=null
     private var titleLabel:GLLabel?=null
     private var fpsLabel:GLLabel?=null
@@ -25,6 +25,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
     private var linearLayout:LinearLayoutConstraint?=null
     private var labelSound:GLLabel?=null
     private var labelParagraph:GLLabel?=null
+    private var dropDown:GLDropDown?=null
      //init camera here or resources eg textures
     override fun prepare() {
         batch.initShader(context)
@@ -103,7 +104,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
          progressBar?.getConstraints()?.alignBelow(labelSound!!)
          progressBar?.getConstraints()?.layoutMarginLeft(25f)
 
-         val scrollView=GLScrollLayout(getCanvasWidth(),180f,atlas!!,"Window2")
+         val scrollView=GLScrollLayout(getCanvasWidth(),150f,atlas!!,"Window2")
          scrollView.setBackgroundColor(ColorRGBA(1f,1f,1f,1f))
          scrollView.setScrollBarBackgroundFromAtlas("Button1")
          scrollView.setScrollBarProgressFromAtlas("Button2")
@@ -126,15 +127,15 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
          scrollList.add(gridView)
          scrollView.setItems(scrollList)
 
-         val paraScrollView=GLScrollLayout(getCanvasWidth(),400f,atlas!!,"Window1")
+         val paraScrollView=GLScrollLayout(getCanvasWidth(),200f,atlas!!,"Window1")
               paraScrollView.setOrientation(GLScrollLayout.VERTICAL)
          paraScrollView.setScrollBarBackgroundColor(ColorRGBA(1f,0f,0f,1f))
 
-         val paraInner=LinearLayoutConstraint(paraScrollView,paraScrollView.height,600f)
+         val paraInner=LinearLayoutConstraint(paraScrollView,paraScrollView.width,600f)
              paraInner.setOrientation(LinearLayoutConstraint.VERTICAL)
              paraInner.setColor(ColorRGBA.transparent)
 
-         labelParagraph= GLLabel(paraInner.width*0.8f,paraInner.height,candara,text.getText(),0.2f)
+         labelParagraph= GLLabel(paraInner.width*0.8f,paraInner.height,harrington,text.getText(),0.25f)
          labelParagraph?.setBackgroundColor(ColorRGBA.transparent)
          labelParagraph?.setCenterText(false)
           paraInner.setItems(mutableListOf(labelParagraph!!))
@@ -144,9 +145,13 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
 
               }
           })
-
-
-         linearLayout?.setItems(mutableListOf(titleLayout,scrollView,inner,paraScrollView))
+          dropDown= GLDropDown(150f,40f,atlas!!,"Window1",harrington,"Hello",0.2f)
+          dropDown?.setDropMaxHeight(200f)
+          dropDown?.setItems(mutableListOf(genLabel("First"),genLabel("First"),genLabel("Third"),
+              genLabel("Fourth"),genLabel("Fourth"),genLabel("Fourth"),genLabel("Fourth")))
+          dropDown?.setBackgroundAtlas(atlas!!,"Window1")
+          dropDown?.addEvents(getRenderer().getTouchController())
+         linearLayout?.setItems(mutableListOf(titleLayout,scrollView,inner,paraScrollView,dropDown!!))
 
          getRenderer().getTouchController()?.addEvent(titleLabel!!)
          getRenderer().getTouchController()?.addEvent(imageCheckBox!!)
@@ -154,7 +159,8 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
          getRenderer().getTouchController()?.addEvent(progressBar!!)
          getRenderer().getTouchController()?.addEvent(scrollView)
          getRenderer().getTouchController()?.addEvent(paraScrollView)
-        text.set(100f,690f)
+         getRenderer().getTouchController()?.addEvent(dropDown!!)
+        text.set(100f,690f,0f)
         text.setMaxWidth(600f)
         getRenderer().fpsCap(60)
          fpsLabel?.getTextView()?.setOutlineColor(1f,0f,1f)

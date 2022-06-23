@@ -155,8 +155,9 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
     fun getCornerRadius():Float{
         return connerRadius
     }
-    fun setVisibility(visible:Boolean){
+    open fun setVisibility(visible:Boolean){
          this.visible=visible
+         text?.setVisibility(visible)
     }
 
     fun isVisible():Boolean{
@@ -174,7 +175,7 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
           position.set(x,y)
       }
 
-      fun setX(x:Float){
+      open fun setX(x:Float){
           position.x=x
       }
 
@@ -182,7 +183,7 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
           position.y=y
       }
 
-    fun setZ(z:Float){
+    open fun setZ(z:Float){
         background.setZ(z)
         foreground.setZ(z)
     }
@@ -242,9 +243,9 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
           val tw= (text?.width?.times(0.5f)?: 0f)
           val th=(text?.height?.times(0.5f)?:0f)
           if(centerText)
-          text?.set(position.x-tw, position.y-th)
+          text?.set(position.x-tw, position.y-th,getZ())
           else
-              text?.set(position.x-width*0.45f,position.y-height*0.45f)
+              text?.set(position.x-width*0.45f,position.y-height*0.45f,getZ())
 
           //clips text that are out of the viewing area of this entity
          LayoutConstraint.clipView(position.x,position.y,width,height,
@@ -317,6 +318,9 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
         return position.y
     }
 
+    fun getZ():Float{
+        return background.getZ()
+    }
     fun getConstraints():LayoutConstraint{
         return constraint
     }

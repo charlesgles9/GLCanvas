@@ -19,8 +19,12 @@ class MultiTouchEvent(private val listener:OnMultiTouchListener,private val rect
 
     fun getTouchDown():Boolean{
         var touched=false
-        for(vector in fingers){
-            touched=touched.or(contains(vector.value.x,vector.value.y))
+        try {
+            for (vector in fingers.entries) {
+                touched = touched.or(contains(vector.value.x, vector.value.y))
+            }
+        }catch (e:ConcurrentModificationException){
+
         }
         return touched
     }
