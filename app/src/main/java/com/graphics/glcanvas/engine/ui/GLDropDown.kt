@@ -25,7 +25,7 @@ class GLDropDown (width:Float, height:Float,
         setBackgroundTextureAtlas(atlas)
         imageFromAtlas(name)
         setPrimaryImage(name)
-        setBackgroundFrame(name)
+        setBackgroundTextureFrame(name)
         setText(string,font,size)
         setRippleColor(ColorRGBA.white)
         setDefaultColor(ColorRGBA.white)
@@ -39,14 +39,18 @@ class GLDropDown (width:Float, height:Float,
     fun setDropMaxHeight(itemDropMaxHeight:Float){
         this.itemDropMaxHeight=itemDropMaxHeight
     }
-    
-    fun setItems(views:MutableList<GLView>){
+
+    fun setItems(strings:MutableList<String>){
         //calculate maximum height of the wrapper
-            var totalViewHeight=0f
-            for (view in views) {
-                totalViewHeight += view.height
-                view.setVisibility(false)
-            }
+          var totalViewHeight=0f
+          val views= mutableListOf<GLView>()
+           strings.forEach {
+               views.add(genLabel(it))
+           }
+        for (view in views) {
+            totalViewHeight += view.height
+            view.setVisibility(false)
+        }
         itemDropMaxHeight=if(itemDropMaxHeight== Float.MAX_VALUE)totalViewHeight else itemDropMaxHeight
         scrollView=GLScrollLayout(width, itemDropMaxHeight)
         scrollView?.setOrientation(GLScrollLayout.VERTICAL)
@@ -61,6 +65,16 @@ class GLDropDown (width:Float, height:Float,
         scrollView?.getConstraints()?.alignCenterHorizontal(this)
         scrollView?.setVisibility(false)
         scrollView?.setZ(this.getZ()+1f)
+    }
+
+    private fun genLabel(message:String):GLLabel{
+        val lbl= GLLabel(width,height,font,message,size)
+        lbl.setBackgroundColor(ColorRGBA.transparent)
+        lbl.getTextView()?.setOutlineColor(1f,0f,1f)
+        lbl.getTextView()?.setInnerEdge(0.1f)
+        lbl.getTextView()?.setInnerWidth(0.4f)
+        lbl.getConstraints().layoutMarginTop(5f)
+        return lbl
     }
 
     fun setBackgroundAtlas(atlas: TextureAtlas, name:String){

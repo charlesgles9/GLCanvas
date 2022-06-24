@@ -18,7 +18,7 @@ class GLOnSwipeEvent (private val listener: OnSwipeListener,
      var LEFT=false
      var RIGHT=false
     companion object {
-        var friction = 0.96f
+        var friction = 0.9f
     }
     private var pointerDown=false
     fun contains(x:Float,y:Float):Boolean{

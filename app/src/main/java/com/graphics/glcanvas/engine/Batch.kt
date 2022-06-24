@@ -83,8 +83,8 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
     private var roundedRectProperties=FloatArray(BATCH_SIZE*2*4)
     private var clipAttribute=FloatArray(BATCH_SIZE*4*4)
     private val buffers=IntArray(6)
-    private val defaultShader=Shader("shaders/default_vertex_shader.txt","shaders/default_fragment_shader.txt")
-    private val circleShader=Shader("shaders/circle_vertex_shader.txt","shaders/circle_fragment_shader.txt")
+    private val defaultShader=Shader("shaders/default_vertex_shader.glsl","shaders/default_fragment_shader.glsl")
+    private val circleShader=Shader("shaders/circle_vertex_shader.glsl","shaders/circle_fragment_shader.glsl")
     private var camera:Camera2D?=null
     private val batchQueue=BatchQueue()
     private var primitiveType= Primitives.QUAD

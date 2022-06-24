@@ -11,9 +11,9 @@ class GLImageProgressBar(width:Float, height:Float, progress:Float,horizontalBar
                 this.horizontalBar=horizontalBar
                 setBackgroundTextureAtlas(atlas)
                 setPrimaryImage(bgImage)
-                setBackgroundFrame(bgImage)
+                setBackgroundTextureFrame(bgImage)
                 setForegroundTextureAtlas(atlas)
-                setForegroundFrame(fgImage)
+                setForegroundTextureFrame(fgImage)
                 positionBars(horizontalBar,progress, maxProgressBar)
                 setRippleColor(getBackground().getColor(0))
                 isProgressBar=true

@@ -69,14 +69,15 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
 
       protected fun setDefaultColor(color:ColorRGBA){
           default.set(color)
-    }
+      }
+
       private fun setBackgroundImage(texture: Texture?){
          this.background.setTexture(texture!!)
       }
+
       private fun setForegroundImage(texture: Texture?){
         this.foreground.setTexture(texture!!)
       }
-
 
       fun clipViewUpper(x:Float,y:Float){
           text?.setClipUpper(x,y)
@@ -125,11 +126,11 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
         this.foreground.setColor(color)
       }
 
-     fun setBackgroundFrame(name:String){
+     fun setBackgroundTextureFrame(name:String){
         if(atlas!=null)
             getBackground().getSpriteSheet().setCurrentFrame(atlas!!.getTextureCoordinate(name))
       }
-    fun setForegroundFrame(name:String){
+    fun setForegroundTextureFrame(name:String){
         if(atlas!=null)
             getForeground().getSpriteSheet().setCurrentFrame(atlas!!.getTextureCoordinate(name))
     }
@@ -274,22 +275,22 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
         if(flag){
             background.setColor(ripple)
             if(ts.isNotEmpty())
-                setBackgroundFrame(ts)
+                setBackgroundTextureFrame(ts)
         }else {
             background.setColor(default)
             if (tp.isNotEmpty())
-                setBackgroundFrame(tp)
+                setBackgroundTextureFrame(tp)
         }
     }
     private fun checkBoxToggle(flag:Boolean){
         if(flag){
             foreground.setColor(ripple)
             if(ts.isNotEmpty())
-                setForegroundFrame(ts)
+                setForegroundTextureFrame(ts)
         }else {
             foreground.setColor(default)
             if (tp.isNotEmpty())
-                setForegroundFrame(tp)
+                setForegroundTextureFrame(tp)
         }
     }
 

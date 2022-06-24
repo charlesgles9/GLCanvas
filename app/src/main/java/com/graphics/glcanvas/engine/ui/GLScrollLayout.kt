@@ -6,10 +6,8 @@ import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.maths.Vector2f
 import com.graphics.glcanvas.engine.structures.RectF
 import com.graphics.glcanvas.engine.utils.TextureAtlas
-import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
-import kotlin.math.round
 
 class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
 
@@ -37,7 +35,7 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
          this.name=name
          setBackgroundTextureAtlas(atlas)
          setPrimaryImage(name)
-         setBackgroundFrame(name)
+         setBackgroundTextureFrame(name)
      }
 
     fun showScrollBar(enableScrollBar:Boolean){
@@ -128,11 +126,11 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
         val first=items.first()
         val last=items.last()
         val vx=(onSwipeEvent?.getVelocity()?.x?:0f)
-        if((first.getX()-first.width*0.5f+vx)<getX()-width*0.5f&&onSwipeEvent?.LEFT==true){
+        if((first.getX()-first.width*0.5f+vx)<=getX()-width*0.5f&&onSwipeEvent?.LEFT==true){
             offset.sub(vx, 0f)
             onSwipeEvent?.getVelocity()?.multiply(GLOnSwipeEvent.friction)
         }else
-            if((last.getX()+last.width*0.5f+vx)>getX()+width*0.5f&&onSwipeEvent?.RIGHT==true){
+            if((last.getX()+last.width*0.5f+vx)>=getX()+width*0.5f&&onSwipeEvent?.RIGHT==true){
                 offset.sub(vx, 0f)
                 onSwipeEvent?.getVelocity()?.multiply(GLOnSwipeEvent.friction)
                 //@debug  println("last "+last.getY()+" origin "+getY()+height*0.5f+" velocity "+vy)
@@ -150,15 +148,15 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
         // how large is the scroll progress bar relative to the background progress bar
         var scrollPercent=height/minHeight
         if(scrollPercent>1.0f)
-            scrollPercent=1.0f-(scrollPercent-1.0f)
+            scrollPercent=1.0f
         scrollBarBackground.setWidth(scrollBarWidth)
         scrollBarProgress.setWidth(scrollBarWidth*0.8f)
-        scrollBarBackground.setHeight(height*0.8f)
+        scrollBarBackground.setHeight(height)
         scrollBarProgress.setHeight(scrollBarBackground.getHeight()*scrollPercent)
         scrollBarBackground.set(getX()+width*0.5f-scrollBarWidth,getY())
         val sH=scrollBarBackground.getHeight()
-        val offset=(sH)*farPercent
-        var py=scrollBarBackground.getY()+offset-scrollBarProgress.getHeight()*0.5f
+        val offset=(sH)*(farPercent)
+        var py=scrollBarBackground.getY()+offset-scrollBarBackground.getHeight()*0.5f
             py= max(scrollBarBackground.getY()-scrollBarBackground.getHeight()*0.5f+scrollBarProgress.getHeight()*0.5f,py)
             py= min(scrollBarBackground.getY()+scrollBarBackground.getHeight()*0.5f-scrollBarProgress.getHeight()*0.5f,py)
         scrollBarProgress.set(scrollBarBackground.getX(),py)
@@ -176,14 +174,15 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
         val farPercent=(farHeight/minWidth)
         if(scrollPercent>1.0f)
             scrollPercent=1.0f
-        scrollBarBackground.setWidth(width)
-        scrollBarProgress.setWidth(scrollBarBackground.getWidth()*scrollPercent)
+
+        scrollBarBackground.setWidth(width*0.8f)
+        scrollBarProgress.setWidth(scrollBarBackground.getWidth()*scrollPercent*0.8f)
         scrollBarBackground.setHeight(scrollBarHeight)
         scrollBarProgress.setHeight(scrollBarHeight*0.8f)
         scrollBarBackground.set(getX(),getY()+height*0.5f-scrollBarHeight)
         val sW=scrollBarBackground.getWidth()
-        val offset=sW*farPercent
-        var px=scrollBarBackground.getX()-scrollBarBackground.getWidth()*0.5f+offset
+        val offset=sW*(farPercent)
+        var px=scrollBarBackground.getX()+offset-scrollBarBackground.getWidth()*0.5f
             px= max(scrollBarBackground.getX()-scrollBarBackground.getWidth()*0.5f+scrollBarProgress.getWidth()*0.5f,px)
             px= min(scrollBarBackground.getX()+scrollBarBackground.getWidth()*0.5f-scrollBarProgress.getWidth()*0.5f,px)
         scrollBarProgress.set(px,scrollBarBackground.getY())
@@ -218,8 +217,6 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
             itemHeight+=it.height
              it.draw(batch)
         }
-        scrollBarBackground.setConnerRadius(5f)
-        scrollBarProgress.setConnerRadius(5f)
         if(enableScrollBar&&isVisible())
         drawScrollBar(batch,itemWidth,itemHeight)
 
