@@ -277,49 +277,49 @@ Window3
   orig: 320, 163
   offset: 0, 0
   index: 3
-arrow6
+arrow
   rotate: false
   xy: 1879, 1823
   size: 167, 214
   orig: 167, 214
   offset: 0, 0
   index: 6
-arrow3
+arrow
   rotate: false
   xy: 1879, 1607
   size: 167, 214
   orig: 167, 214
   offset: 0, 0
   index: 3
-arrow4
+arrow
   rotate: false
   xy: 1879, 1391
   size: 167, 214
   orig: 167, 214
   offset: 0, 0
   index: 4
-arrow1
+arrow
   rotate: false
   xy: 1908, 179
   size: 136, 175
   orig: 136, 175
   offset: 0, 0
   index: 1
-arrow5
+arrow
   rotate: false
   xy: 1899, 989
   size: 136, 175
   orig: 136, 175
   offset: 0, 0
   index: 5
-arrow2
+arrow
   rotate: false
   xy: 1908, 2
   size: 136, 175
   orig: 136, 175
   offset: 0, 0
   index: 2
-arrow7
+arrow
   rotate: false
   xy: 785, 51
   size: 90, 70

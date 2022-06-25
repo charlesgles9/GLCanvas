@@ -11,29 +11,53 @@ class TextureAtlas(path:String,context: Context) {
     private var texture:Texture?=null
     private var resolution=Vector2f()
     private var format=""
-    private val map=HashMap<String,Atlas>()
-    private val coordinates=HashMap<String,Int>()
+    private val map=HashMap<String,ArrayList<Atlas>>()
     private var sheet:SpriteSheet?=null
-    private var current:Atlas?=null
+    private var current:ArrayList<Atlas>?=null
     init {
         parse(path,context)
         sheet= SpriteSheet(1,1)
-        sheet?.resize(map.size)
+        sheet?.resize(coordinateCount())
         var counter=0
-        map.forEach{(k,v)->
-             sheet?.setSTMatrix(v.getPosition().x,v.getPosition().y,
-                                v.getSize().x,v.getSize().y,
-                                resolution.x,resolution.y,counter)
-            coordinates[k] = counter
-            counter++
+        map.forEach{(k,l)->
+           l.sortBy {
+               it.getIndex()
+           }
+            l.forEach { v->
+                 sheet?.setSTMatrix(
+                     v.getPosition().x, v.getPosition().y,
+                     v.getSize().x, v.getSize().y,
+                     resolution.x, resolution.y, counter
+                 )
+                 v.setSheetIndex(counter)
+                 counter++
+             }
         }
        texture= Texture(context,texturePath)
     }
 
+
+    private fun coordinateCount():Int{
+        var counter=0
+        map.forEach{(k,l)->
+            counter+=l.size
+        }
+        return counter
+    }
     private fun split(text:String):List<String>{
         return text.split(":")
     }
 
+    private fun get(name:String):ArrayList<Atlas>?{
+         return map[name]
+    }
+
+    private fun get(name:String, index: Int):Atlas?{
+        val list=get(name)
+        if(index>list?.size?:0)
+            return list?.get(0)
+        return list?.get(index)
+    }
     private fun parse(path: String,context: Context){
         val stream: InputStream =context.assets.open(path)
         stream.bufferedReader().forEachLine {
@@ -45,9 +69,15 @@ class TextureAtlas(path:String,context: Context) {
                  if (map.isEmpty()&&texturePath=="") {
                      texturePath = it
                  }else {
-                     //if map isn't empty then these are the sprite coordinates
-                     current = Atlas()
-                     map[it] = current!!
+                     val objList=get(it)
+                     if(objList==null){
+                      current= ArrayList()
+                      current?.add(Atlas(it))
+                      map[it] = current!!
+                      }else {
+                         current = objList
+                         current?.add(Atlas(it))
+                     }
                  }
              }else{
                  // sprite coordinate data and texture information
@@ -63,19 +93,23 @@ class TextureAtlas(path:String,context: Context) {
                      when {
                          it.indexOf("size") != -1->{
                              val arr = split(it)[1].split(',')
-                             current?.setSize(arr[0].trim().toFloat(), arr[1].trim().toFloat())
+                             val obj=current?.last()
+                                 obj?.setSize(arr[0].trim().toFloat(), arr[1].trim().toFloat())
                          }
                          it.indexOf("rotate") != -1 -> {
                              val rotate = split(it)[1].trim()
-                             current?.setRotate(rotate.toBoolean())
+                             val obj=current?.last()
+                             obj?.setRotate(rotate.toBoolean())
                          }
                          it.indexOf("xy") != -1 -> {
                              val xy = split(it)[1].split(",")
-                             current?.setPosition(xy[0].trim().toFloat(), xy[1].trim().toFloat())
+                             val obj=current?.last()
+                             obj?.setPosition(xy[0].trim().toFloat(), xy[1].trim().toFloat())
                          }
                          it.indexOf("orig") != -1 -> {
                              val origin = split(it)[1].split(",")
-                             current?.setOrigin(
+                             val obj=current?.last()
+                               obj?.setOrigin(
                                  origin[0].trim().toFloat(),
                                  origin[1].trim().toFloat()
                              )
@@ -83,14 +117,16 @@ class TextureAtlas(path:String,context: Context) {
 
                          it.indexOf("offset") != -1 -> {
                              val offset = split(it)[1].split(",")
-                             current?.setOffset(
+                             val obj=current?.last()
+                                obj?.setOffset(
                                  offset[0].trim().toFloat(),
                                  offset[1].trim().toFloat()
                              )
                          }
                          it.indexOf("index") != -1 -> {
                              val index = split(it)[1].trim()
-                             current?.setIndex(index.toInt())
+                             val obj=current?.last()
+                             obj?.setIndex(index.toInt())
                          }
                      }
                  }
@@ -100,7 +136,7 @@ class TextureAtlas(path:String,context: Context) {
 
 
     fun getItem(key:String):Atlas?{
-        return map[key]
+        return map[key]?.get(0)
     }
 
     fun getSheet():SpriteSheet?{
@@ -108,19 +144,26 @@ class TextureAtlas(path:String,context: Context) {
     }
 
     fun getTextureCoordinate(key: String):Int{
-        return coordinates[key]!!
+        return get(key,0)?.getSheetIndex()?:0
     }
-
+    fun getTextureCoordinate(key: String,index: Int):Int{
+        return get(key,index)?.getSheetIndex()?:0
+    }
     fun getTexture():Texture?{
         return texture
     }
-    inner class Atlas(){
+
+    inner class Atlas(private val name:String){
         private var rotate=false
         private var position=Vector2f()
         private var size= Vector2f()
         private var origin=Vector2f()
         private var offset=Vector2f()
         private var index=-1
+        private var sheetIndex=0
+        override fun hashCode(): Int {
+            return super.hashCode()
+        }
         fun setRotate(rotate: Boolean){
             this.rotate=rotate
         }
@@ -140,17 +183,28 @@ class TextureAtlas(path:String,context: Context) {
             this.index=index
         }
 
+        fun setSheetIndex(sheetIndex:Int){
+            this.sheetIndex=sheetIndex
+        }
         fun getRotate():Boolean{
             return rotate
         }
-
         fun getPosition():Vector2f{
             return position
         }
         fun getSize():Vector2f{
             return size
         }
+        fun getIndex():Int{
+            return index
+        }
+        fun getName():String{
+            return name
+        }
 
+        fun getSheetIndex():Int{
+            return sheetIndex
+        }
 
     }
 }

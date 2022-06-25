@@ -5,6 +5,7 @@ import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.maths.Vector2f
 import com.graphics.glcanvas.engine.maths.Vector3f
 import com.graphics.glcanvas.engine.utils.TextureLoader
+import kotlin.concurrent.thread
 import kotlin.math.max
 
 class Text(private var text:String,private var fontSize:Float,private var font: Font) {
@@ -80,10 +81,13 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
         // update only if necessary
         if(x!=position.x||position.y!=y||position.z!=z) {
             this.position.set(x, y,z)
+
             initWordList()
 
         }
     }
+
+
 
 
     fun setMaxWidth(maxWidth:Float){
@@ -164,12 +168,13 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
     fun draw(batch: Batch){
         val id=TextureLoader.getInstance().getTexture(font.getTextureAtlasPath())
         if(visible)
-        words.forEach { word->
-            word.getCharacter().forEach {
-                it.getTexture().setId(id)
-                batch.draw(it)
+            words.forEach { word ->
+                word.getCharacter().forEach {
+                    it.getTexture().setId(id)
+                    batch.draw(it)
+                }
             }
-        }
+
 
     }
 
