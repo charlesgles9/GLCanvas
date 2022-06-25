@@ -229,24 +229,25 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
         val sizeY=rect.getRadius()
         val x=rect.getX()
         val y=rect.getY()
+        val z=rect.getZ()
 
 
         //top left
         vertexes[vcount++]=-sizeX+x
         vertexes[vcount++]=sizeY+y
-        vertexes[vcount++]=0.0f
+        vertexes[vcount++]=z
         //bottom left
         vertexes[vcount++]=-sizeX+x
         vertexes[vcount++]=-sizeY+y
-        vertexes[vcount++]=0.0f
+        vertexes[vcount++]=z
         //bottom right
         vertexes[vcount++]=sizeX+x
         vertexes[vcount++]=-sizeY+y
-        vertexes[vcount++]=0.0f
+        vertexes[vcount++]=z
         //top right
         vertexes[vcount++]=sizeX+x
         vertexes[vcount++]=sizeY+y
-        vertexes[vcount++]=0.0f
+        vertexes[vcount++]=z
 
 
         centerVertex[mcount++]=x
@@ -435,14 +436,15 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
         val sizeY=abs(line.getStartY()-line.getStopY())
         val x=line.getStartX()
         val y=line.getStartY()
+        val z=line.getZ()
         // top left
         vertexes[vcount++]=x
         vertexes[vcount++]=y
-        vertexes[vcount++]=0.0f
+        vertexes[vcount++]=z
         //bottom left
         vertexes[vcount++]=sizeX+x
         vertexes[vcount++]=sizeY+y
-        vertexes[vcount++]=0.0f
+        vertexes[vcount++]=z
 
         indices[icount++]=(index*2+0).toShort()
         indices[icount++]=(index*2+1).toShort()
@@ -469,6 +471,7 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
             val path=polyLine.getPaths()[i]
             val x = path.getStart().x
             val y = path.getStart().y
+            val z=  polyLine.getZ()
             for(j in 0 until path.getEndPoints().size){
                 val line=path.getEndPoints()[j]
                 val sizeX = abs(x - line.x)
@@ -476,11 +479,11 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
                 // top left
                 vertexes[vcount++] = x
                 vertexes[vcount++] = y
-                vertexes[vcount++] = 0.0f
+                vertexes[vcount++] = z
                 //bottom left
                 vertexes[vcount++] = sizeX + x
                 vertexes[vcount++] = sizeY + y
-                vertexes[vcount++] = 0.0f
+                vertexes[vcount++] = z
 
                 indices[icount++] = (lcount * 2 + 0).toShort()
                 indices[icount++] = (lcount * 2 + 1).toShort()
@@ -511,6 +514,7 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
             val path=poly.getPaths()[i]
             val x = path.getStart().x
             val y = path.getStart().y
+            val z = poly.getZ()
             if(path.getEndPoints().size>=2)
             for(j in 0 until path.getEndPoints().size step 2){
                 val a=path.getEndPoints()[j]
@@ -522,15 +526,15 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
 
                 vertexes[vcount++] = x
                 vertexes[vcount++] = y
-                vertexes[vcount++] = 0.0f
+                vertexes[vcount++] = z
 
                 vertexes[vcount++] = sizeAX + x
                 vertexes[vcount++] = sizeAY + y
-                vertexes[vcount++] = 0.0f
+                vertexes[vcount++] = z
 
                 vertexes[vcount++] = sizeBX + x
                 vertexes[vcount++] = sizeBY + y
-                vertexes[vcount++] = 0.0f
+                vertexes[vcount++] = z
 
                 indices[icount++] = (pcount * 3 + 0).toShort()
                 indices[icount++] = (pcount * 3 + 1).toShort()

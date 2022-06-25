@@ -19,12 +19,20 @@ class Circle:Vertex {
         position.setValueY(y)
     }
 
+    fun setZ(z:Float){
+        this.position.z=z
+    }
+
     fun getX():Float{
         return position.x
     }
 
     fun getY():Float{
         return position.y
+    }
+
+    open fun getZ():Float{
+        return position.z
     }
 
    private fun setWidth(width: Float){

@@ -3,6 +3,7 @@ package com.graphics.glcanvas.engine.structures
 class Line(private var startX: Float, private var startY: Float,
            private var stopX: Float, private var stopY: Float) : Vertex(2, 2) {
 
+    private var z=0f
     fun set(startX: Float,startY: Float,stopX: Float,stopY: Float){
         this.startX=startX
         this.startY=startY
@@ -33,5 +34,13 @@ class Line(private var startX: Float, private var startY: Float,
     }
     fun getStopY():Float{
         return stopY
+    }
+
+    fun setZ(z:Float){
+        this.z=z
+    }
+
+    fun getZ():Float{
+        return z
     }
 }
