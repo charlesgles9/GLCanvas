@@ -15,7 +15,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
     private val camera=Camera2D(10.0f)
     private val candara=Font("fonts/candara.fnt",context)
     private val harrington=Font("fonts/harrington.fnt",context)
-    private val text=Text("Ideas are shit and worthless what really matters is execution. The idea focuses mostly on the event, execution is the difficult process that makes the event possible.\n\nTime passes, dreams die and what remains? An old withered body forlorn for what could have been.\n\n I once heard that a smart man learns from his mistakes. A wise man learns from the mistakes of others. The fear of failure is normal yet failure creates experince and experience breeds wisdom.\n\n All skill growth is derived from the friction and the struggle in the process. There will be no growth if you are spoon fed the answers with zero struggles of your own. You can't move boulders until you've learnt how to move the pebbles.",0.3f,harrington)
+    private val text=Text("Ideas are shit and worthless what really matters is execution. The idea focuses mostly on the event, execution is the difficult process that makes the event possible.\n\nTime passes, dreams die and what remains? An old withered body forlorn for what could have been.\n\n I once heard that a smart man learns from his mistakes. A wise man learns from the mistakes of others. The fear of failure is normal yet failure creates experince and experience breeds wisdom.\n\n All skill growth is derived from the friction and the struggle in the process. There will be no growth if you are spoon fed the answers with zero struggles of your own. You can't move boulders until you've learnt how to move the pebbles. This is a piece of paragraph to test an annoying scrollView implementation, I have spent hours and hours, commit after commit. Every time thinking i've solved it to no avail.",0.3f,harrington)
     private var atlas:TextureAtlas?=null
     private var titleLabel:GLLabel?=null
     private var fpsLabel:GLLabel?=null
@@ -37,7 +37,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
 
          atlas= TextureAtlas("textures/ui/UI.atlas",context)
 
-         titleLabel= GLLabel(380f,100f, atlas!!,"Textfield2",candara,"HELLO GUI!",0.3f )
+         titleLabel= GLLabel(380f,100f, atlas!!,"Textfield2",0,candara,"HELLO GUI!",0.3f )
          titleLabel?.setRippleColor(ColorRGBA(0f,1f,0.1f,0.5f))
          titleLabel?.setMultiTouchListener(object :MultiTouchEvent.OnMultiTouchListener{
              override fun onTouch(vector2f: Vector2f) {
@@ -52,17 +52,17 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
 
          fpsLabel= GLLabel(200f,60f,candara,"FPS: 60",0.3f)
          fpsLabel?.setBackgroundColor(ColorRGBA.transparent)
-         labelDrawCall= GLLabel(getCanvasWidth()*0.8f,60f,atlas!!,"Textfield2",candara,"DrawCalls: ",0.3f)
+         labelDrawCall= GLLabel(getCanvasWidth()*0.8f,60f,atlas!!,"Textfield2",0,candara,"DrawCalls: ",0.3f)
          fpsLabel?.setBackgroundColor(ColorRGBA.transparent)
 
-         labelSound= GLLabel(200f,50f,atlas!!,"Textfield2",candara,"Enable Sound",0.2f)
+         labelSound= GLLabel(200f,50f,atlas!!,"Textfield2",0,candara,"Enable Sound",0.2f)
          labelSound?.setBackgroundColor(ColorRGBA(1f,0f,0f,1f))
          labelSound?.getTextView()?.setOutlineColor(1f,0f,1f)
          labelSound?.getTextView()?.setInnerEdge(0.1f)
          labelSound?.getTextView()?.setInnerWidth(0.4f)
          labelSound?.getConstraints()?.layoutMarginRight(15f)
 
-         imageCheckBox=GLImageCheckBox(50f,50f, atlas!!,"Checkbox1","Checkmark1")
+         imageCheckBox=GLImageCheckBox(50f,50f, atlas!!,"Checkbox1",0,"Checkmark1",0)
          imageCheckBox?.set(300f,600f)
          imageCheckBox?.setOnClickListener(object :OnClickListener{
              override fun onClick() {
@@ -70,7 +70,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
              }
          })
 
-         progressBar= GLProgressBar(300f,25f,80f,true,atlas!!,"Expbar2","Expbar1")
+         progressBar= GLProgressBar(300f,25f,80f,true,atlas!!,"Expbar2",0,"Expbar1",0)
          progressBar?.set(200f,700f)
          progressBar?.setForegroundColor(ColorRGBA(1f,1f,1f,1f))
          progressBar?.setOnClickListener(object :OnClickListener{
@@ -80,7 +80,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
          })
 
 
-         val titleLayout=RelativeLayoutConstraint(getCanvasWidth(),250f,atlas!!,"Window1")
+         val titleLayout=RelativeLayoutConstraint(getCanvasWidth(),250f,atlas!!,"Window1",0)
          titleLabel?.getConstraints()?.layoutMarginTop(5f)
          fpsLabel?.getConstraints()?.layoutMarginLeft(100f)
          fpsLabel?.getConstraints()?.layoutMarginTop(20f)
@@ -89,12 +89,12 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
          labelDrawCall?.getConstraints()?.alignBelow(titleLabel!!)
          titleLayout.setItems(mutableListOf(titleLabel!!,labelDrawCall!!,fpsLabel!!))
 
-         linearLayout= LinearLayoutConstraint(null,getCanvasWidth(), getCanvasHeight(),atlas!!,"Background2")
+         linearLayout= LinearLayoutConstraint(null,getCanvasWidth(), getCanvasHeight(),atlas!!,"Background2",0)
          linearLayout?.setPosition(0f,0f)
          linearLayout?.setColor(ColorRGBA(1f,1f,1f,1f))
          progressBar?.getConstraints()?.layoutMarginBottom(20f)
          imageCheckBox?.getConstraints()?.layoutMarginLeft(20f)
-         val inner=RelativeLayoutConstraint(400f,180f,atlas!!,"Window2")
+         val inner=RelativeLayoutConstraint(400f,180f,atlas!!,"Window2",0)
          inner.setBackgroundColor(ColorRGBA())
          inner.setItems(mutableListOf(labelSound!!,imageCheckBox!!,progressBar!!))
          labelSound?.getConstraints()?.layoutMarginLeft(35f)
@@ -104,7 +104,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
          progressBar?.getConstraints()?.alignBelow(labelSound!!)
          progressBar?.getConstraints()?.layoutMarginLeft(25f)
 
-         val scrollView=GLScrollLayout(getCanvasWidth(),150f,atlas!!,"Window2")
+         val scrollView=GLScrollLayout(getCanvasWidth(),150f,atlas!!,"Window2",0)
          scrollView.setBackgroundColor(ColorRGBA(1f,1f,1f,1f))
          scrollView.setScrollBarBackgroundColor(ColorRGBA.red)
          scrollView.setOrientation(GLScrollLayout.HORIZONTAL)
@@ -126,7 +126,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
          scrollList.add(gridView)
          scrollView.setItems(scrollList)
 
-         val paraScrollView=GLScrollLayout(getCanvasWidth(),200f,atlas!!,"Window1")
+         val paraScrollView=GLScrollLayout(getCanvasWidth(),200f,atlas!!,"Window1",0)
               paraScrollView.setOrientation(GLScrollLayout.VERTICAL)
          paraScrollView.setScrollBarBackgroundColor(ColorRGBA(1f,0f,0f,1f))
 
@@ -144,12 +144,12 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
 
               }
           })
-          dropDown= GLDropDown(150f,40f,atlas!!,"Window1",harrington,"Hello",0.2f)
+          dropDown= GLDropDown(150f,40f,atlas!!,"Window1",0,harrington,"Hello",0.2f)
           dropDown?.setDropMaxHeight(200f)
           dropDown?.setItems(mutableListOf("kenya","sudan","ethiopia",
               "russia","iran","somalia","USA","israel","poland","UK",
               "UAE","ukraine","congo","germany","hungary","Czech"))
-          dropDown?.setBackgroundAtlas(atlas!!,"Window1")
+          dropDown?.setBackgroundAtlas(atlas!!,"Window1",0)
           dropDown?.addEvents(getRenderer().getTouchController())
          linearLayout?.setItems(mutableListOf(titleLayout,scrollView,inner,paraScrollView,dropDown!!))
 

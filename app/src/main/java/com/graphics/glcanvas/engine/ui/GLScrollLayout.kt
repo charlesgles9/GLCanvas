@@ -6,6 +6,7 @@ import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.maths.Vector2f
 import com.graphics.glcanvas.engine.structures.RectF
 import com.graphics.glcanvas.engine.utils.TextureAtlas
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
@@ -26,16 +27,15 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
         const val VERTICAL=0
         const val HORIZONTAL=1
     }
-    constructor(width:Float, height:Float, atlas: TextureAtlas, name:String):this(width, height){
-        setBackgroundAtlas(atlas, name)
+    constructor(width:Float, height:Float, atlas: TextureAtlas, name:String,index: Int):this(width, height){
+        setBackgroundAtlas(atlas, name,index)
     }
 
-     fun setBackgroundAtlas(atlas: TextureAtlas, name:String){
+     fun setBackgroundAtlas(atlas: TextureAtlas, name:String,index:Int){
          this.atlas=atlas
-         this.name=name
          setBackgroundTextureAtlas(atlas)
-         setPrimaryImage(name)
-         setBackgroundTextureFrame(name)
+         setPrimaryImage(name,index)
+         setBackgroundTextureFrame(name,index)
      }
 
     fun showScrollBar(enableScrollBar:Boolean){
@@ -101,42 +101,26 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
     fun addOnSwipeEvent(onSwipeListener:GLOnSwipeEvent.OnSwipeListener){
         this.onSwipeEvent= GLOnSwipeEvent(onSwipeListener,this)
         this.onSwipeListener=onSwipeListener
+        onSwipeEvent?.setOffset(offset)
     }
 
 
-    private fun scrollVertical(){
-        val first=items.first()
-        val last=items.last()
-        val vy=(onSwipeEvent?.getVelocity()?.y?:0f)
-        if((first.getY()-vy-first.height*0.5f)<=getY()-height*0.5f&&onSwipeEvent?.UP==true){
-            offset.sub(0f, vy)
-            onSwipeEvent?.getVelocity()?.multiply(GLOnSwipeEvent.friction)
-        }else
-            if((last.getY()+vy+last.height*0.5f)>=getY()+height*0.5f&&onSwipeEvent?.DOWN==true){
-                offset.sub(0f, vy)
-                onSwipeEvent?.getVelocity()?.multiply(GLOnSwipeEvent.friction)
-                //@debug  println("last "+last.getY()+" origin "+getY()+height*0.5f+" velocity "+vy)
-            }else{
-                //reset this or we'll get this annoying jagged scrolling effect
-                onSwipeEvent?.getVelocity()?.set(0f,0f)
-            }
+    private fun scrollVertical(oHeight: Float){
+       val rollBackVelocity=2.5f
+        //roll back effect
+        if(offset.y>=10f)
+            offset.sub(0f,rollBackVelocity)
+        if(offset.y<(oHeight-height)*-1f)
+            offset.add(0f,rollBackVelocity)
+
     }
 
-    private fun scrollHorizontal(){
-        val first=items.first()
-        val last=items.last()
-        val vx=(onSwipeEvent?.getVelocity()?.x?:0f)
-        if((first.getX()-first.width*0.5f+vx)<=getX()-width*0.5f&&onSwipeEvent?.LEFT==true){
-            offset.sub(vx, 0f)
-            onSwipeEvent?.getVelocity()?.multiply(GLOnSwipeEvent.friction)
-        }else
-            if((last.getX()+last.width*0.5f+vx)>=getX()+width*0.5f&&onSwipeEvent?.RIGHT==true){
-                offset.sub(vx, 0f)
-                onSwipeEvent?.getVelocity()?.multiply(GLOnSwipeEvent.friction)
-                //@debug  println("last "+last.getY()+" origin "+getY()+height*0.5f+" velocity "+vy)
-            }else{
-                onSwipeEvent?.getVelocity()?.set(0f,0f)
-            }
+    private fun scrollHorizontal(oWidth: Float){
+        val rollBackVelocity=2.5f
+       if(offset.x>=10f)
+           offset.sub(rollBackVelocity,0f)
+        if(offset.x<(oWidth-width)*-1f)
+            offset.add(rollBackVelocity,0f)
     }
 
 
@@ -151,7 +135,7 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
             scrollPercent=1.0f
         scrollBarBackground.setWidth(scrollBarWidth)
         scrollBarProgress.setWidth(scrollBarWidth*0.8f)
-        scrollBarBackground.setHeight(height)
+        scrollBarBackground.setHeight(height*0.8f)
         scrollBarProgress.setHeight(scrollBarBackground.getHeight()*scrollPercent)
         scrollBarBackground.set(getX()+width*0.5f-scrollBarWidth,getY())
         val sH=scrollBarBackground.getHeight()
@@ -201,12 +185,7 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
     override fun draw(batch: Batch) {
         super.draw(batch)
 
-        when(orientation){
-             VERTICAL->
-                 scrollVertical()
-             HORIZONTAL->
-                 scrollHorizontal()
-        }
+
         LayoutConstraint.groupItems(orientation,offset ,this,items)
         var itemWidth=0f
         var itemHeight=0f
@@ -219,7 +198,12 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
         }
         if(enableScrollBar&&isVisible())
         drawScrollBar(batch,itemWidth,itemHeight)
-
+        when(orientation){
+            VERTICAL->
+                scrollVertical(itemHeight)
+            HORIZONTAL->
+                scrollHorizontal(itemWidth)
+        }
 
     }
 

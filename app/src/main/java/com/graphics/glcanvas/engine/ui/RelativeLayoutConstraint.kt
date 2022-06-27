@@ -8,8 +8,8 @@ class RelativeLayoutConstraint(width:Float,height:Float):GLView(width ,height) {
 
 
     private var items= mutableListOf<GLView>()
-    constructor(width:Float, height:Float, atlas: TextureAtlas, name:String):this(width, height){
-       setBackgroundAtlas(atlas, name)
+    constructor(width:Float, height:Float, atlas: TextureAtlas, name:String,index:Int):this(width, height){
+       setBackgroundAtlas(atlas, name,index)
     }
     //push this view from center origin 0.5,0.5 -> 0,0
     fun setPosition(x:Float,y:Float){
@@ -23,12 +23,11 @@ class RelativeLayoutConstraint(width:Float,height:Float):GLView(width ,height) {
     fun setItems(items:MutableList<GLView>){
         this.items=items
     }
-    fun setBackgroundAtlas(atlas: TextureAtlas, name:String){
+    fun setBackgroundAtlas(atlas: TextureAtlas, name:String,index: Int){
         this.atlas=atlas
-        this.name=name
         setBackgroundTextureAtlas(atlas)
-        setPrimaryImage(name)
-        setBackgroundTextureFrame(name)
+        setPrimaryImage(name,index)
+        setBackgroundTextureFrame(name,index)
     }
     private fun applyMargin(view:GLView){
         view.set(view.getX()+view.getConstraints().getMarginLeft(),view.getY())

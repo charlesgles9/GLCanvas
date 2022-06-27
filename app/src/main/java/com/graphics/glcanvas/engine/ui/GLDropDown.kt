@@ -15,17 +15,16 @@ class GLDropDown (width:Float, height:Float,
     init {
         setText(string,font,size)
     }
-    constructor(width: Float, height: Float, atlas: TextureAtlas, name: String, font:Font, string: String, size: Float)
+    constructor(width: Float, height: Float, atlas: TextureAtlas, name: String, index:Int, font:Font, string: String, size: Float)
             :this(width, height,font,string,size) {
         this.atlas=atlas
-        this.name=name
         this.font=font
         this.string=string
         this.size=size
         setBackgroundTextureAtlas(atlas)
-        imageFromAtlas(name)
-        setPrimaryImage(name)
-        setBackgroundTextureFrame(name)
+        imageFromAtlas(name,index)
+        setPrimaryImage(name,index)
+        setBackgroundTextureFrame(name,index)
         setText(string,font,size)
         setRippleColor(ColorRGBA.white)
         setDefaultColor(ColorRGBA.white)
@@ -77,8 +76,8 @@ class GLDropDown (width:Float, height:Float,
         return lbl
     }
 
-    fun setBackgroundAtlas(atlas: TextureAtlas, name:String){
-        scrollView?.setBackgroundAtlas(atlas, name)
+    fun setBackgroundAtlas(atlas: TextureAtlas, name:String,index: Int){
+        scrollView?.setBackgroundAtlas(atlas, name,index)
     }
 
 

@@ -12,16 +12,15 @@ class LinearLayoutConstraint(private val parent:GLView?,width:Float,height:Float
     private var items= mutableListOf<GLView>()
     private var orientation= VERTICAL
     private var offset=Vector2f()
-    constructor(parent:GLView?,width:Float,height:Float,atlas: TextureAtlas,name:String):this(parent,width, height){
+    constructor(parent:GLView?,width:Float,height:Float,atlas: TextureAtlas,name:String,index:Int):this(parent,width, height){
         this.atlas=atlas
-        this.name=name
-       setBackgroundAtlas(atlas, name)
+       setBackgroundAtlas(atlas, name,index)
     }
 
-    fun setBackgroundAtlas(atlas: TextureAtlas, name:String){
+    fun setBackgroundAtlas(atlas: TextureAtlas, name:String,index:Int){
         setBackgroundTextureAtlas(atlas)
-        setPrimaryImage(name)
-        setBackgroundTextureFrame(name)
+        setPrimaryImage(name,index)
+        setBackgroundTextureFrame(name,index)
     }
     companion object{
         const val VERTICAL=0

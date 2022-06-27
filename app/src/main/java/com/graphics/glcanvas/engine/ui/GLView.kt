@@ -30,13 +30,14 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
       private val position=Vector2f()
       private var background= RectF(0f,0f,width, height)
       private var foreground=RectF(0f,0f,width, height)
+    //progress bar thumb
+      private var pThumb=RectF(0f,0f,10f,10f)
     // click effect color
       private var ripple=ColorRGBA(0f,0f,0f,0f)
     // default color no click
       private var default=ColorRGBA()
       private var collision=AxisABB()
       protected var atlas: TextureAtlas?=null
-      protected var name:String?=null
       protected var text:Text?=null
       private val onClickEvents= mutableListOf<OnClickEvent>()
       private val onMultiTouchEvents= mutableListOf<MultiTouchEvent>()
@@ -45,6 +46,8 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
     //primary and secondary texture coordinates for click effects
       private var tp=""
       private var ts=""
+      private var tpIndex=0
+      private var tsIndex=0
     // checkbox variables
       private var check=false
       protected var isCheckBox=false
@@ -60,6 +63,7 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
           background.setHeight(height)
           foreground.setWidth(width)
           foreground.setHeight(height)
+          pThumb.setColor(ColorRGBA.transparent)
       }
 
       fun setBackgroundColor(color: ColorRGBA){
@@ -69,14 +73,6 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
 
       protected fun setDefaultColor(color:ColorRGBA){
           default.set(color)
-      }
-
-      private fun setBackgroundImage(texture: Texture?){
-         this.background.setTexture(texture!!)
-      }
-
-      private fun setForegroundImage(texture: Texture?){
-        this.foreground.setTexture(texture!!)
       }
 
       fun clipViewUpper(x:Float,y:Float){
@@ -97,14 +93,21 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
     }
 
       fun setBackgroundTextureAtlas(atlas: TextureAtlas){
-          background.setSpriteSheet(atlas.getSheet()?.clone())
-          setBackgroundImage(atlas.getTexture())
+          background.setTextureAtlas(atlas)
       }
 
      fun setForegroundTextureAtlas(atlas: TextureAtlas){
-        foreground.setSpriteSheet(atlas.getSheet()?.clone())
-        setForegroundImage(atlas.getTexture())
+        foreground.setTextureAtlas(atlas)
      }
+
+     fun setProgressThumbColor(color: ColorRGBA){
+         pThumb.setColor(color)
+     }
+
+     fun setProgressRounded(radius:Float){
+        pThumb.setConnerRadius(radius)
+     }
+
 
     fun setWidthPixels(width: Float){
         background.setWidth(width)
@@ -126,21 +129,24 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
         this.foreground.setColor(color)
       }
 
-     fun setBackgroundTextureFrame(name:String){
+     fun setBackgroundTextureFrame(name:String,index:Int){
         if(atlas!=null)
-            getBackground().getSpriteSheet().setCurrentFrame(atlas!!.getTextureCoordinate(name))
+            background.setTextureAtlasFrame(name, index)
       }
-    fun setForegroundTextureFrame(name:String){
+
+     fun setForegroundTextureFrame(name:String,index: Int){
         if(atlas!=null)
-            getForeground().getSpriteSheet().setCurrentFrame(atlas!!.getTextureCoordinate(name))
+            foreground.setTextureAtlasFrame(name, index)
     }
 
-     fun setSecondaryImage(ts:String){
+     fun setSecondaryImage(ts:String,index: Int){
         this.ts=ts
+        this.tsIndex=index
     }
 
-     fun setPrimaryImage(tp:String){
+     fun setPrimaryImage(tp:String,index: Int){
         this.tp=tp
+        this.tpIndex=index
     }
 
     fun setRippleColor(color: ColorRGBA){
@@ -210,11 +216,15 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
             currentProgress = pw / width * maxProgressBar
             getForeground().setWidth(pw.toFloat() - backgroundThickness * 2f)
             fOffset.x = ((width - pw.toFloat()) * -0.5f).toInt().toFloat()
+            pThumb.set(getForeground().getX()+getForeground().getWidth()*0.5f,
+                getForeground().getY())
             //position the vertical bar
         }else if(!horizontalBar&&ph!=getForeground().getHeight().toInt()){
             currentProgress = pw / width * maxProgressBar
             getForeground().setHeight(ph.toFloat() - backgroundThickness * 2f)
             fOffset.y = ((height - ph.toFloat()) * -0.5f).toInt().toFloat()
+            pThumb.set(getForeground().getX(),
+                getForeground().getY()+getForeground().getHeight()*0.5f)
         }
     }
 
@@ -275,22 +285,22 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
         if(flag){
             background.setColor(ripple)
             if(ts.isNotEmpty())
-                setBackgroundTextureFrame(ts)
+                setBackgroundTextureFrame(ts,tsIndex)
         }else {
             background.setColor(default)
             if (tp.isNotEmpty())
-                setBackgroundTextureFrame(tp)
+                setBackgroundTextureFrame(tp,tpIndex)
         }
     }
     private fun checkBoxToggle(flag:Boolean){
         if(flag){
             foreground.setColor(ripple)
             if(ts.isNotEmpty())
-                setForegroundTextureFrame(ts)
+                setForegroundTextureFrame(ts,tsIndex)
         }else {
             foreground.setColor(default)
             if (tp.isNotEmpty())
-                setForegroundTextureFrame(tp)
+                setForegroundTextureFrame(tp,tpIndex)
         }
     }
 

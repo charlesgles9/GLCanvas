@@ -2,6 +2,8 @@ package com.graphics.glcanvas.engine.structures
 import com.graphics.glcanvas.engine.maths.Vector2f
 import com.graphics.glcanvas.engine.maths.Vector3f
 import com.graphics.glcanvas.engine.utils.SpriteAnimator
+import com.graphics.glcanvas.engine.utils.Texture
+import com.graphics.glcanvas.engine.utils.TextureAtlas
 
 open class RectF :Vertex {
     private val position=Vector3f()
@@ -12,6 +14,7 @@ open class RectF :Vertex {
     private var clipUpper=Vector2f(Float.MIN_VALUE, Float.MIN_VALUE)
     private var clipLower=Vector2f(Float.MAX_VALUE, Float.MAX_VALUE)
     private var animator:SpriteAnimator?=null
+    private var atlas:TextureAtlas?=null
     constructor():super(4,4){}
     constructor(x:Float,y:Float,width:Float,height:Float):super(4,4){
         this.width=width
@@ -22,12 +25,28 @@ open class RectF :Vertex {
      fun set(x:Float, y:Float){
         position.setValueX(x)
         position.setValueY(y)
+     }
+
+    fun setTextureAtlas(atlas: TextureAtlas){
+        this.atlas=atlas
+        setSpriteSheet(atlas.getSheet()?.clone())
+        setTexture(atlas.getTexture()!!)
     }
 
+    fun setTextureAtlasFrame(name:String,index:Int){
+        if(atlas!=null)
+          getSpriteSheet().setCurrentFrame(atlas!!.getTextureCoordinate(name,index))
+    }
+
+    fun setTextureAtlasFrame(name:String){
+        if(atlas!=null)
+            getSpriteSheet().setCurrentFrame(atlas!!.getTextureCoordinate(name))
+    }
 
     fun setZ(z:Float){
         this.position.z=z
     }
+
     fun setClipUpper(upperX:Float,upperY:Float){
         clipUpper.set(upperX,upperY)
     }

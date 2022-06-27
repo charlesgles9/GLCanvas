@@ -31,6 +31,10 @@ class Vector2f {
         this.y=otherY
     }
 
+    fun sub(other:Float){
+        this.x-=other
+        this.y-=other
+    }
     fun sub(otherX:Float, otherY:Float){
         this.x-=otherX
         this.y-=otherY

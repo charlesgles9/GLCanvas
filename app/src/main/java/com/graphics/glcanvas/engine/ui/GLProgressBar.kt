@@ -17,14 +17,13 @@ class GLProgressBar(width:Float,height:Float, progress:Float,horizontalBar:Boole
        }
 
     constructor(width: Float, height: Float,progress: Float,horizontalBar:Boolean, atlas: TextureAtlas,
-                primary: String,secondary:String):this(width, height,progress, horizontalBar) {
+                primary: String,primaryIndex:Int,secondary:String,secondaryIndex:Int):this(width, height,progress, horizontalBar) {
         this.atlas=atlas
-        this.name=secondary
         setBackgroundTextureAtlas(atlas)
-        setPrimaryImage(secondary)
-        setBackgroundTextureFrame(secondary)
+        setPrimaryImage(secondary,secondaryIndex)
+        setBackgroundTextureFrame(secondary,secondaryIndex)
         setForegroundTextureAtlas(atlas)
-        setForegroundTextureFrame(primary)
+        setForegroundTextureFrame(primary,primaryIndex)
 
     }
 

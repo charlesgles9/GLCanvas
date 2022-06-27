@@ -3,17 +3,17 @@ package com.graphics.glcanvas.engine.ui
 import com.graphics.glcanvas.engine.utils.TextureAtlas
 
 class GLImageProgressBar(width:Float, height:Float, progress:Float,horizontalBar:Boolean, atlas: TextureAtlas,
-                         bgImage: String,fgImage:String):GLView(width, height) {
+                         bgImage: String,bgIndex:Int,fgImage:String,fgIndex:Int):GLView(width, height) {
 
             init {
                 this.atlas=atlas
                 this.currentProgress=progress
                 this.horizontalBar=horizontalBar
                 setBackgroundTextureAtlas(atlas)
-                setPrimaryImage(bgImage)
-                setBackgroundTextureFrame(bgImage)
+                setPrimaryImage(bgImage,bgIndex)
+                setBackgroundTextureFrame(bgImage,bgIndex)
                 setForegroundTextureAtlas(atlas)
-                setForegroundTextureFrame(fgImage)
+                setForegroundTextureFrame(fgImage,fgIndex)
                 positionBars(horizontalBar,progress, maxProgressBar)
                 setRippleColor(getBackground().getColor(0))
                 isProgressBar=true

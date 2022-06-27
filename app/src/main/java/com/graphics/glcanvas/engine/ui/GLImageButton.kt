@@ -8,18 +8,14 @@ import com.graphics.glcanvas.engine.utils.TextureAtlas
 class GLImageButton(width:Float, height:Float) : GLView(width, height) {
 
 
-    constructor(width: Float,height: Float,atlas: TextureAtlas,name: String):this(width, height) {
+    constructor(width: Float,height: Float,atlas: TextureAtlas):this(width, height) {
         this.atlas=atlas
-        this.name=name
         setBackgroundTextureAtlas(atlas)
-
-        imageFromAtlas(name)
     }
 
-    private fun imageFromAtlas(name:String){
-        this.name=name
-        setPrimaryImage(name)
-        setBackgroundTextureFrame(name)
+    private fun imageFromAtlas(name:String,index:Int){
+        setPrimaryImage(name,index)
+        setBackgroundTextureFrame(name,index)
     }
 
 

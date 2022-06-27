@@ -12,21 +12,20 @@ open class GLLabel(width:Float, height:Float, private var font: Font, private va
         setText(string,font,size)
     }
 
-    constructor(width: Float, height: Float, atlas: TextureAtlas, name: String,font:Font,string: String,size: Float):this(width, height,font,string,size) {
+    constructor(width: Float, height: Float, atlas: TextureAtlas, name: String,index: Int,font:Font,string: String,size: Float):this(width, height,font,string,size) {
         this.atlas=atlas
-        this.name=name
+
         this.font=font
         this.string=string
         this.size=size
         setBackgroundTextureAtlas(atlas)
-        imageFromAtlas(name)
+        imageFromAtlas(name,index)
         setText(string,font,size)
         setRippleColor(ColorRGBA.white)
     }
 
-    protected fun imageFromAtlas(name:String){
-        this.name=name
-        setBackgroundTextureFrame(name)
+    protected fun imageFromAtlas(name:String,index:Int){
+        setBackgroundTextureFrame(name,index)
     }
 
 
