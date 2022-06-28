@@ -24,9 +24,6 @@ open class GLRendererWrapper(private val width: Float,private val height: Float)
         return renderer
     }
 
-    fun fpsCap(cap:Int){
-        renderer.fpsCap(cap+10)
-    }
 
     fun getCanvasWidth():Float{
        return width

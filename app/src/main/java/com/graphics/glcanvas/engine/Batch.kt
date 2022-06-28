@@ -608,7 +608,7 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
         vertexBuffer!!.put(vertexes).position(0)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[0])
         GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,vcount*4,vertexBuffer)
-        defaultShader.enableVertexAttribPointer("a_position",VERTEX_COORDS_PER_VERTEX,12,vertexBuffer)
+        defaultShader.enableVertexAttribPointer("a_position",VERTEX_COORDS_PER_VERTEX,0,vertexBuffer)
         // pass in every circle or quads center position
         centerBuffer!!.put(centerVertex).position(0)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[3])
@@ -660,6 +660,7 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
             defaultShader.use()
         defaultShader.getUniformMatrix4fv("u_MVPMatrix",mMVPMatrix)
         circleShader.uniform2f("srcRes",ResolutionX,ResolutionY)
+        defaultShader.uniform2f("srcRes",ResolutionX,ResolutionY)
         defaultShader.uniformLi("a_isQuad",if(primitiveType== Primitives.QUAD&&!isText)1 else 0)
         defaultShader.uniformLi("isText",if(isText)1 else 0)
         // distance field uniforms for text rendering

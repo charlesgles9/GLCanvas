@@ -53,7 +53,7 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
       protected var isCheckBox=false
       private  var clicked=false
      // finger size or touch area
-      private val thumb=30f
+      private val thumb=20f
       private var centerText=true
       private var visible=true
       private var enabled=true
@@ -348,7 +348,13 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
                                  background.getHeight(),x,y,thumb,thumb)
 
     }
+    fun contains(view:GLView):Boolean{
+        return collision.isIntersecting(background.getX(),
+            background.getY(),
+            background.getWidth(),
+            background.getHeight(),view.getX(),view.getY(),view.width,view.height)
 
+    }
     fun setOnClickListener(onclick: OnClickEvent.OnClickListener){
         onClickEvents.add(OnClickEvent(onclick,this))
     }
@@ -367,26 +373,6 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
                 if(enabled&&isVisible())
                 it.onTouchEvent(event)
 
-           /* MotionEvent.ACTION_DOWN->{
-                if(contains(event.x,event.y))
-                   background.setColor(ripple)
-            }
-            MotionEvent.ACTION_UP->{
-               background.setColor(default)
-            }
-            MotionEvent.ACTION_POINTER_DOWN->{
-                println("Second finger Touched")
-            }
-
-            MotionEvent.ACTION_POINTER_UP->{
-                println("Second finger Not Touch")
-            }
-            MotionEvent.ACTION_MOVE->{
-                if(contains(event.x,event.y))
-                    background.setColor(ripple)
-                else
-                    background.setColor(default)
-            }*/
 
         }
         return true

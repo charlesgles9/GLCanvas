@@ -5,6 +5,7 @@ import android.content.Context
 import android.opengl.GLSurfaceView
 import android.util.DisplayMetrics
 import android.view.MotionEvent
+import android.widget.Toast
 import com.graphics.glcanvas.engine.ui.ScreenRatio
 
 
@@ -21,12 +22,17 @@ class GLCanvasSurfaceView(context: Context, private val renderer: GLCanvasRender
         ScreenRatio.getInstance().setSurfaceScreen(renderer.getCanvasWidth(),renderer.getCanvasHeight())
         renderer.getRenderer().setController(controller)
         setRenderer(renderer.getRenderer())
+        Toast.makeText(getContext(), "W= $w H= $h",Toast.LENGTH_LONG).show()
+
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        controller.getEvents().forEach{
-             it.onTouchEvent(event)
+        queueEvent {
+            controller.getEvents().forEach{
+                it.onTouchEvent(event)
+            }
         }
+
         return true
     }
 

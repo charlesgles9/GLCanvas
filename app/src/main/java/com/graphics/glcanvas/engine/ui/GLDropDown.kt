@@ -11,6 +11,9 @@ class GLDropDown (width:Float, height:Float,
                   private var font: Font, private var string:String, private var size: Float)
                   : GLLabel(width,height,font, string, size)  {
     private var scrollView:GLScrollLayout?=null
+    private val views= mutableListOf<GLView>()
+    private var onItemClick:OnItemClickEvent?=null
+    private var listener:OnItemClickEvent.OnItemClickListener?=null
     private var itemDropMaxHeight=Float.MAX_VALUE
     init {
         setText(string,font,size)
@@ -42,7 +45,6 @@ class GLDropDown (width:Float, height:Float,
     fun setItems(strings:MutableList<String>){
         //calculate maximum height of the wrapper
           var totalViewHeight=0f
-          val views= mutableListOf<GLView>()
            strings.forEach {
                views.add(genLabel(it))
            }
@@ -50,6 +52,7 @@ class GLDropDown (width:Float, height:Float,
             totalViewHeight += view.height
             view.setVisibility(false)
         }
+
         itemDropMaxHeight=if(itemDropMaxHeight== Float.MAX_VALUE)totalViewHeight else itemDropMaxHeight
         scrollView=GLScrollLayout(width, itemDropMaxHeight)
         scrollView?.setOrientation(GLScrollLayout.VERTICAL)
@@ -64,6 +67,9 @@ class GLDropDown (width:Float, height:Float,
         scrollView?.getConstraints()?.alignCenterHorizontal(this)
         scrollView?.setVisibility(false)
         scrollView?.setZ(this.getZ()+1f)
+        onItemClick=OnItemClickEvent(null,scrollView!!,this,views )
+        if(listener!=null)
+            onItemClick?.setListener(listener!!)
     }
 
     private fun genLabel(message:String):GLLabel{
@@ -87,6 +93,10 @@ class GLDropDown (width:Float, height:Float,
 
     }
 
+    fun setOnItemClickListener(listener:OnItemClickEvent.OnItemClickListener){
+        this.listener=listener
+        this.onItemClick?.setListener(listener)
+    }
     fun addEvents(controller:GLCanvasSurfaceView.TouchController?){
          scrollView?.addOnSwipeEvent(object :GLOnSwipeEvent.OnSwipeListener{
              override fun onSwipe() {
@@ -105,6 +115,7 @@ class GLDropDown (width:Float, height:Float,
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
          scrollView?.onTouchEvent(event)
+         onItemClick?.onTouchEvent(event)
 
         return super.onTouchEvent(event)
     }

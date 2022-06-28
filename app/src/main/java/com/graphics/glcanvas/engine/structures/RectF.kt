@@ -2,7 +2,6 @@ package com.graphics.glcanvas.engine.structures
 import com.graphics.glcanvas.engine.maths.Vector2f
 import com.graphics.glcanvas.engine.maths.Vector3f
 import com.graphics.glcanvas.engine.utils.SpriteAnimator
-import com.graphics.glcanvas.engine.utils.Texture
 import com.graphics.glcanvas.engine.utils.TextureAtlas
 
 open class RectF :Vertex {
@@ -20,11 +19,15 @@ open class RectF :Vertex {
         this.width=width
         this.height=height
         this.position.set(x,y,0.0f)
+       // this.clipUpper.set(x,y)
+      //  this.clipLower.set(x+width,y+height*0.5f)
     }
 
      fun set(x:Float, y:Float){
         position.setValueX(x)
         position.setValueY(y)
+     //   clipUpper.set(x,y)
+      //  clipLower.set(x+width,y+height*0.5f)
      }
 
     fun setTextureAtlas(atlas: TextureAtlas){
@@ -76,10 +79,12 @@ open class RectF :Vertex {
     }
     open fun setWidth(width: Float){
         this.width=width
+      //  this.clipLower.set(position.x+width,position.y+height*0.5f)
     }
 
     open fun setHeight(height: Float){
         this.height=height
+       // this.clipLower.set(position.x+width,position.y+height*0.5f)
     }
 
     open fun getWidth():Float{

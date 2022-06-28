@@ -2,6 +2,7 @@ package com.graphics.glcanvas.engine
 
 import android.content.Context
 import android.opengl.GLES32
+import android.widget.Toast
 import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.maths.Vector2f
 import com.graphics.glcanvas.engine.structures.*
@@ -151,6 +152,11 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
               "UAE","ukraine","congo","germany","hungary","Czech"))
           dropDown?.setBackgroundAtlas(atlas!!,"Window1",0)
           dropDown?.addEvents(getRenderer().getTouchController())
+         dropDown?.setOnItemClickListener(object :OnItemClickEvent.OnItemClickListener{
+             override fun onItemClick(view: GLView) {
+
+             }
+         })
          linearLayout?.setItems(mutableListOf(titleLayout,scrollView,inner,paraScrollView,dropDown!!))
 
          getRenderer().getTouchController()?.addEvent(titleLabel!!)
@@ -184,7 +190,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
 
     override fun draw() {
         GLES32.glClear(GLES32.GL_DEPTH_BUFFER_BIT or  GLES32.GL_COLOR_BUFFER_BIT)
-        GLES32.glClearColor(0.5f,0.5f,0.5f,0.5f)
+        GLES32.glClearColor(1f,1f,1f,1f)
 
         // draw ui
         batch.setMode(BatchQueue.UNORDER)
@@ -195,6 +201,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         fpsLabel?.getTextView()?.setText("FPS: "+FpsCounter.getInstance().getFps())
         labelDrawCall?.getTextView()?.setText("DrawCalls: "+batch.getDrawCallCount())
         batch.resetStats()
+
     }
 
     override fun update(delta: Long) {

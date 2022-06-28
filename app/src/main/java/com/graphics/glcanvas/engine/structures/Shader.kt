@@ -96,6 +96,18 @@ class Shader(private val vname:String,private val fname:String) {
             stride,
             buffer)
     }
+    fun enableVertexAttribPointer(name:String,coords_per_vertex:Int,stride:Int,buffer:Int){
+        val handle=GLES32.glGetAttribLocation(getProgram(),name)
+        GLES32.glEnableVertexAttribArray(handle)
+        //prepare triangle coordinate data
+        GLES32.glVertexAttribPointer(
+            handle,
+            coords_per_vertex,
+            GLES32.GL_FLOAT,
+            false,
+            stride,
+            buffer)
+    }
     fun disableVertexAttribPointer(name:String){
         GLES32.glDisableVertexAttribArray(GLES32.glGetAttribLocation(getProgram(),name))
     }
