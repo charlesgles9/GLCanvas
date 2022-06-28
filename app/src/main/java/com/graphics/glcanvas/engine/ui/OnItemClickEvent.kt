@@ -38,7 +38,8 @@ class OnItemClickEvent(private var listener:OnItemClickListener?,
                     listener?.onItemClick(view)
                     header.getTextView()?.setText(view.getTextView()?.getText() ?: "")
                     pointerDown[i] = false
-
+                     if(header is GLDropDown)
+                         header.toggleDropDown(false)
                 } else if (event.action == MotionEvent.ACTION_MOVE && pointerDown[i]) {
                     position.set(
                         event.x - view.getThumbSize() / 2,

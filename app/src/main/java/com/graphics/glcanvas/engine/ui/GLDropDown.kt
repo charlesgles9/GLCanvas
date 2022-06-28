@@ -15,6 +15,7 @@ class GLDropDown (width:Float, height:Float,
     private var onItemClick:OnItemClickEvent?=null
     private var listener:OnItemClickEvent.OnItemClickListener?=null
     private var itemDropMaxHeight=Float.MAX_VALUE
+    private var showDropDowm=false
     init {
         setText(string,font,size)
     }
@@ -34,8 +35,14 @@ class GLDropDown (width:Float, height:Float,
     }
 
     fun toggleDropDown(){
-        val bool=scrollView?.isVisible()?:false
-        scrollView?.setVisibility(!bool)
+        showDropDowm=!showDropDowm
+        scrollView?.setVisibility(showDropDowm)
+
+    }
+
+    fun toggleDropDown(boolean: Boolean){
+        scrollView?.setVisibility(boolean)
+        showDropDowm=boolean
     }
 
     fun setDropMaxHeight(itemDropMaxHeight:Float){

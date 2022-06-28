@@ -117,11 +117,11 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
              }
          })
 
-         val gridView=GLGridLayout(scrollView,scrollView.width,scrollView.height,2,30)
+         val gridView=GLGridLayout(scrollView,scrollView.width,scrollView.height,2,10)
              gridView.setBackgroundColor(ColorRGBA.transparent)
              gridView.getConstraints().layoutMarginBottom(20f)
          val gridList= mutableListOf<GLView>()
-         for(i in 0 until 60)
+         for(i in 0 until 20)
              gridList.add(genLabel("label"))
          gridView.setItems(gridList)
          scrollList.add(gridView)

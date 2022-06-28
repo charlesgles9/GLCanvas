@@ -4,8 +4,6 @@ import android.view.MotionEvent
 import com.graphics.glcanvas.engine.Touch
 import com.graphics.glcanvas.engine.maths.Vector2f
 import kotlin.math.abs
-import kotlin.math.max
-
 
 class GLOnSwipeEvent (private val listener: OnSwipeListener,
                       private val view:GLView): Touch {
@@ -13,8 +11,9 @@ class GLOnSwipeEvent (private val listener: OnSwipeListener,
     private val velocity=Vector2f(0f,0f)
     private var origin=Vector2f(-1f,-1f)
     private var move=Vector2f(-1f,-1f)
-    private var distance=Vector2f(0f,0f)
     private var offset=Vector2f()
+    private var maxOffset=Vector2f()
+    private var minOffset=Vector2f()
      var UP=false
      var DOWN=false
      var LEFT=false
@@ -38,15 +37,14 @@ class GLOnSwipeEvent (private val listener: OnSwipeListener,
     fun setOffset(offset:Vector2f){
         this.offset=offset
     }
-    fun getDistance():Vector2f{
-        return distance
+
+    fun setMaxOffset(x:Float,y:Float){
+        this.maxOffset.set(x,y)
     }
 
-
-    fun printDistance(){
-        println("x= "+distance.x+" y= "+distance.y)
+    fun setMinOffset(x:Float,y:Float){
+        this.minOffset.set(x,y)
     }
-
 
     override fun onTouchEvent(event: MotionEvent):Boolean {
         if(event.action ==MotionEvent.ACTION_DOWN){
@@ -67,7 +65,18 @@ class GLOnSwipeEvent (private val listener: OnSwipeListener,
                 val distanceY=abs(origin.y -move.y+1)
                 val dirx= (origin.x-move.x+1) / distanceX
                 val diry=(origin.y-move.y +1 )/ distanceY
+
                 offset.sub(dirx*threshHold,threshHold*diry)
+
+                if(offset.x>=maxOffset.x&&maxOffset.x!=0f)
+                    offset.x=offset.x+dirx*threshHold
+                if(offset.x<=minOffset.x&&minOffset.x!=0f)
+                    offset.x=offset.x+dirx*threshHold
+                if(offset.y>=maxOffset.y&&maxOffset.y!=0f)
+                    offset.y=offset.y+diry*threshHold
+                if(offset.y<=minOffset.y&&minOffset.y!=0f)
+                    offset.y=offset.y+diry*threshHold
+
                 UP=velocity.y<0
                 DOWN=velocity.y>0
                 LEFT=velocity.x<0

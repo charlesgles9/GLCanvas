@@ -107,6 +107,8 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
 
     private fun scrollVertical(oHeight: Float){
        val rollBackVelocity=2.5f
+        onSwipeEvent?.setMaxOffset(0f,height*0.20f)
+        onSwipeEvent?.setMinOffset(0f,-oHeight+height*0.8f)
         //roll back effect
         if(offset.y>=10f)
             offset.sub(0f,rollBackVelocity)
@@ -117,6 +119,8 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
 
     private fun scrollHorizontal(oWidth: Float){
         val rollBackVelocity=2.5f
+        onSwipeEvent?.setMaxOffset(width*0.20f,0f)
+        onSwipeEvent?.setMinOffset(-oWidth+width*0.8f,0f)
        if(offset.x>=10f)
            offset.sub(rollBackVelocity,0f)
         if(offset.x<(oWidth-width)*-1f)

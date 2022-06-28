@@ -57,8 +57,8 @@ void main(){
 /* if its a quad test if it has rounded corners
     ignore text objects since texts are also quads*/
     float rounded=roundedEdge(src,pos,size,radius,thickness);
-    quadV=clip;//*booleanBounds*booleanThickness;
-    vec4 quad_color=v_color*clip;//*rounded;
+    quadV=clip;
+    vec4 quad_color=v_color*clip*rounded;
 
 
     if(quad_color.a<(1.0/255.0))
@@ -72,8 +72,7 @@ void main(){
       float outlineAlpha=1.0-smoothstep(textBorderWidth,textBorderWidth+textBorderEdge,borderDistance);
       float overallAlpha=innerAlpha+(1.0-innerAlpha)*outlineAlpha;
       vec3 overallColor=mix(outlineColor.rgb,v_color.rgb,innerAlpha/overallAlpha);
-       quad_color=vec4(overallColor.rgb,overallAlpha)*clip;
-
+      quad_color=vec4(overallColor.rgb,overallAlpha)*clip;
       }
 
 
