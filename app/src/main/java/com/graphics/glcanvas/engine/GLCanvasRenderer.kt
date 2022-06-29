@@ -105,7 +105,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
          progressBar?.getConstraints()?.alignBelow(labelSound!!)
          progressBar?.getConstraints()?.layoutMarginLeft(25f)
 
-         val scrollView=GLScrollLayout(getCanvasWidth(),150f,atlas!!,"Window2",0)
+         val scrollView=GLScrollLayout(getCanvasWidth(),180f,atlas!!,"Window2",0)
          scrollView.setBackgroundColor(ColorRGBA(1f,1f,1f,1f))
          scrollView.setScrollBarBackgroundColor(ColorRGBA.red)
          scrollView.setOrientation(GLScrollLayout.HORIZONTAL)
@@ -117,7 +117,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
              }
          })
 
-         val gridView=GLGridLayout(scrollView,scrollView.width,scrollView.height,2,10)
+         val gridView=GLGridLayout(scrollView,scrollView.width,scrollView.height,2,7)
              gridView.setBackgroundColor(ColorRGBA.transparent)
              gridView.getConstraints().layoutMarginBottom(20f)
          val gridList= mutableListOf<GLView>()
