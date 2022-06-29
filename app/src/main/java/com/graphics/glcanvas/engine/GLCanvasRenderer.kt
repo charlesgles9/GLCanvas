@@ -127,6 +127,11 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
          scrollList.add(gridView)
          scrollView.setItems(scrollList)
 
+         gridView.setOnItemClickListener(object :OnItemClickEvent.OnItemClickListener{
+             override fun onItemClick(view: GLView) {
+
+             }
+         })
          val paraScrollView=GLScrollLayout(getCanvasWidth(),200f,atlas!!,"Window1",0)
               paraScrollView.setOrientation(GLScrollLayout.VERTICAL)
          paraScrollView.setScrollBarBackgroundColor(ColorRGBA(1f,0f,0f,1f))

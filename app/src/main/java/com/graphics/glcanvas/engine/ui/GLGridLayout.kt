@@ -1,5 +1,6 @@
 package com.graphics.glcanvas.engine.ui
 
+import android.view.MotionEvent
 import com.graphics.glcanvas.engine.Batch
 import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.maths.Vector2f
@@ -8,6 +9,8 @@ import com.graphics.glcanvas.engine.utils.TextureAtlas
 class GLGridLayout(private val parent:GLView?,width:Float,height:Float,private val rows:Int,private val cols:Int):GLView(width ,height) {
     private var items= mutableListOf<GLView>()
     private var offset= Vector2f()
+    private var onItemClick=OnItemClickEvent(null,parent?:this,null,items)
+    private var listener:OnItemClickEvent.OnItemClickListener?=null
     constructor(parent:GLView?,width:Float,height:Float, rows:Int,cols:Int,atlas: TextureAtlas,name:String,index:Int):this(parent,width, height,rows, cols){
         this.atlas=atlas
         setBackgroundAtlas(atlas, name,index)
@@ -28,7 +31,7 @@ class GLGridLayout(private val parent:GLView?,width:Float,height:Float,private v
     }
 
     fun setItems(items:MutableList<GLView>){
-        this.items=items
+        this.items.addAll(items)
     }
 
     fun getItems():MutableList<GLView>{
@@ -41,7 +44,10 @@ class GLGridLayout(private val parent:GLView?,width:Float,height:Float,private v
             it.setEnabled(enable)
         }
     }
-
+    fun setOnItemClickListener(listener:OnItemClickEvent.OnItemClickListener){
+        this.listener=listener
+        this.onItemClick.setListener(listener)
+    }
     override fun draw(batch: Batch) {
         super.draw(batch)
         LayoutConstraint.groupItems(offset,this,items, rows, cols)
@@ -49,5 +55,10 @@ class GLGridLayout(private val parent:GLView?,width:Float,height:Float,private v
             LayoutConstraint.clipView(parent?:this,this,it)
             it.draw(batch)
         }
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        onItemClick.onTouchEvent(event)
+        return super.onTouchEvent(event)
     }
 }

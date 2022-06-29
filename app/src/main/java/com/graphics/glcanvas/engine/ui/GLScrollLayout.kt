@@ -218,6 +218,9 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
         super.onTouchEvent(event)
         if(isEnabled()&&isVisible())
           onSwipeEvent?.onTouchEvent(event)!!
+        items.forEach {
+            it.onTouchEvent(event)
+        }
         return true
     }
 }
