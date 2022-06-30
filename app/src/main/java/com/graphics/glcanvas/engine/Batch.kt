@@ -688,7 +688,9 @@ class Batch() {
         transform()
         Matrix.multiplyMM(mMVPMatrix,0,mViewMatrix,0,mModelMatrix,0)
         Matrix.multiplyMM(mMVPMatrix,0,camera?.getProjectionMatrix(),0,mMVPMatrix,0)
+
         render()
+
          num_draw_calls++
 
 

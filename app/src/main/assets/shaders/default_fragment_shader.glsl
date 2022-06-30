@@ -57,8 +57,8 @@ void main(){
 /* if its a quad test if it has rounded corners
     ignore text objects since texts are also quads*/
     float rounded=roundedEdge(src,pos,size,radius,thickness);
-    quadV=clip;
-    vec4 quad_color=v_color*clip*rounded;
+    quadV=clip;//*rounded;
+    vec4 quad_color=v_color*quadV;
 
 
     if(quad_color.a<(1.0/255.0))

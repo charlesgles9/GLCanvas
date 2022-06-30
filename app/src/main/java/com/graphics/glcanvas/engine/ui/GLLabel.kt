@@ -41,4 +41,8 @@ open class GLLabel(width:Float, height:Float, private var font: Font, private va
         text?.setText(string)
     }
 
+    fun setTextColor(color:ColorRGBA){
+        text?.setColor(color)
+    }
+
 }

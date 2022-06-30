@@ -183,8 +183,8 @@ open class LayoutConstraint(private val view:GLView) : Constraints() {
             val upperVisibleX=parent.getX()-parent.width*0.5f<view.getX()+mWidth
 
             view.setVisibility(lowerVisibleY && upperVisibleY&&upperVisibleX&&lowerVisibleX)
-            view.clipViewLower(parent.getX() + (parent.width * 0.5f), parent.getY() + (parent.height * 0.5f))
-            view.clipViewUpper(parent.getX() - parent.width * 0.5f, parent.getY() - parent.height * 0.5f)
+            view.clipViewLower(parent.getX() + (parent.width * 0.5f), parent.getY() + (parent.height * 0.5f)-view.getConstraints().getMarginBottom())
+            view.clipViewUpper(parent.getX() - parent.width * 0.5f, parent.getY() - parent.height * 0.5f+view.getConstraints().getMarginTop())
 
         }
         fun groupItems(offset: Vector2f, parent: GLView, items: MutableList<GLView>, rows:Int, cols:Int){

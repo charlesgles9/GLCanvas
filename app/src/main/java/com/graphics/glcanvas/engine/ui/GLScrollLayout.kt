@@ -76,8 +76,12 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
     }
 
     fun setItems(items:MutableList<GLView>){
-        this.items=items
+        this.items.addAll(items)
 
+    }
+
+    fun addItem(view:GLView){
+        this.items.add(view)
     }
 
     override fun setVisibility(visible: Boolean) {
@@ -204,15 +208,16 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
         LayoutConstraint.groupItems(orientation,offset ,this,items)
         var itemWidth=0f
         var itemHeight=0f
-        if(isVisible())
-        items.forEach {
-            LayoutConstraint.clipView(this,it)
-            itemWidth+=it.width
-            itemHeight+=it.height
-             it.draw(batch)
+        if(isVisible()) {
+            items.forEach {
+                LayoutConstraint.clipView(this, it)
+                itemWidth += it.width
+                itemHeight += it.height
+                it.draw(batch)
+            }
+            if (enableScrollBar)
+                drawScrollBar(batch, itemWidth, itemHeight)
         }
-        if(enableScrollBar&&isVisible())
-        drawScrollBar(batch,itemWidth,itemHeight)
         when(orientation){
             VERTICAL->
                 scrollVertical(itemHeight)

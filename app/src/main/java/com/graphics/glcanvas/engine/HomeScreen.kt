@@ -15,6 +15,7 @@ class HomeScreen(atlas: TextureAtlas,font: Font,controller:GLCanvasSurfaceView.T
     private var about=GLImageButton(250f,50f,atlas)
     private var exit=GLImageButton(250f,50f,atlas)
     private var fpsLabel=GLLabel(150f,50f,font,"FPS: ",0.3f)
+    private var aboutDialog=AboutDialog(layout,atlas, font, controller, width, height)
    init {
        layout.setBackgroundColor(ColorRGBA.white)
        layout.setX(width*0.5f)
@@ -33,19 +34,19 @@ class HomeScreen(atlas: TextureAtlas,font: Font,controller:GLCanvasSurfaceView.T
        settings.setSecondaryImage("Button Hover",0)
        settings.setText("SETTINGS",font,0.3f)
        settings.setRippleColor(ColorRGBA.white)
-       settings.getConstraints().layoutMarginBottom(10f)
+       settings.getConstraints().layoutMarginBottom(20f)
       // about button
        about.setPrimaryImage("Button Normal",0)
        about.setSecondaryImage("Button Hover",0)
        about.setText("ABOUT",font,0.3f)
        about.setRippleColor(ColorRGBA.white)
-       about.getConstraints().layoutMarginBottom(10f)
+       about.getConstraints().layoutMarginBottom(20f)
        //exit button
        exit.setPrimaryImage("Button Normal",0)
        exit.setSecondaryImage("Button Hover",0)
        exit.setText("EXIT",font,0.3f)
        exit.setRippleColor(ColorRGBA.white)
-       exit.getConstraints().layoutMarginBottom(10f)
+       exit.getConstraints().layoutMarginBottom(20f)
        mainContainer.addItem(start)
        mainContainer.addItem(settings)
        mainContainer.addItem(about)
@@ -68,6 +69,8 @@ class HomeScreen(atlas: TextureAtlas,font: Font,controller:GLCanvasSurfaceView.T
        })
        about.setOnClickListener(object :OnClickEvent.OnClickListener{
            override fun onClick() {
+                aboutDialog.show(!aboutDialog.isShowing())
+                layout.setEnableTouchEvents(!aboutDialog.isShowing())
 
            }
        })
@@ -85,7 +88,9 @@ class HomeScreen(atlas: TextureAtlas,font: Font,controller:GLCanvasSurfaceView.T
    }
 
      fun draw(batch:Batch){
+
         layout.draw(batch)
+         aboutDialog.draw(batch)
         fpsLabel.setText("FPS: "+FpsCounter.getInstance().getFps())
     }
 }
