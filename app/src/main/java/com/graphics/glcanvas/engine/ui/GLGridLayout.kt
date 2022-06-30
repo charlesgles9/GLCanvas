@@ -37,7 +37,12 @@ class GLGridLayout(private val parent:GLView?,width:Float,height:Float,private v
     fun getItems():MutableList<GLView>{
         return items
     }
-
+    override fun setEnableTouchEvents(enable: Boolean){
+        super.setEnableTouchEvents(enable)
+        items.forEach {
+            it.setEnableTouchEvents(enable)
+        }
+    }
     override fun setEnabled(enable: Boolean) {
         super.setEnabled(enable)
         items.forEach {
@@ -58,6 +63,7 @@ class GLGridLayout(private val parent:GLView?,width:Float,height:Float,private v
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        if(isTouchEventsEnabled())
         onItemClick.onTouchEvent(event)
         return super.onTouchEvent(event)
     }

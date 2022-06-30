@@ -10,6 +10,7 @@ open class GLLabel(width:Float, height:Float, private var font: Font, private va
     init {
 
         setText(string,font,size)
+        setBackgroundColor(ColorRGBA.transparent)
     }
 
     constructor(width: Float, height: Float, atlas: TextureAtlas, name: String,index: Int,font:Font,string: String,size: Float):this(width, height,font,string,size) {
@@ -34,6 +35,10 @@ open class GLLabel(width:Float, height:Float, private var font: Font, private va
         text= Text(string,size,font)
         text?.setMaxWidth(width*0.9f)
         text?.setMaxHeight(height)
+    }
+
+    fun setText(string: String){
+        text?.setText(string)
     }
 
 }

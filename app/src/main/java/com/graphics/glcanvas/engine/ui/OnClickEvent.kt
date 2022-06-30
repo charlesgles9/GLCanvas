@@ -18,18 +18,20 @@ class OnClickEvent(private val listener:OnClickListener,
              position.set(event.x-view.getThumbSize()/2,event.y-view.getThumbSize()/2)
              ScreenRatio.getInstance().project(position)
              pointerDown= contains(position.x,position.y)
-                 return true
+                return pointerDown
          }else if(event.action ==MotionEvent.ACTION_UP&&pointerDown){
              position.set(-1f,-1f)
              listener.onClick()
              //for checkboxes
              view.setChecked(!view.getChecked())
              pointerDown=false
+
          }else if(event.action ==MotionEvent.ACTION_MOVE&&pointerDown){
              position.set(event.x-view.getThumbSize()/2,event.y-view.getThumbSize()/2)
              ScreenRatio.getInstance().project(position)
              pointerDown=contains(position.x,position.y)
-             return true
+             return pointerDown
+
          }
         return false
     }

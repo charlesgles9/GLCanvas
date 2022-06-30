@@ -37,8 +37,18 @@ class LinearLayoutConstraint(private val parent:GLView?,width:Float,height:Float
 
 
     fun setItems(items:MutableList<GLView>){
-        this.items=items
+        this.items.addAll(items)
         LayoutConstraint.groupItems(orientation,offset ,this,items)
+    }
+
+    fun addItem(view:GLView){
+        items.add(view)
+    }
+    override fun setEnableTouchEvents(enable: Boolean){
+        super.setEnableTouchEvents(enable)
+        items.forEach {
+            it.setEnableTouchEvents(enable)
+        }
     }
 
     override fun setVisibility(visible: Boolean) {
@@ -75,10 +85,8 @@ class LinearLayoutConstraint(private val parent:GLView?,width:Float,height:Float
         LayoutConstraint.groupItems(orientation,offset ,this,items)
         if(isVisible())
         items.forEach {
-
             LayoutConstraint.clipView(parent?:this,this,it)
             it.draw(batch)
         }
-
     }
 }

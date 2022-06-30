@@ -86,6 +86,14 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
             view.setVisibility(visible)
         }
     }
+
+    override fun setEnableTouchEvents(enable: Boolean){
+         super.setEnableTouchEvents(enable)
+        items.forEach {
+            it.setEnableTouchEvents(enable)
+        }
+    }
+
     override fun setZ(z: Float) {
         super.setZ(z)
         scrollBarProgress.setZ(z)
@@ -216,10 +224,12 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
 
     override fun onTouchEvent(event: MotionEvent):Boolean {
         super.onTouchEvent(event)
-        if(isEnabled()&&isVisible())
-          onSwipeEvent?.onTouchEvent(event)!!
-        items.forEach {
-            it.onTouchEvent(event)
+        if(isTouchEventsEnabled()) {
+            if (isEnabled() && isVisible())
+                onSwipeEvent?.onTouchEvent(event)!!
+            items.forEach {
+                it.onTouchEvent(event)
+            }
         }
         return true
     }

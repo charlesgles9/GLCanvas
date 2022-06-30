@@ -30,4 +30,12 @@ class ScreenRatio {
     fun setDisplayScreen(x:Float,y:Float){
         display.set(x,y)
     }
+
+    fun getDisplay():Vector2f{
+        return display
+    }
+
+    fun getSurfaceScreen():Vector2f{
+        return screen
+    }
 }

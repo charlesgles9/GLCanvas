@@ -24,6 +24,9 @@ open class GLRendererWrapper(private val width: Float,private val height: Float)
         return renderer
     }
 
+    fun getController():GLCanvasSurfaceView.TouchController?{
+        return renderer.getTouchController()
+    }
 
     fun getCanvasWidth():Float{
        return width

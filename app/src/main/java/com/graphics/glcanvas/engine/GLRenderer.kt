@@ -59,6 +59,7 @@ class GLRenderer(private val updatable: Updatable) : GLSurfaceView.Renderer {
     fun getTouchController():GLCanvasSurfaceView.TouchController?{
         return controller
     }
+
      private fun setTransparency(gl:GL10, transparency:Boolean){
         if(transparency){
             gl.glEnable(GL10.GL_BLEND)

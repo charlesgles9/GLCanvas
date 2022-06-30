@@ -57,6 +57,8 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
       private var centerText=true
       private var visible=true
       private var enabled=true
+    // for touch events
+      private var enableTouchEvents=true
       init {
           foreground.setColor(ColorRGBA(0f,0f,0f,0f))
           background.setWidth(width)
@@ -108,6 +110,13 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
         pThumb.setConnerRadius(radius)
      }
 
+    open fun setEnableTouchEvents(enable: Boolean){
+        enableTouchEvents=enable
+    }
+
+    fun isTouchEventsEnabled():Boolean{
+        return enableTouchEvents
+    }
 
     fun setWidthPixels(width: Float){
         background.setWidth(width)
@@ -365,14 +374,16 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
 
     override fun onTouchEvent(event: MotionEvent):Boolean{
 
+        if(enableTouchEvents){
         onMultiTouchEvents.forEach {
             if(enabled&&isVisible())
                 it.onTouchEvent(event)
-        }
-            onClickEvents.forEach{
-                if(enabled&&isVisible())
-                it.onTouchEvent(event)
+          }
+            onClickEvents.forEach {
+                if (enabled && isVisible())
+                    it.onTouchEvent(event)
 
+            }
 
         }
         return true

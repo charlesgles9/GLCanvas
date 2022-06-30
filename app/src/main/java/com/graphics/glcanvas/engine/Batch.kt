@@ -7,11 +7,12 @@ import com.graphics.glcanvas.engine.constants.Primitives
 import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.maths.Vector3f
 import com.graphics.glcanvas.engine.structures.*
+import com.graphics.glcanvas.engine.ui.ScreenRatio
 import java.nio.FloatBuffer
 import java.nio.ShortBuffer
 import kotlin.math.abs
 
-class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
+class Batch() {
 
     // a model matrix used to move models from object space
     private val mModelMatrix=FloatArray(16)
@@ -150,6 +151,7 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
     }
 
     fun end(){
+
         for( i in 0 until entities.size){
             val entity=entities[i]
             var type= Primitives.CIRCLE
@@ -652,15 +654,14 @@ class Batch(private val ResolutionX:Float,private val ResolutionY:Float) {
     }
 
     private fun render(){
-
         // use different shader is it's a circle
         if(primitiveType== Primitives.CIRCLE)
             circleShader.use()
         else
             defaultShader.use()
         defaultShader.getUniformMatrix4fv("u_MVPMatrix",mMVPMatrix)
-        circleShader.uniform2f("srcRes",ResolutionX,ResolutionY)
-        defaultShader.uniform2f("srcRes",ResolutionX,ResolutionY)
+        circleShader.uniform2f("srcRes",ScreenRatio.getInstance().getSurfaceScreen().x,ScreenRatio.getInstance().getSurfaceScreen().y)
+        defaultShader.uniform2f("srcRes",ScreenRatio.getInstance().getSurfaceScreen().x,ScreenRatio.getInstance().getSurfaceScreen().y)
         defaultShader.uniformLi("a_isQuad",if(primitiveType== Primitives.QUAD&&!isText)1 else 0)
         defaultShader.uniformLi("isText",if(isText)1 else 0)
         // distance field uniforms for text rendering

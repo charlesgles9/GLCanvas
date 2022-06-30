@@ -22,14 +22,14 @@ class GLCanvasSurfaceView(context: Context, private val renderer: GLCanvasRender
         ScreenRatio.getInstance().setSurfaceScreen(renderer.getCanvasWidth(),renderer.getCanvasHeight())
         renderer.getRenderer().setController(controller)
         setRenderer(renderer.getRenderer())
-        Toast.makeText(getContext(), "W= $w H= $h",Toast.LENGTH_LONG).show()
 
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         queueEvent {
-            controller.getEvents().forEach{
-                it.onTouchEvent(event)
+            for(touch in controller.getEvents()){
+                touch.onTouchEvent(event)
+
             }
         }
 

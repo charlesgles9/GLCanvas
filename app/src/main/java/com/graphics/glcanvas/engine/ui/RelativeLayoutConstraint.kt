@@ -21,7 +21,11 @@ class RelativeLayoutConstraint(width:Float,height:Float):GLView(width ,height) {
     }
 
     fun setItems(items:MutableList<GLView>){
-        this.items=items
+        this.items.addAll(items)
+    }
+
+    fun addItem(view:GLView){
+        this.items.add(view)
     }
     fun setBackgroundAtlas(atlas: TextureAtlas, name:String,index: Int){
         this.atlas=atlas
@@ -42,7 +46,12 @@ class RelativeLayoutConstraint(width:Float,height:Float):GLView(width ,height) {
         view.set(view.getX(),view.getY()-view.getConstraints().getMarginTop())
         view.set(view.getX(),view.getY()+view.getConstraints().getMarginBottom())
     }
-
+    override fun setEnableTouchEvents(enable: Boolean){
+        super.setEnableTouchEvents(enable)
+        items.forEach {
+            it.setEnableTouchEvents(enable)
+        }
+    }
     override fun setEnabled(enable: Boolean) {
         super.setEnabled(enable)
         items.forEach {
