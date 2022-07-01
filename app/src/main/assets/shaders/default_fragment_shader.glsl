@@ -17,12 +17,9 @@ uniform float textBorderEdge;
 uniform vec3 outlineColor;
 
 float roundedEdge(vec2 pos,vec2 center,vec2 size,float radius,float thickness){
-    float hyp=sqrt(size.x*size.x+size.y*size.y);
-    float maxHyp=hyp-radius*0.5;
     vec2 pd=abs(pos-center);
-    float pd_hyp=sqrt(pd.x*pd.x+pd.y*pd.y);
-    float max_pd_hyp=pd_hyp;
-    return 1.0-min(step(maxHyp,max_pd_hyp)*radius,1.0);
+    return 1.0-min(step(sqrt(size.x*size.x+size.y*size.y)-
+          radius*0.5,sqrt(pd.x*pd.x+pd.y*pd.y))*radius,1.0);
 }
 
 void main(){

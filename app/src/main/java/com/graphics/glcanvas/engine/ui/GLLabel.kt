@@ -20,13 +20,8 @@ open class GLLabel(width:Float, height:Float, private var font: Font, private va
         this.string=string
         this.size=size
         setBackgroundTextureAtlas(atlas)
-        imageFromAtlas(name,index)
-        setText(string,font,size)
-        setRippleColor(ColorRGBA.white)
-    }
-
-    protected fun imageFromAtlas(name:String,index:Int){
         setBackgroundSubTexture(name,index)
+        setText(string,font,size)
     }
 
 

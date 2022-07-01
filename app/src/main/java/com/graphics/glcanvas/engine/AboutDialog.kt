@@ -53,7 +53,6 @@ class AboutDialog(private val parent:GLView, atlas: TextureAtlas,font: Font, con
 
     }
 
-
     fun draw(batch: Batch){
         if(visible)
         layout.draw(batch)

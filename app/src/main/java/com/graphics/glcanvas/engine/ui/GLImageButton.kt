@@ -20,7 +20,11 @@ class GLImageButton(width:Float, height:Float) : GLView(width, height) {
 
     }
 
+    fun setBackgroundImageAtlas(name:String){
+        setPrimaryImage(name,0)
+        setBackgroundSubTexture(name,0)
 
+    }
 
     fun setText(string:String,font: Font,size:Float){
        text= Text(string,size,font)

@@ -19,15 +19,11 @@ open class RectF :Vertex {
         this.width=width
         this.height=height
         this.position.set(x,y,0.0f)
-       // this.clipUpper.set(x,y)
-      //  this.clipLower.set(x+width,y+height*0.5f)
     }
 
      fun set(x:Float, y:Float){
         position.setValueX(x)
         position.setValueY(y)
-     //   clipUpper.set(x,y)
-      //  clipLower.set(x+width,y+height*0.5f)
      }
 
     fun setTextureAtlas(atlas: TextureAtlas){
@@ -36,15 +32,11 @@ open class RectF :Vertex {
         setTexture(atlas.getTexture()!!)
     }
 
-    fun setTextureAtlasFrame(name:String,index:Int){
+    private fun setTextureAtlasFrame(name:String, index:Int){
         if(atlas!=null)
           getSpriteSheet().setCurrentFrame(atlas!!.getTextureCoordinate(name,index))
     }
 
-    fun setTextureAtlasFrame(name:String){
-        if(atlas!=null)
-            getSpriteSheet().setCurrentFrame(atlas!!.getTextureCoordinate(name))
-    }
     fun setSubTextureAtlas(atlas: TextureAtlas,name: String,index: Int){
         setSpriteSheet(atlas.getSheet()?.clone())
         setTexture(atlas.getTexture()!!)
@@ -89,12 +81,10 @@ open class RectF :Vertex {
     }
     open fun setWidth(width: Float){
         this.width=width
-      //  this.clipLower.set(position.x+width,position.y+height*0.5f)
     }
 
     open fun setHeight(height: Float){
         this.height=height
-       // this.clipLower.set(position.x+width,position.y+height*0.5f)
     }
 
     open fun getWidth():Float{

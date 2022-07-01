@@ -26,7 +26,7 @@ class GLDropDown (width:Float, height:Float,
         this.string=string
         this.size=size
         setBackgroundTextureAtlas(atlas)
-        imageFromAtlas(name,index)
+        setBackgroundSubTexture(name,index)
         setPrimaryImage(name,index)
         setBackgroundSubTexture(name,index)
         setText(string,font,size)
