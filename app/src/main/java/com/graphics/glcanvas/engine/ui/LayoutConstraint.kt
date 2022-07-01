@@ -12,6 +12,7 @@ open class LayoutConstraint(private val view:GLView) : Constraints() {
     private var above:GLView?=null
     private var below:GLView?=null
     private var center:GLView?=null
+    private var end:GLView?=null
     private var center_Horizontal:GLView?=null
     private var center_Vertical:GLView?=null
     private var MARGIN= floatArrayOf(0f,0f,0f,0f)
@@ -39,6 +40,10 @@ open class LayoutConstraint(private val view:GLView) : Constraints() {
 
     override fun alignCenter(view:GLView){
         this.center=view
+    }
+
+    override fun alignEnd(view:GLView){
+        this.end=view
     }
      override fun alignCenterVertical(view:GLView){
          this.center_Vertical=view
@@ -80,6 +85,11 @@ open class LayoutConstraint(private val view:GLView) : Constraints() {
         view.set(view.getX(),ly)
     }
 
+    private fun applyEnd(){
+        val width=(end?.width?:0f)
+        val lx= (end?.getX()?.plus(width*0.5f-view.width*0.5f+getMarginLeft()-getMarginRight())?:view.getX())
+        view.set(lx,view.getY())
+    }
     private fun applyBelow(){
         val height=(below?.height?:0f)
         val ly= (below?.getY()?.plus(height*0.5f+view.height*0.5f+getMarginBottom())?:view.getY())
@@ -97,7 +107,6 @@ open class LayoutConstraint(private val view:GLView) : Constraints() {
 
      private fun applyCenterVertical(){
              val ly= (center_Vertical?.getY()?:view.getY())
-
              view.set(view.getX(),ly)
      }
 
@@ -128,6 +137,7 @@ open class LayoutConstraint(private val view:GLView) : Constraints() {
         applyAbove()
         applyBelow()
         applyCenter()
+        applyEnd()
         applyCenterVertical()
         applyCenterHorizontal()
     }

@@ -31,7 +31,7 @@ class RelativeLayoutConstraint(width:Float,height:Float):GLView(width ,height) {
         this.atlas=atlas
         setBackgroundTextureAtlas(atlas)
         setPrimaryImage(name,index)
-        setBackgroundTextureFrame(name,index)
+        setBackgroundSubTexture(name,index)
     }
     private fun applyMargin(view:GLView){
         view.set(view.getX()+view.getConstraints().getMarginLeft(),view.getY())

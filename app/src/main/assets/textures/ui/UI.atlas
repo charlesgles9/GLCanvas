@@ -172,35 +172,35 @@ Favorite3
   orig: 195, 195
   offset: 0, 0
   index: 3
-Frame5
+Frame
   rotate: false
   xy: 1542, 1701
   size: 335, 336
   orig: 335, 336
   offset: 0, 0
   index: 5
-Frame4
+Frame
   rotate: false
   xy: 2, 385
   size: 335, 336
   orig: 335, 336
   offset: 0, 0
   index: 4
-Frame1
+Frame
   rotate: false
   xy: 1542, 1363
   size: 335, 336
   orig: 335, 336
   offset: 0, 0
   index: 1
-Frame3
+Frame
   rotate: false
   xy: 2, 47
   size: 335, 336
   orig: 335, 336
   offset: 0, 0
   index: 3
-Frame2
+Frame
   rotate: false
   xy: 649, 435
   size: 286, 286

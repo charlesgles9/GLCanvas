@@ -20,7 +20,7 @@ class LinearLayoutConstraint(private val parent:GLView?,width:Float,height:Float
     fun setBackgroundAtlas(atlas: TextureAtlas, name:String,index:Int){
         setBackgroundTextureAtlas(atlas)
         setPrimaryImage(name,index)
-        setBackgroundTextureFrame(name,index)
+        setBackgroundSubTexture(name,index)
     }
     companion object{
         const val VERTICAL=0

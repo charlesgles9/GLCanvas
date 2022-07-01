@@ -21,9 +21,9 @@ class GLProgressBar(width:Float,height:Float, progress:Float,horizontalBar:Boole
         this.atlas=atlas
         setBackgroundTextureAtlas(atlas)
         setPrimaryImage(secondary,secondaryIndex)
-        setBackgroundTextureFrame(secondary,secondaryIndex)
+        setBackgroundSubTexture(secondary,secondaryIndex)
         setForegroundTextureAtlas(atlas)
-        setForegroundTextureFrame(primary,primaryIndex)
+        setForegroundSubTexture(primary,primaryIndex)
 
     }
 

@@ -33,7 +33,7 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
     //progress bar thumb
       private var pThumb=RectF(0f,0f,10f,10f)
     // click effect color
-      private var ripple=ColorRGBA(0f,0f,0f,0f)
+      private var ripple=ColorRGBA()
     // default color no click
       private var default=ColorRGBA()
       private var collision=AxisABB()
@@ -138,14 +138,14 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
         this.foreground.setColor(color)
       }
 
-     fun setBackgroundTextureFrame(name:String,index:Int){
+     fun setBackgroundSubTexture(name:String, index:Int){
         if(atlas!=null)
-            background.setTextureAtlasFrame(name, index)
+            background.setSubTextureAtlas(atlas!!, name, index)
       }
 
-     fun setForegroundTextureFrame(name:String,index: Int){
+     fun setForegroundSubTexture(name:String, index: Int){
         if(atlas!=null)
-            foreground.setTextureAtlasFrame(name, index)
+            foreground.setSubTextureAtlas(atlas!!,name, index)
     }
 
      fun setSecondaryImage(ts:String,index: Int){
@@ -294,22 +294,22 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
         if(flag){
             background.setColor(ripple)
             if(ts.isNotEmpty())
-                setBackgroundTextureFrame(ts,tsIndex)
+                setBackgroundSubTexture(ts,tsIndex)
         }else {
             background.setColor(default)
             if (tp.isNotEmpty())
-                setBackgroundTextureFrame(tp,tpIndex)
+                setBackgroundSubTexture(tp,tpIndex)
         }
     }
     private fun checkBoxToggle(flag:Boolean){
         if(flag){
             foreground.setColor(ripple)
             if(ts.isNotEmpty())
-                setForegroundTextureFrame(ts,tsIndex)
+                setForegroundSubTexture(ts,tsIndex)
         }else {
             foreground.setColor(default)
             if (tp.isNotEmpty())
-                setForegroundTextureFrame(tp,tpIndex)
+                setForegroundSubTexture(tp,tpIndex)
         }
     }
 

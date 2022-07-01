@@ -19,7 +19,7 @@ class GLGridLayout(private val parent:GLView?,width:Float,height:Float,private v
     fun setBackgroundAtlas(atlas: TextureAtlas, name:String, index:Int){
         setBackgroundTextureAtlas(atlas)
         setPrimaryImage(name,index)
-        setBackgroundTextureFrame(name,index)
+        setBackgroundSubTexture(name,index)
     }
     //push this view from center origin 0.5,0.5 -> 0,0
     fun setPosition(x:Float,y:Float){

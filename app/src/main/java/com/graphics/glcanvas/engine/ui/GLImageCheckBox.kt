@@ -11,12 +11,12 @@ class GLImageCheckBox(width:Float, height:Float, atlas: TextureAtlas, primary: S
         getForeground().setHeight(height*0.8f)
         setBackgroundTextureAtlas(atlas)
         setForegroundTextureAtlas(atlas)
-        setForegroundTextureFrame(primary,primaryIndex)
-        setBackgroundTextureFrame(primary,primaryIndex)
+        setForegroundSubTexture(primary,primaryIndex)
+        setBackgroundSubTexture(primary,primaryIndex)
         setForegroundColor(ColorRGBA(1f))
         setRippleColor(ColorRGBA.transparent)
         setPrimaryImage(checked,checkedIndex)
-        setBackgroundTextureFrame(primary,primaryIndex)
+        setBackgroundSubTexture(primary,primaryIndex)
         isCheckBox=true
     }
 

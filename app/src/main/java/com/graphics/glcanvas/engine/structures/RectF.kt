@@ -45,7 +45,17 @@ open class RectF :Vertex {
         if(atlas!=null)
             getSpriteSheet().setCurrentFrame(atlas!!.getTextureCoordinate(name))
     }
+    fun setSubTextureAtlas(atlas: TextureAtlas,name: String,index: Int){
+        setSpriteSheet(atlas.getSheet()?.clone())
+        setTexture(atlas.getTexture()!!)
+        setTextureAtlasFrame(name,index)
+    }
 
+    fun setSubTextureAtlas(atlas: TextureAtlas,name: String){
+        setSpriteSheet(atlas.getSheet()?.clone())
+        setTexture(atlas.getTexture()!!)
+        setTextureAtlasFrame(name,0)
+    }
     fun setZ(z:Float){
         this.position.z=z
     }

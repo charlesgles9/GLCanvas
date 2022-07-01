@@ -28,7 +28,7 @@ class GLDropDown (width:Float, height:Float,
         setBackgroundTextureAtlas(atlas)
         imageFromAtlas(name,index)
         setPrimaryImage(name,index)
-        setBackgroundTextureFrame(name,index)
+        setBackgroundSubTexture(name,index)
         setText(string,font,size)
         setRippleColor(ColorRGBA.white)
         setDefaultColor(ColorRGBA.white)

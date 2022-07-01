@@ -6,7 +6,6 @@ import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.maths.Vector2f
 import com.graphics.glcanvas.engine.structures.RectF
 import com.graphics.glcanvas.engine.utils.TextureAtlas
-import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
@@ -35,7 +34,7 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
          this.atlas=atlas
          setBackgroundTextureAtlas(atlas)
          setPrimaryImage(name,index)
-         setBackgroundTextureFrame(name,index)
+         setBackgroundSubTexture(name,index)
      }
 
     fun showScrollBar(enableScrollBar:Boolean){
@@ -50,18 +49,20 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
         scrollBarBackground.setColor(color)
     }
 
-    fun setScrollBarProgressFromAtlas(name: String){
-        scrollBarProgress.setSpriteSheet(atlas?.getSheet()?.clone())
-        scrollBarProgress.setTexture(atlas?.getTexture()!!)
-        scrollBarProgress.getSpriteSheet().setCurrentFrame(atlas?.getTextureCoordinate(name)?:0)
+    fun setScrollBarProgressFromAtlas(atlas: TextureAtlas,name: String,index: Int){
+       scrollBarProgress.setSubTextureAtlas(atlas, name, index)
     }
 
-    fun setScrollBarBackgroundFromAtlas(name: String){
-        scrollBarBackground.setSpriteSheet(atlas?.getSheet()?.clone())
-        scrollBarBackground.setTexture(atlas?.getTexture()!!)
-        scrollBarBackground.getSpriteSheet().setCurrentFrame(atlas?.getTextureCoordinate(name)?:0)
+    fun setScrollBarBackgroundFromAtlas(atlas: TextureAtlas,name: String,index: Int){
+        scrollBarBackground.setSubTextureAtlas(atlas, name,index)
+    }
+    fun setScrollBarProgressFromAtlas(atlas: TextureAtlas,name: String){
+        scrollBarProgress.setSubTextureAtlas(atlas, name, 0)
     }
 
+    fun setScrollBarBackgroundFromAtlas(atlas: TextureAtlas,name: String){
+        scrollBarBackground.setSubTextureAtlas(atlas, name,0)
+    }
     fun setScrollBarHeight(height: Float){
         scrollBarHeight=height
     }

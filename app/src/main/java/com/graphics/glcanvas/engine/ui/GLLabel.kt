@@ -26,7 +26,7 @@ open class GLLabel(width:Float, height:Float, private var font: Font, private va
     }
 
     protected fun imageFromAtlas(name:String,index:Int){
-        setBackgroundTextureFrame(name,index)
+        setBackgroundSubTexture(name,index)
     }
 
 

@@ -7,6 +7,7 @@ abstract class Constraints {
     abstract fun alignAbove(view:GLView)
     abstract fun alignBelow(view:GLView)
     abstract fun alignCenter(view:GLView)
+    abstract fun alignEnd(view: GLView)
     abstract fun alignCenterVertical(view: GLView)
     abstract fun alignCenterHorizontal(view: GLView)
     abstract fun layoutMarginLeft(margin:Float)
