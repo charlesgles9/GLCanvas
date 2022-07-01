@@ -4,7 +4,7 @@ import com.graphics.glcanvas.engine.Batch
 import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.utils.TextureAtlas
 
-class RelativeLayoutConstraint(width:Float,height:Float):GLView(width ,height) {
+open class RelativeLayoutConstraint(width:Float, height:Float):GLView(width ,height) {
 
 
     private var items= mutableListOf<GLView>()

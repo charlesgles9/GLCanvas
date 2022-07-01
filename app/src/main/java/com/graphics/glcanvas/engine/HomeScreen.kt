@@ -10,6 +10,7 @@ class HomeScreen(atlas: TextureAtlas,font: Font,controller:GLCanvasSurfaceView.T
 
 
     private var layout=RelativeLayoutConstraint(width, height,atlas,"Card",0)
+    private var marquee=GLMarqueeText(layout,300f,50f,"This is a marquee text. This is a marquee text. This is a marquee text.",font,0.3f)
     private var start=GLImageButton(250f,50f,atlas)
     private var settings=GLImageButton(250f,50f,atlas)
     private var about=GLImageButton(250f,50f,atlas)
@@ -55,6 +56,10 @@ class HomeScreen(atlas: TextureAtlas,font: Font,controller:GLCanvasSurfaceView.T
        mainContainer.getConstraints().alignCenterHorizontal(layout)
        layout.addItem(mainContainer)
        layout.addItem(fpsLabel)
+       layout.addItem(marquee)
+       marquee.getConstraints().layoutMarginTop(80f)
+       marquee.getConstraints().alignCenterHorizontal(layout)
+       marquee.setBackgroundAtlas(atlas,"Frame",0)
        fpsLabel.getConstraints().layoutMarginTop(20f)
        fpsLabel.getConstraints().alignCenterHorizontal(layout)
        start.setOnClickListener(object :OnClickEvent.OnClickListener{
@@ -84,6 +89,7 @@ class HomeScreen(atlas: TextureAtlas,font: Font,controller:GLCanvasSurfaceView.T
        controller?.addEvent(settings)
        controller?.addEvent(about)
        controller?.addEvent(exit)
+
 
    }
 

@@ -23,6 +23,7 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
     private var maxHeight=Float.MAX_VALUE
     private var visible=true
     private var paragraphs= mutableListOf<MutableList<String>>()
+    private var overallWidth=0f
     var width=0f
     var height=0f
     init {
@@ -42,7 +43,7 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
     }
 
     private fun initWordList(){
-
+       overallWidth=0f
         words.clear()
         val cursor=Vector2f()
         if(paragraphs.isNotEmpty()) {
@@ -68,13 +69,11 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
             words.add(Word(text,font,cursor,fontSize,clipUpper,clipLower,color,outline,innerEdge, innerWidth,
                                            borderWidth, borderEdge, position, maxWidth,maxHeight))
             cursor.addX(space*fontSize)
+          words.last().getCharacter().forEach {
+              overallWidth+=it.getWidth()+space*fontSize
+          }
 
-    }
-    private fun modifyWord(word:Word, cursor:Vector2f){
-        val space=20f
-        word.updateWord(font,cursor,fontSize,clipUpper,clipLower,color,outline,innerEdge, innerWidth,
-            borderWidth, borderEdge, position)
-        cursor.addX(space*fontSize)
+
     }
 
     fun set(x:Float,y:Float,z:Float){
@@ -134,6 +133,9 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
         return text
     }
 
+    fun getOverallWidth():Float{
+        return overallWidth
+    }
     fun setOutlineColor(outline:ColorRGBA){
         this.outline=outline
     }

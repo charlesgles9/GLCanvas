@@ -6,7 +6,7 @@ import com.graphics.glcanvas.engine.maths.Vector2f
 import com.graphics.glcanvas.engine.utils.TextureAtlas
 
 
-class LinearLayoutConstraint(private val parent:GLView?,width:Float,height:Float):GLView(width ,height) {
+open class LinearLayoutConstraint(private val parent:GLView?, width:Float, height:Float):GLView(width ,height) {
 
 
     private var items= mutableListOf<GLView>()
@@ -14,10 +14,10 @@ class LinearLayoutConstraint(private val parent:GLView?,width:Float,height:Float
     private var offset=Vector2f()
     constructor(parent:GLView?,width:Float,height:Float,atlas: TextureAtlas,name:String,index:Int):this(parent,width, height){
         this.atlas=atlas
-       setBackgroundAtlas(atlas, name,index)
+        setBackgroundSubTexture(atlas, name,index)
     }
 
-    fun setBackgroundAtlas(atlas: TextureAtlas, name:String,index:Int){
+    fun setBackgroundSubTexture(atlas: TextureAtlas, name:String, index:Int){
         setBackgroundTextureAtlas(atlas)
         setPrimaryImage(name,index)
         setBackgroundSubTexture(name,index)

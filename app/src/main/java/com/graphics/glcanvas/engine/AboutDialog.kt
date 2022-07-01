@@ -14,6 +14,7 @@ class AboutDialog(private val parent:GLView, atlas: TextureAtlas,font: Font, con
     private var close=GLImageButton(50f,50f,atlas)
     private var visible=false
     init {
+
         layout.addItem(scrollLayout)
         layout.addItem(close)
         scrollLayout.setBackgroundColor(ColorRGBA.transparent)
