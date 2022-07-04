@@ -13,6 +13,9 @@ open class Vertex(pSize: Int, tSize: Int) {
     private var colors:MutableList<ColorRGBA>?=null
     private var spriteSheet:SpriteSheet?=null
     private var texture=Texture()
+    private var angleX=0f
+    private var angleY=0f
+    private var angleZ=0f
     init {
         positions= MutableList(pSize,init = { Vector3f() })
         colors=MutableList(pSize,init = {ColorRGBA(1.0f,1.0f,1.0f,1.0f) })
@@ -80,5 +83,25 @@ open class Vertex(pSize: Int, tSize: Int) {
         return spriteSheet!!.getCurrentFrame()
     }
 
+    fun setAngleX(angleX:Float){
+        this.angleX=angleX
+    }
 
+    fun setAngleY(angleY:Float){
+        this.angleY=angleY
+    }
+
+    fun setAngleZ(angleZ:Float){
+        this.angleZ=angleZ
+    }
+
+    fun getAngleX():Float{
+        return angleX
+    }
+    fun getAngleY():Float{
+        return angleY
+    }
+    fun getAngleZ():Float{
+        return angleZ
+    }
 }

@@ -1,5 +1,8 @@
 package com.graphics.glcanvas.engine.maths
 
+import kotlin.math.cos
+import kotlin.math.sin
+
 class Vector3f {
 
     var x:Float=0.0f
@@ -74,5 +77,14 @@ class Vector3f {
         this.x-=other.x
         this.y-=other.y
         this.z-=other.z
+    }
+
+    fun rotate(angle:Float):Vector3f{
+     val arg=Math.toRadians(angle.toDouble()) .toFloat()
+     val a=x
+     val b=y
+     val x1=a* cos(arg)+b* sin(arg)
+     val y1=-1*a* sin(arg)+b* cos(arg)
+     return Vector3f(x1,y1,z)
     }
 }

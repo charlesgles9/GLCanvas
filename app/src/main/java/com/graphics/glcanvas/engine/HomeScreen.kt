@@ -2,6 +2,7 @@ package com.graphics.glcanvas.engine
 
 import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.structures.Font
+import com.graphics.glcanvas.engine.structures.RectF
 import com.graphics.glcanvas.engine.ui.*
 import com.graphics.glcanvas.engine.utils.FpsCounter
 import com.graphics.glcanvas.engine.utils.TextureAtlas
@@ -9,14 +10,15 @@ import com.graphics.glcanvas.engine.utils.TextureAtlas
 class HomeScreen(atlas: TextureAtlas,font: Font,controller:GLCanvasSurfaceView.TouchController?,width:Float,height:Float) {
 
 
-    private var layout=RelativeLayoutConstraint(width, height,atlas,"Card",0)
-    private var marquee=GLMarqueeText(layout,300f,50f,"This is a marquee text. This is a marquee text. This is a marquee text.",font,0.3f)
+    private var layout=RelativeLayoutConstraint(null,width, height,atlas,"Card",0)
+    private var marquee=GLMarqueeText(300f,50f,"This is a marquee text. This is a marquee text. This is a marquee text.",font,0.3f)
     private var start=GLImageButton(250f,50f,atlas)
     private var settings=GLImageButton(250f,50f,atlas)
     private var about=GLImageButton(250f,50f,atlas)
     private var exit=GLImageButton(250f,50f,atlas)
     private var fpsLabel=GLLabel(150f,50f,font,"FPS: ",0.3f)
     private var aboutDialog=AboutDialog(layout,atlas, font, controller, width, height)
+
    init {
        layout.setBackgroundColor(ColorRGBA.white)
        layout.setX(width*0.5f)
@@ -98,5 +100,6 @@ class HomeScreen(atlas: TextureAtlas,font: Font,controller:GLCanvasSurfaceView.T
         layout.draw(batch)
          aboutDialog.draw(batch)
         fpsLabel.setText("FPS: "+FpsCounter.getInstance().getFps())
+
     }
 }

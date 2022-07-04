@@ -18,9 +18,16 @@ open class LinearLayoutConstraint(private val parent:GLView?, width:Float, heigh
     }
 
     fun setBackgroundSubTexture(atlas: TextureAtlas, name:String, index:Int){
+        this.atlas=atlas
         setBackgroundTextureAtlas(atlas)
         setPrimaryImage(name,index)
         setBackgroundSubTexture(name,index)
+    }
+    fun setBackgroundSubTexture(atlas: TextureAtlas, name:String){
+        this.atlas=atlas
+        setBackgroundTextureAtlas(atlas)
+        setPrimaryImage(name,0)
+        setBackgroundSubTexture(name,0)
     }
     companion object{
         const val VERTICAL=0

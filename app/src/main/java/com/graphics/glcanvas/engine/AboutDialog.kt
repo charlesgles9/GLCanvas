@@ -6,8 +6,8 @@ import com.graphics.glcanvas.engine.ui.*
 import com.graphics.glcanvas.engine.utils.TextureAtlas
 
 class AboutDialog(private val parent:GLView, atlas: TextureAtlas,font: Font, controller:GLCanvasSurfaceView.TouchController?, width:Float, height:Float) {
-    private var layout=RelativeLayoutConstraint(width*0.8f, height*0.4f,atlas,"Card",0)
-    private var scrollLayout=GLScrollLayout(width*0.8f, height*0.4f)
+    private var layout=RelativeLayoutConstraint(null,width*0.8f, height*0.4f,atlas,"Card",0)
+    private var scrollLayout=GLScrollLayout(width*0.8f, height*0.3f)
     private var inner= LinearLayoutConstraint(scrollLayout,width*0.8f, height*0.5f)
     private var title=GLLabel(150f,50f,font,"About",0.4f)
     private var description=GLLabel(inner.width*0.9f,height*0.8f,font,"Hello this is an openGL renderer created by charlie.\n\n You can contribute to the project at my github page @charlesgles9.\n\n I created this for fun and out of curiosity I wanted to demystify some UI concepts.\n\n I also wanted to create a simple but efficient renderer for android phones.\n\n I will keep on improving it and adding more cool features.",0.2f)
@@ -17,11 +17,11 @@ class AboutDialog(private val parent:GLView, atlas: TextureAtlas,font: Font, con
 
         layout.addItem(scrollLayout)
         layout.addItem(close)
+        layout.addItem(title)
         scrollLayout.setBackgroundColor(ColorRGBA.transparent)
         scrollLayout.addItem(inner)
         scrollLayout.setOrientation(GLScrollLayout.VERTICAL)
         layout.set(width*0.5f,height*0.5f)
-        inner.addItem(title)
         inner.addItem(description)
         layout.setZ(parent.getZ()+1f)
         inner.setBackgroundColor(ColorRGBA.transparent)
@@ -29,7 +29,8 @@ class AboutDialog(private val parent:GLView, atlas: TextureAtlas,font: Font, con
         description.getConstraints().layoutMarginTop(50f)
         description.getConstraints().layoutMarginLeft(10f)
         description.getConstraints().layoutMarginBottom(20f)
-        title.getConstraints().alignCenterHorizontal(inner)
+        scrollLayout.getConstraints().alignBelow(title)
+        title.getConstraints().alignCenterHorizontal(layout)
         title.getConstraints().layoutMarginTop(20f)
         title.setTextColor(ColorRGBA.red)
         scrollLayout.addOnSwipeEvent(object :GLOnSwipeEvent.OnSwipeListener{

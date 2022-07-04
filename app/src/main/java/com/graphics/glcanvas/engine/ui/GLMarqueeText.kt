@@ -6,8 +6,7 @@ import com.graphics.glcanvas.engine.maths.Vector2f
 import com.graphics.glcanvas.engine.structures.Font
 import com.graphics.glcanvas.engine.utils.FpsCounter
 
-
-class GLMarqueeText(private val parent:GLView?, width:Float, height:Float,text:String,font: Font,size:Float):RelativeLayoutConstraint( width, height) {
+class GLMarqueeText(width:Float, height:Float,text:String,font: Font,size:Float):RelativeLayoutConstraint(null, width, height) {
 
     private val label=GLLabel(width,height,font,text,size)
     private var direction= MOVE_RIGHT
@@ -19,15 +18,13 @@ class GLMarqueeText(private val parent:GLView?, width:Float, height:Float,text:S
         const val MOVE_LEFT=0
         const val MOVE_RIGHT=1
     }
-
     init {
-        label.setBackgroundColor(ColorRGBA.transparent)
         val lw=label.getTextView()?.getOverallWidth()?:width
         textHeight=label.getTextView()?.height?:height
         textWidth=lw
+        label.setBackgroundColor(ColorRGBA.transparent)
         label.setWidthPixels(textWidth)
         label.getTextView()?.setMaxWidth(lw)
-
     }
 
    fun setText(text:String){
@@ -37,7 +34,8 @@ class GLMarqueeText(private val parent:GLView?, width:Float, height:Float,text:S
    fun setTextColor(color:ColorRGBA){
        label.setTextColor(color)
    }
-    fun setDirection(direction:Int){
+
+   fun setDirection(direction:Int){
         this.direction=direction
     }
 

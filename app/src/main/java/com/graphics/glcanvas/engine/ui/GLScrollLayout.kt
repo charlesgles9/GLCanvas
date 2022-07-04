@@ -204,8 +204,6 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
 
     override fun draw(batch: Batch) {
         super.draw(batch)
-
-
         LayoutConstraint.groupItems(orientation,offset ,this,items)
         var itemWidth=0f
         var itemHeight=0f

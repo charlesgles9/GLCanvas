@@ -28,7 +28,8 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
 
 
 
-
+    private var rect=RectF(300f,300f,100f,100f)
+    private var angle=0f
     override fun draw() {
         GLES32.glClear(GLES32.GL_DEPTH_BUFFER_BIT or  GLES32.GL_COLOR_BUFFER_BIT)
         GLES32.glClearColor(0f,0f,0f,1f)
@@ -36,7 +37,11 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         batch.begin(camera)
         home?.draw(batch)
         batch.end()
-
+        batch.begin(camera)
+        batch.draw(rect)
+        batch.end()
+        rect.setAngleX(angle)
+        angle+=1f
     }
 
     override fun update(delta: Long) {

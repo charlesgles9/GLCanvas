@@ -4,6 +4,7 @@ import android.content.Context
 import android.opengl.GLES32
 import com.graphics.glcanvas.engine.utils.ResourceLoader
 import java.nio.FloatBuffer
+import java.nio.IntBuffer
 
 class Shader(private val vname:String,private val fname:String) {
 
@@ -64,8 +65,8 @@ class Shader(private val vname:String,private val fname:String) {
         return GLES32.glGetUniformLocation(getProgram(),name)
     }
 
-    fun getUniformMatrix4fv(name:String,mMVPMatrix:FloatArray){
-        GLES32.glUniformMatrix4fv(getUniformLocation(name),1,false,mMVPMatrix,0)
+    fun getUniformMatrix4fv(name:String,count:Int,mat:FloatArray){
+        GLES32.glUniformMatrix4fv(getUniformLocation(name),count,false,mat,0)
     }
 
     fun uniform2f(name:String,x:Float,y:Float){
@@ -83,6 +84,10 @@ class Shader(private val vname:String,private val fname:String) {
     fun uniform3f(name: String,x:Float,y:Float,z:Float){
         GLES32.glUniform3f(getUniformLocation(name),x,y,z)
     }
+    fun uniform4f(name: String,x1:Float,y1:Float,x2:Float,y2:Float){
+        GLES32.glUniform4f(getUniformLocation(name),x1,y1,x2,y2)
+
+    }
 
     fun enableVertexAttribPointer(name:String,coords_per_vertex:Int,stride:Int,buffer:FloatBuffer?){
         val handle=GLES32.glGetAttribLocation(getProgram(),name)
@@ -95,6 +100,20 @@ class Shader(private val vname:String,private val fname:String) {
             false,
             stride,
             buffer)
+
+    }
+    fun enableVertexAttribPointer(name:String,coords_per_vertex:Int,stride:Int,buffer:IntBuffer?){
+        val handle=GLES32.glGetAttribLocation(getProgram(),name)
+        GLES32.glEnableVertexAttribArray(handle)
+        //prepare triangle coordinate data
+        GLES32.glVertexAttribPointer(
+            handle,
+            coords_per_vertex,
+            GLES32.GL_INT,
+            false,
+            stride,
+            buffer)
+
     }
     fun enableVertexAttribPointer(name:String,coords_per_vertex:Int,stride:Int,buffer:Int){
         val handle=GLES32.glGetAttribLocation(getProgram(),name)
@@ -108,6 +127,8 @@ class Shader(private val vname:String,private val fname:String) {
             stride,
             buffer)
     }
+
+
     fun disableVertexAttribPointer(name:String){
         GLES32.glDisableVertexAttribArray(GLES32.glGetAttribLocation(getProgram(),name))
     }

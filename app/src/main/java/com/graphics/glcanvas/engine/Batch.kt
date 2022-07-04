@@ -5,12 +5,16 @@ import android.opengl.GLES32
 import android.opengl.Matrix
 import com.graphics.glcanvas.engine.constants.Primitives
 import com.graphics.glcanvas.engine.maths.ColorRGBA
+import com.graphics.glcanvas.engine.maths.Matrix4f
 import com.graphics.glcanvas.engine.maths.Vector3f
 import com.graphics.glcanvas.engine.structures.*
 import com.graphics.glcanvas.engine.ui.ScreenRatio
 import java.nio.FloatBuffer
+import java.nio.IntBuffer
 import java.nio.ShortBuffer
 import kotlin.math.abs
+import kotlin.math.cos
+import kotlin.math.sin
 
 class Batch() {
 
@@ -20,6 +24,7 @@ class Batch() {
     private val mViewMatrix= FloatArray(16)
     // model view Projection  matrix this we will pass it to the vertex shader
     private val mMVPMatrix=FloatArray(16)
+
     // buffers
     // positional
     private var vertexBuffer:FloatBuffer?=null
@@ -33,9 +38,11 @@ class Batch() {
     private var centerBuffer:FloatBuffer?=null
     // trim buffer to cut a quad or a shape
     private var clipBuffer:FloatBuffer?=null
+
     // sends the extra quad data that will enable us to
     // create rounded edges
     private var roundedPropBuffer:FloatBuffer?=null
+    private var transformBuffer:FloatBuffer?=null
     //vertex count
     private var vcount=0
     //index count
@@ -50,6 +57,8 @@ class Batch() {
     private var rcount=0
     //trim count
     private var qcount=0
+    //transform count
+    private var ncount=0
 
     // draw calls counter
     private var num_draw_calls=0
@@ -69,6 +78,7 @@ class Batch() {
     private var indices=ShortArray(BATCH_SIZE*6)
     private var colors=FloatArray(BATCH_SIZE*COLOR_COORDS_PER_VERTEX*4)
     private var textures=FloatArray(BATCH_SIZE*TEXTURE_COORDS_PER_VERTEX*4)
+    private var transforms=FloatArray(BATCH_SIZE*3*4)
     // current texture
     private var mTexture=0
     // text uniforms
@@ -83,7 +93,7 @@ class Batch() {
     private var centerVertex=FloatArray(BATCH_SIZE*4*4)
     private var roundedRectProperties=FloatArray(BATCH_SIZE*2*4)
     private var clipAttribute=FloatArray(BATCH_SIZE*4*4)
-    private val buffers=IntArray(6)
+    private val buffers=IntArray(7)
     private val defaultShader=Shader("shaders/default_vertex_shader.glsl","shaders/default_fragment_shader.glsl")
     private val circleShader=Shader("shaders/circle_vertex_shader.glsl","shaders/circle_fragment_shader.glsl")
     private var camera:Camera2D?=null
@@ -92,13 +102,14 @@ class Batch() {
     private val entities=ArrayList<Vertex>()
 
     init {
-        GLES32.glGenBuffers(6,buffers,0)
+        GLES32.glGenBuffers(7,buffers,0)
         createVertexBuffer()
         createColorBuffer()
         createTextureBuffer()
         createCenterBuffer()
         createRoundedPropertiesBuffer()
         createTrimBuffer()
+        createTransformBuffer()
         initializeDrawList()
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,0)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,1)
@@ -106,6 +117,8 @@ class Batch() {
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,3)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,4)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,5)
+        GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,6)
+
     }
     
     fun begin(camera: Camera2D){
@@ -134,6 +147,7 @@ class Batch() {
         mcount=0
         rcount=0
         qcount=0
+        ncount=0
 
     }
 
@@ -314,7 +328,11 @@ class Batch() {
         val x=rect.getX()
         val y=rect.getY()
         val z=rect.getZ()
-
+        for(i in 0 until  4) {
+            transforms[ncount++] = Math.toRadians(vertex.getAngleX().toDouble()).toFloat()
+            transforms[ncount++] = Math.toRadians(vertex.getAngleY().toDouble()).toFloat()
+            transforms[ncount++] = Math.toRadians(vertex.getAngleZ().toDouble()).toFloat()
+        }
         //top left
         vertexes[vcount++]=-sizeX+x
         vertexes[vcount++]=sizeY+y
@@ -605,6 +623,10 @@ class Batch() {
         clipBuffer=Buffer.createFloatBuffer(buffers[5],0,clipAttribute)
     }
 
+    private fun createTransformBuffer(){
+        transformBuffer=Buffer.createFloatBuffer(buffers[6],0,transforms)
+    }
+
     // bind vertex shader attributes
     private fun bindVertexShader(){
         vertexBuffer!!.put(vertexes).position(0)
@@ -629,6 +651,12 @@ class Batch() {
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[5])
         GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,qcount*4,clipBuffer)
         defaultShader.enableVertexAttribPointer("v_trim",4,0,clipBuffer)
+       /* val arg=Math.toRadians(30f.toDouble()).toFloat()
+        defaultShader.uniform4f("a_transform",1f,1f,1f,1f)*/
+        transformBuffer!!.put(transforms).position(0)
+        GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[6])
+        GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,ncount*4,transformBuffer)
+        defaultShader.enableVertexAttribPointer("a_transform",3,0,transformBuffer)
     }
 
     // bind fragment shader attributes
@@ -659,9 +687,14 @@ class Batch() {
             circleShader.use()
         else
             defaultShader.use()
-        defaultShader.getUniformMatrix4fv("u_MVPMatrix",mMVPMatrix)
+        defaultShader.getUniformMatrix4fv("u_MVPMatrix",1,mMVPMatrix)
+        val mat4=FloatArray(16)
+        Matrix.setIdentityM(mat4,0)
+        Matrix.setRotateM(mat4,0,5f,0f,0f,1f)
+        defaultShader.getUniformMatrix4fv("a_rotation",1,mat4)
         circleShader.uniform2f("srcRes",ScreenRatio.getInstance().getSurfaceScreen().x,ScreenRatio.getInstance().getSurfaceScreen().y)
         defaultShader.uniform2f("srcRes",ScreenRatio.getInstance().getSurfaceScreen().x,ScreenRatio.getInstance().getSurfaceScreen().y)
+
         defaultShader.uniformLi("a_isQuad",if(primitiveType== Primitives.QUAD&&!isText)1 else 0)
         defaultShader.uniformLi("isText",if(isText)1 else 0)
         // distance field uniforms for text rendering
@@ -688,7 +721,6 @@ class Batch() {
         transform()
         Matrix.multiplyMM(mMVPMatrix,0,mViewMatrix,0,mModelMatrix,0)
         Matrix.multiplyMM(mMVPMatrix,0,camera?.getProjectionMatrix(),0,mMVPMatrix,0)
-
         render()
 
          num_draw_calls++

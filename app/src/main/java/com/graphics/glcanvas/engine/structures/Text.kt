@@ -136,6 +136,7 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
     fun getOverallWidth():Float{
         return overallWidth
     }
+
     fun setOutlineColor(outline:ColorRGBA){
         this.outline=outline
     }
