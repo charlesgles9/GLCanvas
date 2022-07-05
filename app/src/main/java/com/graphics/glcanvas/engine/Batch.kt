@@ -71,11 +71,11 @@ class Batch() {
 
     // mesh data
     private val BATCH_SIZE=1000
-    private var vertexes= FloatArray(BATCH_SIZE*VERTEX_COORDS_PER_VERTEX*4)
+    private var vertexes= FloatArray(BATCH_SIZE*VERTEX_COORDS_PER_VERTEX*BYTES_PER_FLOAT)
     private var indices=ShortArray(BATCH_SIZE*6)
-    private var colors=FloatArray(BATCH_SIZE*COLOR_COORDS_PER_VERTEX*4)
-    private var textures=FloatArray(BATCH_SIZE*TEXTURE_COORDS_PER_VERTEX*4)
-    private var transforms=FloatArray(BATCH_SIZE*3*4)
+    private var colors=FloatArray(BATCH_SIZE*COLOR_COORDS_PER_VERTEX*BYTES_PER_FLOAT)
+    private var textures=FloatArray(BATCH_SIZE*TEXTURE_COORDS_PER_VERTEX*BYTES_PER_FLOAT)
+    private var transforms=FloatArray(BATCH_SIZE*3*BYTES_PER_FLOAT)
     // current texture
     private var mTexture=0
     // text uniforms
@@ -87,9 +87,9 @@ class Batch() {
     private var outlineColor=ColorRGBA()
     // used to draw batched circles since we need the center position
     // also useful to pass in the center position of our quad to create rounded edges
-    private var centerVertex=FloatArray(BATCH_SIZE*4*4)
-    private var roundedRectProperties=FloatArray(BATCH_SIZE*2*4)
-    private var clipAttribute=FloatArray(BATCH_SIZE*4*4)
+    private var centerVertex=FloatArray(BATCH_SIZE*4*BYTES_PER_FLOAT)
+    private var roundedRectProperties=FloatArray(BATCH_SIZE*2*BYTES_PER_FLOAT)
+    private var clipAttribute=FloatArray(BATCH_SIZE*4*BYTES_PER_FLOAT)
     private val buffers=IntArray(7)
     private val defaultShader=Shader("shaders/default_vertex_shader.glsl","shaders/default_fragment_shader.glsl")
     private val circleShader=Shader("shaders/circle_vertex_shader.glsl","shaders/circle_fragment_shader.glsl")
@@ -243,7 +243,11 @@ class Batch() {
         val x=rect.getX()
         val y=rect.getY()
         val z=rect.getZ()
-
+        for(i in 0 until  4) {
+            transforms[ncount++] = Math.toRadians(vertex.getAngleX().toDouble()).toFloat()
+            transforms[ncount++] = Math.toRadians(vertex.getAngleY().toDouble()).toFloat()
+            transforms[ncount++] = Math.toRadians(vertex.getAngleZ().toDouble()).toFloat()
+        }
 
         //top left
         vertexes[vcount++]=-sizeX+x
@@ -454,6 +458,11 @@ class Batch() {
         val x=line.getStartX()
         val y=line.getStartY()
         val z=line.getZ()
+        for(i in 0 until  2) {
+            transforms[ncount++] = Math.toRadians(vertex.getAngleX().toDouble()).toFloat()
+            transforms[ncount++] = Math.toRadians(vertex.getAngleY().toDouble()).toFloat()
+            transforms[ncount++] = Math.toRadians(vertex.getAngleZ().toDouble()).toFloat()
+        }
         // top left
         vertexes[vcount++]=x
         vertexes[vcount++]=y
@@ -493,6 +502,11 @@ class Batch() {
                 val line=path.getEndPoints()[j]
                 val sizeX = abs(x - line.x)
                 val sizeY = abs(y - line.y)
+                for(r in 0 until  2) {
+                    transforms[ncount++] = Math.toRadians(vertex.getAngleX().toDouble()).toFloat()
+                    transforms[ncount++] = Math.toRadians(vertex.getAngleY().toDouble()).toFloat()
+                    transforms[ncount++] = Math.toRadians(vertex.getAngleZ().toDouble()).toFloat()
+                }
                 // top left
                 vertexes[vcount++] = x
                 vertexes[vcount++] = y
@@ -540,7 +554,11 @@ class Batch() {
                 val sizeAY = y - a.y
                 val sizeBX = x - b.x
                 val sizeBY = y - b.y
-
+                for(r in 0 until  2) {
+                    transforms[ncount++] = Math.toRadians(vertex.getAngleX().toDouble()).toFloat()
+                    transforms[ncount++] = Math.toRadians(vertex.getAngleY().toDouble()).toFloat()
+                    transforms[ncount++] = Math.toRadians(vertex.getAngleZ().toDouble()).toFloat()
+                }
                 vertexes[vcount++] = x
                 vertexes[vcount++] = y
                 vertexes[vcount++] = z

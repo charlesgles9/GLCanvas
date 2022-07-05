@@ -60,12 +60,15 @@ class GLOnSwipeEvent (private val listener: OnSwipeListener,
             ScreenRatio.getInstance().project(move)
             pointerDown=contains(move.x,move.y)
             if(pointerDown) {
-                listener.onSwipe()
+
                 val distanceX=abs( origin.x-move.x +1)
                 val distanceY=abs(origin.y -move.y+1)
+
+                if(distanceX<=30f&&distanceY<=30f)
+                    return true
                 val dirx= (origin.x-move.x+1) / distanceX
                 val diry=(origin.y-move.y +1 )/ distanceY
-
+                listener.onSwipe()
                 offset.sub(dirx*threshHold,threshHold*diry)
 
                 if(offset.x>=maxOffset.x&&maxOffset.x!=0f)

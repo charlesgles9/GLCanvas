@@ -36,6 +36,16 @@ class GLCanvasSurfaceView(context: Context, private val renderer: GLCanvasRender
         return true
     }
 
+
+    override fun onPause() {
+        super.onPause()
+        renderMode= RENDERMODE_WHEN_DIRTY
+    }
+
+    override fun onResume() {
+        super.onResume()
+        renderMode= RENDERMODE_CONTINUOUSLY
+    }
  inner class TouchController{
      private val events= mutableListOf<Touch>()
      fun addEvent(touch: Touch){
