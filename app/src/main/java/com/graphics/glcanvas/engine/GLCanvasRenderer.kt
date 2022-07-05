@@ -40,8 +40,9 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         batch.begin(camera)
         batch.draw(rect)
         batch.end()
-        rect.setAngleX(angle)
+        rect.setAngleZ(angle)
         angle+=1f
+        angle %= 360
     }
 
     override fun update(delta: Long) {

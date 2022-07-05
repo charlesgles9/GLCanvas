@@ -80,13 +80,5 @@ public class Matrix4f {
         this.array[2][1]=0f;
         this.array[2][2]=(float)Math.cos(angle);
    }
-   public float[] getArray(){
-           float arr[]=new float[16];
-           for(int i=0;i<4;i++){
-               for(int j=0;j<4;j++){
-                   arr[i*4+j]=array[j][i];
-               }
-           }
-           return arr;
-    }
+
 }

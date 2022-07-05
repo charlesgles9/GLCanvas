@@ -5,16 +5,13 @@ import android.opengl.GLES32
 import android.opengl.Matrix
 import com.graphics.glcanvas.engine.constants.Primitives
 import com.graphics.glcanvas.engine.maths.ColorRGBA
-import com.graphics.glcanvas.engine.maths.Matrix4f
 import com.graphics.glcanvas.engine.maths.Vector3f
 import com.graphics.glcanvas.engine.structures.*
 import com.graphics.glcanvas.engine.ui.ScreenRatio
 import java.nio.FloatBuffer
-import java.nio.IntBuffer
 import java.nio.ShortBuffer
 import kotlin.math.abs
-import kotlin.math.cos
-import kotlin.math.sin
+
 
 class Batch() {
 
@@ -651,8 +648,6 @@ class Batch() {
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[5])
         GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,qcount*4,clipBuffer)
         defaultShader.enableVertexAttribPointer("v_trim",4,0,clipBuffer)
-       /* val arg=Math.toRadians(30f.toDouble()).toFloat()
-        defaultShader.uniform4f("a_transform",1f,1f,1f,1f)*/
         transformBuffer!!.put(transforms).position(0)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[6])
         GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,ncount*4,transformBuffer)
@@ -694,7 +689,6 @@ class Batch() {
         defaultShader.getUniformMatrix4fv("a_rotation",1,mat4)
         circleShader.uniform2f("srcRes",ScreenRatio.getInstance().getSurfaceScreen().x,ScreenRatio.getInstance().getSurfaceScreen().y)
         defaultShader.uniform2f("srcRes",ScreenRatio.getInstance().getSurfaceScreen().x,ScreenRatio.getInstance().getSurfaceScreen().y)
-
         defaultShader.uniformLi("a_isQuad",if(primitiveType== Primitives.QUAD&&!isText)1 else 0)
         defaultShader.uniformLi("isText",if(isText)1 else 0)
         // distance field uniforms for text rendering
