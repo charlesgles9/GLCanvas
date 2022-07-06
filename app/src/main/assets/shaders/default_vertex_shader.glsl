@@ -13,22 +13,23 @@
  attribute vec2 a_TexCoordinate;
  varying vec2 v_TexCoordinate;
 void main(){
-  // transformation matrix
+ // translation matrix
+  mat3 transForward= mat3(1.0,0.0,-v_center.x, 0.0,1.0,-v_center.y, 0.0,0.0,1.0);
+  mat3 transBackward=mat3(1.0,0.0, v_center.x, 0.0,1.0, v_center.y, 0.0,0.0,1.0);
+  // rotation matrices
   mat3 rotZ=mat3(cos(a_transform.z),sin(a_transform.z),0.0, -sin(a_transform.z),cos(a_transform.z),0.0, 0.0,0.0,1.0);
   mat3 rotX=mat3(1.0,0.0,0.0, 0.0,cos(a_transform.x),-sin(a_transform.x), 0.0,sin(a_transform.x),cos(a_transform.x));
   mat3 rotY=mat3(cos(a_transform.y),0.0,sin(a_transform.y), 0.0,1.0,0.0, -sin(a_transform.y),0.0,cos(a_transform.y));
   vec4 a_pos=a_position;
   //push this point back to the origin
-  a_pos.x-=v_center.x;
-  a_pos.y-=v_center.y;
-  a_pos.z-=v_center.z;
-  a_pos.xyz=rotZ*a_pos.xyz;
-  a_pos.xyz=rotY*a_pos.xyz;
-  a_pos.xyz=rotX*a_pos.xyz;
-  // after transformations push it back to it's original position
-  a_pos.x+=v_center.x;
-  a_pos.y+=v_center.y;
-  a_pos.z+=v_center.z;
+  a_pos.xyz=vec3(a_pos.xy,1.0)*transForward;
+  //apply rotations
+  a_pos.xyz=a_pos.xyz*rotZ;
+  a_pos.xyz=a_pos.xyz*rotY;
+  a_pos.xyz=a_pos.xyz*rotX;
+  // after rotations push it back to it's original position
+  a_pos.xyz=vec3(a_pos.xy,1.0)*transBackward;
+  a_pos.z=a_position.z;
   gl_Position=u_MVPMatrix*a_pos;
   v_color=a_color;
   a_center=v_center;
