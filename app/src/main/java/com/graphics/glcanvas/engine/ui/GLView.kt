@@ -206,9 +206,11 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
 
     protected fun positionBars(horizontal: Boolean,progress:Float,max:Float){
         if(horizontal) {
+            getForeground().setHeight(height*0.8f)
             getForeground().setWidth(width * ((progress+1) / (max+1)))
             fOffset.x=((getForeground().getWidth()-width)*0.5f)
         }else{
+            getForeground().setWidth(width*0.8f)
             getForeground().setHeight(height*((progress+1)/(max+1)))
             fOffset.y=((height-getForeground().getHeight())*0.5f)
         }
@@ -224,14 +226,14 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
         if(horizontalBar&&pw!=getForeground().getWidth().toInt()) {
             currentProgress = pw / width * maxProgressBar
             getForeground().setWidth(pw.toFloat() - backgroundThickness * 2f)
-            fOffset.x = ((width - pw.toFloat()) * -0.5f).toInt().toFloat()
+            fOffset.x = ((width - pw.toFloat()) * -0.5f)
             pThumb.set(getForeground().getX()+getForeground().getWidth()*0.5f,
                 getForeground().getY())
             //position the vertical bar
         }else if(!horizontalBar&&ph!=getForeground().getHeight().toInt()){
             currentProgress = pw / width * maxProgressBar
             getForeground().setHeight(ph.toFloat() - backgroundThickness * 2f)
-            fOffset.y = ((height - ph.toFloat()) * -0.5f).toInt().toFloat()
+            fOffset.y = ((height - ph.toFloat()) * -0.5f)
             pThumb.set(getForeground().getX(),
                 getForeground().getY()+getForeground().getHeight()*0.5f)
         }

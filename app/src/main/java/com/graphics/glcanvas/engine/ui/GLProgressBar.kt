@@ -14,17 +14,19 @@ class GLProgressBar(width:Float,height:Float, progress:Float,horizontalBar:Boole
            positionBars(horizontalBar,progress, maxProgressBar)
            setRippleColor(getBackground().getColor(0))
            isProgressBar=true
+           setForegroundColor(ColorRGBA.white)
        }
 
     constructor(width: Float, height: Float,progress: Float,horizontalBar:Boolean, atlas: TextureAtlas,
                 primary: String,primaryIndex:Int,secondary:String,secondaryIndex:Int):this(width, height,progress, horizontalBar) {
         this.atlas=atlas
         setBackgroundTextureAtlas(atlas)
-        setPrimaryImage(secondary,secondaryIndex)
-        setBackgroundSubTexture(secondary,secondaryIndex)
+        setPrimaryImage(primary,primaryIndex)
+        setBackgroundSubTexture(primary,primaryIndex)
         setForegroundTextureAtlas(atlas)
-        setForegroundSubTexture(primary,primaryIndex)
-
+        setForegroundSubTexture(secondary,secondaryIndex)
+        positionBars(horizontalBar,progress, maxProgressBar)
+        setForegroundColor(ColorRGBA.white)
     }
 
     override fun roundedCorner(value: Float) {

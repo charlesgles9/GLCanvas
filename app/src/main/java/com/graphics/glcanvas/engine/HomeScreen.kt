@@ -2,7 +2,6 @@ package com.graphics.glcanvas.engine
 
 import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.structures.Font
-import com.graphics.glcanvas.engine.structures.RectF
 import com.graphics.glcanvas.engine.ui.*
 import com.graphics.glcanvas.engine.utils.FpsCounter
 import com.graphics.glcanvas.engine.utils.TextureAtlas
@@ -18,6 +17,7 @@ class HomeScreen(atlas: TextureAtlas,font: Font,controller:GLCanvasSurfaceView.T
     private var exit=GLImageButton(250f,50f,atlas)
     private var fpsLabel=GLLabel(150f,50f,font,"FPS: ",0.3f)
     private var aboutDialog=AboutDialog(layout,atlas, font, controller, width, height)
+    private var settingDialog=SettingDialog(layout,atlas, font, controller, width, height)
 
    init {
        layout.setBackgroundColor(ColorRGBA.white)
@@ -71,7 +71,8 @@ class HomeScreen(atlas: TextureAtlas,font: Font,controller:GLCanvasSurfaceView.T
        })
        settings.setOnClickListener(object :OnClickEvent.OnClickListener{
            override fun onClick() {
-
+             settingDialog.show(!settingDialog.isShowing())
+             layout.setEnableTouchEvents(!settingDialog.isShowing())
            }
        })
        about.setOnClickListener(object :OnClickEvent.OnClickListener{
@@ -98,7 +99,8 @@ class HomeScreen(atlas: TextureAtlas,font: Font,controller:GLCanvasSurfaceView.T
      fun draw(batch:Batch){
 
         layout.draw(batch)
-         aboutDialog.draw(batch)
+        aboutDialog.draw(batch)
+        settingDialog.draw(batch)
         fpsLabel.setText("FPS: "+FpsCounter.getInstance().getFps())
 
     }
