@@ -45,8 +45,8 @@ class SettingDialog(private val parent: GLView, atlas: TextureAtlas, font: Font,
             volumeLayout.setOrientation(LinearLayoutConstraint.VERTICAL)
             volumeLayout.setBackgroundColor(ColorRGBA.transparent)
         val volumeLabel=GLLabel(100f,50f,font,"Volume",0.3f)
-        val volumeProgress=GLProgressBar(layout.width*0.8f,50f,50f,
-            true,atlas,"TabSelected",0,"Container",0)
+        val volumeProgress=GLProgressBar(layout.width*0.8f,30f,50f,
+            true,atlas,"SliderEmpty",0,"CurrencyContainer",0)
         volumeLayout.getConstraints().layoutMarginLeft(30f)
         volumeLayout.getConstraints().layoutMarginBottom(30f)
         volumeLayout.addItem(volumeLabel)

@@ -21,6 +21,7 @@ open class GLLabel(width:Float, height:Float, private var font: Font, private va
         this.size=size
         setBackgroundTextureAtlas(atlas)
         setBackgroundSubTexture(name,index)
+        setBackgroundColor(ColorRGBA.white)
         setText(string,font,size)
     }
 
