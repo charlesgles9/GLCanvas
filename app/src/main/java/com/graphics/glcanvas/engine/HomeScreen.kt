@@ -5,6 +5,7 @@ import com.graphics.glcanvas.engine.structures.Font
 import com.graphics.glcanvas.engine.ui.*
 import com.graphics.glcanvas.engine.utils.FpsCounter
 import com.graphics.glcanvas.engine.utils.TextureAtlas
+import kotlin.system.exitProcess
 
 class HomeScreen(atlas: TextureAtlas,font: Font,controller:GLCanvasSurfaceView.TouchController?,width:Float,height:Float) {
 
@@ -18,7 +19,7 @@ class HomeScreen(atlas: TextureAtlas,font: Font,controller:GLCanvasSurfaceView.T
     private var fpsLabel=GLLabel(150f,50f,font,"FPS: ",0.3f)
     private var aboutDialog=AboutDialog(layout,atlas, font, controller, width, height)
     private var settingDialog=SettingDialog(layout,atlas, font, controller, width, height)
-
+    private var startGameDialog=StartGameDialog(layout,atlas, font, controller, width, height)
    init {
        layout.setBackgroundColor(ColorRGBA.white)
        layout.setX(width*0.5f)
@@ -66,7 +67,8 @@ class HomeScreen(atlas: TextureAtlas,font: Font,controller:GLCanvasSurfaceView.T
        fpsLabel.getConstraints().alignCenterHorizontal(layout)
        start.setOnClickListener(object :OnClickEvent.OnClickListener{
            override fun onClick() {
-
+             startGameDialog.show(!startGameDialog.isShowing())
+             layout.setEnableTouchEvents(!startGameDialog.isShowing())
            }
        })
        settings.setOnClickListener(object :OnClickEvent.OnClickListener{
@@ -84,7 +86,7 @@ class HomeScreen(atlas: TextureAtlas,font: Font,controller:GLCanvasSurfaceView.T
        })
        exit.setOnClickListener(object :OnClickEvent.OnClickListener{
            override fun onClick() {
-
+             exitProcess(0)
            }
        })
 
@@ -93,14 +95,13 @@ class HomeScreen(atlas: TextureAtlas,font: Font,controller:GLCanvasSurfaceView.T
        controller?.addEvent(about)
        controller?.addEvent(exit)
 
-
    }
 
      fun draw(batch:Batch){
-
         layout.draw(batch)
         aboutDialog.draw(batch)
         settingDialog.draw(batch)
+        startGameDialog.draw(batch)
         fpsLabel.setText("FPS: "+FpsCounter.getInstance().getFps())
 
     }

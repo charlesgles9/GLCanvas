@@ -18,8 +18,8 @@ uniform vec3 outlineColor;
 
 float roundedEdge(vec2 pos,vec2 center,vec2 size,float radius,float thickness){
     vec2 pd=abs(pos-center);
-    return 1.0-min(step(sqrt(size.x*size.x+size.y*size.y)-
-          radius*0.5,sqrt(pd.x*pd.x+pd.y*pd.y))*radius,1.0);
+    return 1.0-min(step(length(size)-
+          radius*0.5,length(pd))*radius,1.0);
 }
 
 void main(){
@@ -73,9 +73,8 @@ void main(){
       }
 
 
-    if(sampleId!=0){
-     gl_FragColor=quad_color*texture2D(u_texture,v_TexCoordinate);//*quadV;
-      } else{
+    if(sampleId!=0)
+     gl_FragColor=quad_color*texture2D(u_texture,v_TexCoordinate);
+       else
      gl_FragColor=quad_color;
-     }
 }

@@ -13,6 +13,8 @@
  attribute vec2 a_TexCoordinate;
  varying vec2 v_TexCoordinate;
 void main(){
+   //scaling matrix
+  mat3 scale=mat3(1.0,0.0,0.0, 0.0,0.0,0.0, 0.0,0.0,1.0);
  // translation matrix
   mat3 transForward= mat3(1.0,0.0,-v_center.x, 0.0,1.0,-v_center.y, 0.0,0.0,1.0);
   mat3 transBackward=mat3(1.0,0.0, v_center.x, 0.0,1.0, v_center.y, 0.0,0.0,1.0);

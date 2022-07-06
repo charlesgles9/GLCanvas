@@ -74,17 +74,17 @@ class SettingDialog(private val parent: GLView, atlas: TextureAtlas, font: Font,
         })
         checkSoundBox.setOnClickListener(object :OnClickEvent.OnClickListener{
             override fun onClick() {
-
+                println(checkSoundBox.getChecked())
             }
         })
         checkMusicBox.setOnClickListener(object :OnClickEvent.OnClickListener{
             override fun onClick() {
-
+             println(checkMusicBox.getChecked())
             }
         })
         volumeProgress.setOnClickListener(object :OnClickEvent.OnClickListener{
             override fun onClick() {
-
+              println("Progress: "+volumeProgress.getProgress())
             }
         })
         controller?.getEvents()?.add(close)
