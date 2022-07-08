@@ -2,6 +2,7 @@ package com.graphics.glcanvas.engine
 import android.opengl.GLES32
 import android.opengl.GLSurfaceView
 import android.os.SystemClock
+import com.graphics.glcanvas.engine.utils.FpsCounter
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
@@ -21,6 +22,7 @@ class GLRenderer(private val updatable: Updatable) : GLSurfaceView.Renderer {
     //    if(elapsed>=ms_per_frame){
             updatable.draw( )
             updatable.update(time)
+            FpsCounter.getInstance().update(time)
         //    st+=ms_per_frame
      //   }
         /* val nextCycle=st+(1000L/60.0f).toLong()

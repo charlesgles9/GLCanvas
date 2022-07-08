@@ -5,6 +5,7 @@ import com.graphics.glcanvas.engine.Batch
 import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.maths.Vector2f
 import com.graphics.glcanvas.engine.structures.RectF
+import com.graphics.glcanvas.engine.utils.FpsCounter
 import com.graphics.glcanvas.engine.utils.TextureAtlas
 import kotlin.math.max
 import kotlin.math.min
@@ -119,25 +120,29 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
 
 
     private fun scrollVertical(oHeight: Float){
-       val rollBackVelocity=2.5f
+       val rollBackVelocity=2.5f*60f/(FpsCounter.getInstance().getFps()+1f)
         onSwipeEvent?.setMaxOffset(0f,height*0.20f)
         onSwipeEvent?.setMinOffset(0f,-oHeight+height*0.8f)
         //roll back effect
-        if(offset.y>=10f)
-            offset.sub(0f,rollBackVelocity)
-        if(offset.y<(oHeight-height)*-1f)
-            offset.add(0f,rollBackVelocity)
+       if(onSwipeEvent?.getPointerDown() != true) {
+           if (offset.y >= 10f)
+               offset.sub(0f, rollBackVelocity)
+           if (offset.y < (oHeight - height) * -1f)
+               offset.add(0f, rollBackVelocity)
+       }
 
     }
 
     private fun scrollHorizontal(oWidth: Float){
-        val rollBackVelocity=2.5f
+        val rollBackVelocity=2.5f*60f/(FpsCounter.getInstance().getFps()+1f)
         onSwipeEvent?.setMaxOffset(width*0.20f,0f)
         onSwipeEvent?.setMinOffset(-oWidth+width*0.8f,0f)
-       if(offset.x>=10f)
-           offset.sub(rollBackVelocity,0f)
-        if(offset.x<(oWidth-width)*-1f)
-            offset.add(rollBackVelocity,0f)
+        if(onSwipeEvent?.getPointerDown() != true) {
+            if (offset.x >= 10f)
+                offset.sub(rollBackVelocity, 0f)
+            if (offset.x < (oWidth - width) * -1f)
+                offset.add(rollBackVelocity, 0f)
+        }
     }
 
 

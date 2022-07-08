@@ -181,6 +181,7 @@ class Batch() {
              batchQueue.addVertex(entity,type)
         }
 
+
         while (!batchQueue.getBatchedQueue().isEmpty()){
             val bucket=batchQueue.getBatchedQueue().remove()
             val list=bucket.getBatchList()
@@ -238,8 +239,8 @@ class Batch() {
 
     private fun addCircle(index:Int,vertex: Vertex){
         val rect= vertex as Circle
-        val sizeX=rect.getRadius()
-        val sizeY=rect.getRadius()
+        val sizeX=rect.getRadius()*0.5f
+        val sizeY=rect.getRadius()*0.5f
         val x=rect.getX()
         val y=rect.getY()
         val z=rect.getZ()
@@ -272,35 +273,35 @@ class Batch() {
 
         centerVertex[mcount++]=x
         centerVertex[mcount++]=y
-        centerVertex[mcount++]=rect.getRadius()
+        centerVertex[mcount++]=sizeX
         centerVertex[mcount++]=rect.getThickness()
 
         centerVertex[mcount++]=x
         centerVertex[mcount++]=y
-        centerVertex[mcount++]=rect.getRadius()
+        centerVertex[mcount++]=sizeX
         centerVertex[mcount++]=rect.getThickness()
 
         centerVertex[mcount++]=x
         centerVertex[mcount++]=y
-        centerVertex[mcount++]=rect.getRadius()
+        centerVertex[mcount++]=sizeX
         centerVertex[mcount++]=rect.getThickness()
 
         centerVertex[mcount++]=x
         centerVertex[mcount++]=y
-        centerVertex[mcount++]=rect.getRadius()
+        centerVertex[mcount++]=sizeX
         centerVertex[mcount++]=rect.getThickness()
 
         roundedRectProperties[rcount++]=rect.getThickness()
-        roundedRectProperties[rcount++]=rect.getRadius()
+        roundedRectProperties[rcount++]=sizeX*0.5f
 
         roundedRectProperties[rcount++]=rect.getThickness()
-        roundedRectProperties[rcount++]=rect.getRadius()
+        roundedRectProperties[rcount++]=sizeX*0.5f
 
         roundedRectProperties[rcount++]=rect.getThickness()
-        roundedRectProperties[rcount++]=rect.getRadius()
+        roundedRectProperties[rcount++]=sizeX*0.5f
 
         roundedRectProperties[rcount++]=rect.getThickness()
-        roundedRectProperties[rcount++]=rect.getRadius()
+        roundedRectProperties[rcount++]=sizeX*0.5f
 
         indices[icount++]= (index*4+0).toShort()
         indices[icount++]= (index*4+1).toShort()
@@ -678,7 +679,7 @@ class Batch() {
         centerBuffer?.put(centerVertex)?.position(0)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[3])
         GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,mcount*4,centerBuffer)
-        if(primitiveType== Primitives.QUAD) {
+        if(primitiveType== Primitives.QUAD||primitiveType==Primitives.CIRCLE) {
             defaultShader.enableVertexAttribPointer("v_center",4,0,centerBuffer)
             // pass the rounded corners for rectF shape
             roundedPropBuffer?.put(roundedRectProperties)?.position(0)
@@ -735,7 +736,7 @@ class Batch() {
         Matrix.setRotateM(mat4,0,5f,0f,0f,1f)
         defaultShader.getUniformMatrix4fv("a_rotation",1,mat4)
         defaultShader.uniform2f("srcRes",ScreenRatio.getInstance().getSurfaceScreen().x,ScreenRatio.getInstance().getSurfaceScreen().y)
-        defaultShader.uniformLi("a_isQuad",if(primitiveType== Primitives.QUAD&&!isText)1 else 0)
+        defaultShader.uniformLi("a_isQuad",if(primitiveType== Primitives.QUAD||primitiveType==Primitives.CIRCLE&&!isText)1 else 0)
         defaultShader.uniformLi("isText",if(isText)1 else 0)
         // distance field uniforms for text rendering
         defaultShader.uniform1f("textEdge",textEdge)

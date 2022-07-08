@@ -50,6 +50,7 @@ class Circle:Vertex {
    fun setRadius(radius: Float){
         this.width=radius
         this.height=radius
+
     }
 
    fun setThickness(thickness:Float){

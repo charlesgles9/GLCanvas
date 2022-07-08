@@ -19,7 +19,7 @@ class GLCanvasSurfaceView(private val context: Activity, private val renderer: G
 
     private val controller=TouchController()
     init {
-        hideStatusBar(context.window)
+        hideStatusBar()
         setEGLContextClientVersion(3)
         setScreenDisplayRatio()
         holder.setFixedSize(renderer.getCanvasWidth().toInt(), renderer.getCanvasHeight().toInt())
@@ -30,13 +30,13 @@ class GLCanvasSurfaceView(private val context: Activity, private val renderer: G
     }
 
 
-     private fun hideStatusBar(window:Window){
+     private fun hideStatusBar(){
          context.requestWindowFeature(Window.FEATURE_NO_TITLE)
-         window.setFlags(
+         context.window.setFlags(
              WindowManager.LayoutParams.FLAG_FULLSCREEN,
              WindowManager.LayoutParams.FLAG_FULLSCREEN
          )
-        val insetsController=ViewCompat.getWindowInsetsController(window.decorView)?:return
+        val insetsController=ViewCompat.getWindowInsetsController(context.window.decorView)?:return
         insetsController.systemBarsBehavior=
             WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         insetsController.hide(WindowInsetsCompat.Type.systemBars())

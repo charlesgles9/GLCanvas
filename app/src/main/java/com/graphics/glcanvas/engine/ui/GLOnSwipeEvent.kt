@@ -29,7 +29,9 @@ class GLOnSwipeEvent (private val listener: OnSwipeListener,
     fun getVelocity():Vector2f{
         return velocity
     }
-
+    fun getPointerDown():Boolean{
+        return pointerDown
+    }
     fun setVelocity(x:Float,y:Float){
         this.velocity.set(x,y)
     }
@@ -63,14 +65,11 @@ class GLOnSwipeEvent (private val listener: OnSwipeListener,
 
                 val distanceX=abs( origin.x-move.x +1)
                 val distanceY=abs(origin.y -move.y+1)
-
-                if(distanceX<=30f&&distanceY<=30f)
-                    return true
                 val dirx= (origin.x-move.x+1) / distanceX
                 val diry=(origin.y-move.y +1 )/ distanceY
+                origin.set(move.x,move.y)
                 listener.onSwipe()
                 offset.sub(dirx*threshHold,threshHold*diry)
-
                 if(offset.x>=maxOffset.x&&maxOffset.x!=0f)
                     offset.x=offset.x+dirx*threshHold
                 if(offset.x<=minOffset.x&&minOffset.x!=0f)
