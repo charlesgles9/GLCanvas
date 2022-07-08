@@ -1,4 +1,4 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
@@ -7,7 +7,7 @@ android {
     buildToolsVersion "29.0.3"
 
     defaultConfig {
-        applicationId "com.graphics.glcanvas"
+      //  applicationId "com.graphics.glcanvas"
         minSdkVersion 23
         targetSdkVersion 29
         versionCode 1

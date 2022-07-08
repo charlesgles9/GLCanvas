@@ -75,7 +75,7 @@ class Batch() {
     private var indices=ShortArray(BATCH_SIZE*6)
     private var colors=FloatArray(BATCH_SIZE*COLOR_COORDS_PER_VERTEX*BYTES_PER_FLOAT)
     private var textures=FloatArray(BATCH_SIZE*TEXTURE_COORDS_PER_VERTEX*BYTES_PER_FLOAT)
-    private var transforms=FloatArray(BATCH_SIZE*3*BYTES_PER_FLOAT)
+    private var transforms=FloatArray(BATCH_SIZE*6*BYTES_PER_FLOAT)
     // current texture
     private var mTexture=0
     // text uniforms
@@ -92,7 +92,7 @@ class Batch() {
     private var clipAttribute=FloatArray(BATCH_SIZE*4*BYTES_PER_FLOAT)
     private val buffers=IntArray(7)
     private val defaultShader=Shader("shaders/default_vertex_shader.glsl","shaders/default_fragment_shader.glsl")
-    private val circleShader=Shader("shaders/circle_vertex_shader.glsl","shaders/circle_fragment_shader.glsl")
+   // private val circleShader=Shader("shaders/circle_vertex_shader.glsl","shaders/circle_fragment_shader.glsl")
     private var camera:Camera2D?=null
     private val batchQueue=BatchQueue()
     private var primitiveType= Primitives.QUAD
@@ -247,6 +247,9 @@ class Batch() {
             transforms[ncount++] = Math.toRadians(vertex.getAngleX().toDouble()).toFloat()
             transforms[ncount++] = Math.toRadians(vertex.getAngleY().toDouble()).toFloat()
             transforms[ncount++] = Math.toRadians(vertex.getAngleZ().toDouble()).toFloat()
+            transforms[ncount++] = vertex.getScale().x
+            transforms[ncount++] = vertex.getScale().y
+            transforms[ncount++] = 1f
         }
 
         //top left
@@ -287,6 +290,17 @@ class Batch() {
         centerVertex[mcount++]=rect.getRadius()
         centerVertex[mcount++]=rect.getThickness()
 
+        roundedRectProperties[rcount++]=rect.getThickness()
+        roundedRectProperties[rcount++]=rect.getRadius()
+
+        roundedRectProperties[rcount++]=rect.getThickness()
+        roundedRectProperties[rcount++]=rect.getRadius()
+
+        roundedRectProperties[rcount++]=rect.getThickness()
+        roundedRectProperties[rcount++]=rect.getRadius()
+
+        roundedRectProperties[rcount++]=rect.getThickness()
+        roundedRectProperties[rcount++]=rect.getRadius()
 
         indices[icount++]= (index*4+0).toShort()
         indices[icount++]= (index*4+1).toShort()
@@ -333,6 +347,9 @@ class Batch() {
             transforms[ncount++] = Math.toRadians(vertex.getAngleX().toDouble()).toFloat()
             transforms[ncount++] = Math.toRadians(vertex.getAngleY().toDouble()).toFloat()
             transforms[ncount++] = Math.toRadians(vertex.getAngleZ().toDouble()).toFloat()
+            transforms[ncount++] = vertex.getScale().x
+            transforms[ncount++] = vertex.getScale().y
+            transforms[ncount++] = 1f
         }
         //top left
         vertexes[vcount++]=-sizeX+x
@@ -462,6 +479,9 @@ class Batch() {
             transforms[ncount++] = Math.toRadians(vertex.getAngleX().toDouble()).toFloat()
             transforms[ncount++] = Math.toRadians(vertex.getAngleY().toDouble()).toFloat()
             transforms[ncount++] = Math.toRadians(vertex.getAngleZ().toDouble()).toFloat()
+            transforms[ncount++] = vertex.getScale().x
+            transforms[ncount++] = vertex.getScale().y
+            transforms[ncount++] = 1f
         }
         // top left
         vertexes[vcount++]=x
@@ -506,6 +526,9 @@ class Batch() {
                     transforms[ncount++] = Math.toRadians(vertex.getAngleX().toDouble()).toFloat()
                     transforms[ncount++] = Math.toRadians(vertex.getAngleY().toDouble()).toFloat()
                     transforms[ncount++] = Math.toRadians(vertex.getAngleZ().toDouble()).toFloat()
+                    transforms[ncount++] = vertex.getScale().x
+                    transforms[ncount++] = vertex.getScale().y
+                    transforms[ncount++] = 1f
                 }
                 // top left
                 vertexes[vcount++] = x
@@ -558,6 +581,9 @@ class Batch() {
                     transforms[ncount++] = Math.toRadians(vertex.getAngleX().toDouble()).toFloat()
                     transforms[ncount++] = Math.toRadians(vertex.getAngleY().toDouble()).toFloat()
                     transforms[ncount++] = Math.toRadians(vertex.getAngleZ().toDouble()).toFloat()
+                    transforms[ncount++] = vertex.getScale().x
+                    transforms[ncount++] = vertex.getScale().y
+                    transforms[ncount++] = 1f
                 }
                 vertexes[vcount++] = x
                 vertexes[vcount++] = y
@@ -644,38 +670,44 @@ class Batch() {
 
     // bind vertex shader attributes
     private fun bindVertexShader(){
-        vertexBuffer!!.put(vertexes).position(0)
+        vertexBuffer?.put(vertexes)?.position(0)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[0])
         GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,vcount*4,vertexBuffer)
         defaultShader.enableVertexAttribPointer("a_position",VERTEX_COORDS_PER_VERTEX,0,vertexBuffer)
         // pass in every circle or quads center position
-        centerBuffer!!.put(centerVertex).position(0)
+        centerBuffer?.put(centerVertex)?.position(0)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[3])
         GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,mcount*4,centerBuffer)
-        if(primitiveType== Primitives.CIRCLE) {
-            circleShader.enableVertexAttribPointer("v_center",4,0,centerBuffer)
-        }else if (primitiveType== Primitives.QUAD) {
-             defaultShader.enableVertexAttribPointer("v_center",4,0,centerBuffer)
+        if(primitiveType== Primitives.QUAD) {
+            defaultShader.enableVertexAttribPointer("v_center",4,0,centerBuffer)
             // pass the rounded corners for rectF shape
-            roundedPropBuffer!!.put(roundedRectProperties).position(0)
+            roundedPropBuffer?.put(roundedRectProperties)?.position(0)
             GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[4])
             GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,rcount*4,roundedPropBuffer)
             defaultShader.enableVertexAttribPointer("v_rounded_properties",2,0,roundedPropBuffer)
         }
-        clipBuffer!!.put(clipAttribute).position(0)
+        clipBuffer?.put(clipAttribute)?.position(0)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[5])
         GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,qcount*4,clipBuffer)
         defaultShader.enableVertexAttribPointer("v_trim",4,0,clipBuffer)
-        transformBuffer!!.put(transforms).position(0)
+        val transFormStrideBytes=6*4
+        val rotationOffset=0
+        val scaleOffset=3
+        transformBuffer?.clear()
+        transformBuffer?.put(transforms)?.position(rotationOffset)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[6])
         GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,ncount*4,transformBuffer)
-        defaultShader.enableVertexAttribPointer("a_transform",3,0,transformBuffer)
+        defaultShader.enableVertexAttribPointer("a_transform",3,transFormStrideBytes,transformBuffer)
+        transformBuffer?.put(transforms)?.position(scaleOffset)
+        GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[6])
+        GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,ncount*4,transformBuffer)
+        defaultShader.enableVertexAttribPointer("a_scale",3,transFormStrideBytes,transformBuffer)
     }
 
     // bind fragment shader attributes
     private fun bindFragmentShader(){
         //bind color
-        colorBuffer!!.put(colors).position(0)
+        colorBuffer?.put(colors)?.position(0)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[1])
         GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,acount*4,colorBuffer)
         defaultShader.enableVertexAttribPointer("a_color",COLOR_COORDS_PER_VERTEX,0,colorBuffer)
@@ -684,7 +716,7 @@ class Batch() {
         //this test if its a valid texture in the shader
         defaultShader.uniformLi("sampleId",mTexture)
         // pass texture coordinate info
-        textureBuffer!!.put(textures).position(0)
+        textureBuffer?.put(textures)?.position(0)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[2])
         GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,tcount*4,textureBuffer)
         defaultShader.enableVertexAttribPointer("a_TexCoordinate",2,0,textureBuffer)
@@ -695,17 +727,13 @@ class Batch() {
     }
 
     private fun render(){
-        // use different shader is it's a circle
-        if(primitiveType== Primitives.CIRCLE)
-            circleShader.use()
-        else
-            defaultShader.use()
+
+        defaultShader.use()
         defaultShader.getUniformMatrix4fv("u_MVPMatrix",1,mMVPMatrix)
         val mat4=FloatArray(16)
         Matrix.setIdentityM(mat4,0)
         Matrix.setRotateM(mat4,0,5f,0f,0f,1f)
         defaultShader.getUniformMatrix4fv("a_rotation",1,mat4)
-        circleShader.uniform2f("srcRes",ScreenRatio.getInstance().getSurfaceScreen().x,ScreenRatio.getInstance().getSurfaceScreen().y)
         defaultShader.uniform2f("srcRes",ScreenRatio.getInstance().getSurfaceScreen().x,ScreenRatio.getInstance().getSurfaceScreen().y)
         defaultShader.uniformLi("a_isQuad",if(primitiveType== Primitives.QUAD&&!isText)1 else 0)
         defaultShader.uniformLi("isText",if(isText)1 else 0)
@@ -741,7 +769,6 @@ class Batch() {
     }
 
     fun initShader(context: Context){
-        circleShader.createProgram(context)
         defaultShader.createProgram(context)
 
     }

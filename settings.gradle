@@ -1,2 +1,3 @@
+include ':app:testexample'
 include ':app'
 rootProject.name = "GLCanvas"

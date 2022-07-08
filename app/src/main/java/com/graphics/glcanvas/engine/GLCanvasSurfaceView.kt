@@ -1,29 +1,58 @@
 package com.graphics.glcanvas.engine
 
 import android.annotation.SuppressLint
-import android.content.Context
+import android.app.Activity
 import android.opengl.GLSurfaceView
-import android.util.DisplayMetrics
 import android.view.MotionEvent
-import android.widget.Toast
+import android.view.View
+import android.view.Window
+import android.view.WindowManager
+
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.graphics.glcanvas.engine.ui.ScreenRatio
 
 
 @SuppressLint("ViewConstructor")
-class GLCanvasSurfaceView(context: Context, private val renderer: GLCanvasRenderer) : GLSurfaceView(context) {
+class GLCanvasSurfaceView(private val context: Activity, private val renderer: GLRendererView) : GLSurfaceView(context) {
 
     private val controller=TouchController()
     init {
+        hideStatusBar(context.window)
         setEGLContextClientVersion(3)
-        val w=resources.displayMetrics.widthPixels
-        val h=resources.displayMetrics.heightPixels
-        ScreenRatio.getInstance().setDisplayScreen(w.toFloat(),h.toFloat())
+        setScreenDisplayRatio()
         holder.setFixedSize(renderer.getCanvasWidth().toInt(), renderer.getCanvasHeight().toInt())
         ScreenRatio.getInstance().setSurfaceScreen(renderer.getCanvasWidth(),renderer.getCanvasHeight())
         renderer.getRenderer().setController(controller)
         setRenderer(renderer.getRenderer())
 
     }
+
+
+     private fun hideStatusBar(window:Window){
+         context.requestWindowFeature(Window.FEATURE_NO_TITLE)
+         window.setFlags(
+             WindowManager.LayoutParams.FLAG_FULLSCREEN,
+             WindowManager.LayoutParams.FLAG_FULLSCREEN
+         )
+        val insetsController=ViewCompat.getWindowInsetsController(window.decorView)?:return
+        insetsController.systemBarsBehavior=
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        insetsController.hide(WindowInsetsCompat.Type.systemBars())
+
+    }
+    private fun setScreenDisplayRatio(){
+        val content=context.window.findViewById<View>(Window.ID_ANDROID_CONTENT)
+        val w=resources.displayMetrics.widthPixels+ (resources.displayMetrics.widthPixels-content.width)
+        val h=resources.displayMetrics.heightPixels+ (resources.displayMetrics.heightPixels- content.height)
+        ScreenRatio.getInstance().setDisplayScreen(w.toFloat(),h.toFloat())
+    }
+    override fun onWindowFocusChanged(hasWindowFocus: Boolean) {
+        super.onWindowFocusChanged(hasWindowFocus)
+       setScreenDisplayRatio()
+    }
+
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         queueEvent {

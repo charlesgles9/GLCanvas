@@ -2,6 +2,7 @@ package com.graphics.glcanvas.engine.structures
 
 import android.content.Context
 import com.graphics.glcanvas.engine.maths.ColorRGBA
+import com.graphics.glcanvas.engine.maths.Vector2f
 import com.graphics.glcanvas.engine.maths.Vector3f
 import com.graphics.glcanvas.engine.utils.SpriteSheet
 import com.graphics.glcanvas.engine.utils.Texture
@@ -11,6 +12,7 @@ open class Vertex(pSize: Int, tSize: Int) {
     private var visible=true
     private var positions: MutableList<Vector3f>? =null
     private var colors:MutableList<ColorRGBA>?=null
+    private var scale=Vector2f(1f,1f)
     private var spriteSheet:SpriteSheet?=null
     private var texture=Texture()
     private var angleX=0f
@@ -59,6 +61,10 @@ open class Vertex(pSize: Int, tSize: Int) {
         colors!!.forEach { it.set(color) }
     }
 
+    fun setScale(sx:Float,sy:Float){
+        scale.set(sx,sy)
+    }
+
     fun setVisibility(visible:Boolean){
         this.visible=visible
     }
@@ -75,6 +81,9 @@ open class Vertex(pSize: Int, tSize: Int) {
         return positions!![index]
     }
 
+    fun getScale():Vector2f{
+        return scale
+    }
     fun vertexCount():Int{
         return positions!!.size
     }

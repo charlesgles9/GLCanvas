@@ -1,7 +1,7 @@
 package com.graphics.glcanvas.engine
 
 
-open class GLRendererWrapper(private val width: Float,private val height: Float) :Updatable {
+open class GLRendererView(private val width: Float, private val height: Float) :Updatable {
 
 
     private val renderer = GLRenderer(this)
