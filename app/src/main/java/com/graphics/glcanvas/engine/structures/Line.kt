@@ -1,8 +1,11 @@
 package com.graphics.glcanvas.engine.structures
 
+import com.graphics.glcanvas.engine.maths.Vector2f
+
 class Line(private var startX: Float, private var startY: Float,
            private var stopX: Float, private var stopY: Float) : Vertex(2, 2) {
-
+    private var clipUpper= Vector2f(Float.MIN_VALUE, Float.MIN_VALUE)
+    private var clipLower= Vector2f(Float.MAX_VALUE, Float.MAX_VALUE)
     private var z=0f
     fun set(startX: Float,startY: Float,stopX: Float,stopY: Float){
         this.startX=startX
@@ -10,7 +13,21 @@ class Line(private var startX: Float, private var startY: Float,
         this.stopX=stopX
         this.stopY=stopY
     }
+    fun setClipUpper(upperX:Float,upperY:Float){
+        clipUpper.set(upperX,upperY)
+    }
 
+    fun setClipLower(lowerX:Float,lowerY:Float){
+        clipLower.set(lowerX,lowerY)
+    }
+
+    fun getClipUpper(): Vector2f {
+        return clipUpper
+    }
+
+    fun getClipLower(): Vector2f {
+        return clipLower
+    }
     fun setStartX(startX: Float){
         this.startX=startX
     }

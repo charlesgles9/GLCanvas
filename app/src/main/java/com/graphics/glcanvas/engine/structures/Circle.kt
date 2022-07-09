@@ -1,9 +1,12 @@
 package com.graphics.glcanvas.engine.structures
 
+import com.graphics.glcanvas.engine.maths.Vector2f
 import com.graphics.glcanvas.engine.maths.Vector3f
 
 class Circle:Vertex {
     private val position= Vector3f()
+    private var clipUpper= Vector2f(Float.MIN_VALUE, Float.MIN_VALUE)
+    private var clipLower= Vector2f(Float.MAX_VALUE, Float.MAX_VALUE)
     private var width=0.0f
     private var height=0.0f
     private var thickness=0.0f
@@ -35,14 +38,21 @@ class Circle:Vertex {
         return position.z
     }
 
-   private fun setWidth(width: Float){
-        this.width=width
+    fun setClipUpper(upperX:Float,upperY:Float){
+        clipUpper.set(upperX,upperY)
     }
 
-   private fun setHeight(height: Float){
-        this.height=height
+    fun setClipLower(lowerX:Float,lowerY:Float){
+        clipLower.set(lowerX,lowerY)
     }
 
+    fun getClipUpper():Vector2f{
+        return clipUpper
+    }
+
+    fun getClipLower():Vector2f{
+        return clipLower
+    }
    fun getRadius():Float{
        return width
    }

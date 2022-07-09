@@ -92,7 +92,6 @@ class Batch() {
     private var clipAttribute=FloatArray(BATCH_SIZE*4*BYTES_PER_FLOAT)
     private val buffers=IntArray(7)
     private val defaultShader=Shader("shaders/default_vertex_shader.glsl","shaders/default_fragment_shader.glsl")
-   // private val circleShader=Shader("shaders/circle_vertex_shader.glsl","shaders/circle_fragment_shader.glsl")
     private var camera:Camera2D?=null
     private val batchQueue=BatchQueue()
     private var primitiveType= Primitives.QUAD
@@ -129,12 +128,15 @@ class Batch() {
         num_draw_calls=0
         num_triangles=0
     }
+
     fun setMode(mode:Int){
         batchQueue.setMode(mode)
     }
+
     fun getCamera():Camera2D?{
         return camera
     }
+
     private fun reset(){
         this.entities.clear()
         vcount=0
@@ -211,7 +213,6 @@ class Batch() {
 
                    }
                    when(bucket.getPrimitiveType()){
-
                        Primitives.QUAD ->  addRectF(i, vertex)
                        Primitives.TRIANGLE -> addPolygon(i, vertex)
                        Primitives.CIRCLE ->  addCircle(i,vertex)
@@ -270,6 +271,25 @@ class Batch() {
         vertexes[vcount++]=sizeY+y
         vertexes[vcount++]=z
 
+        clipAttribute[qcount++]=rect.getClipUpper().x
+        clipAttribute[qcount++]=rect.getClipUpper().y
+        clipAttribute[qcount++]=rect.getClipLower().x
+        clipAttribute[qcount++]=rect.getClipLower().y
+
+        clipAttribute[qcount++]=rect.getClipUpper().x
+        clipAttribute[qcount++]=rect.getClipUpper().y
+        clipAttribute[qcount++]=rect.getClipLower().x
+        clipAttribute[qcount++]=rect.getClipLower().y
+
+        clipAttribute[qcount++]=rect.getClipUpper().x
+        clipAttribute[qcount++]=rect.getClipUpper().y
+        clipAttribute[qcount++]=rect.getClipLower().x
+        clipAttribute[qcount++]=rect.getClipLower().y
+
+        clipAttribute[qcount++]=rect.getClipUpper().x
+        clipAttribute[qcount++]=rect.getClipUpper().y
+        clipAttribute[qcount++]=rect.getClipLower().x
+        clipAttribute[qcount++]=rect.getClipLower().y
 
         centerVertex[mcount++]=x
         centerVertex[mcount++]=y
@@ -291,6 +311,20 @@ class Batch() {
         centerVertex[mcount++]=sizeX
         centerVertex[mcount++]=rect.getThickness()
 
+        val texture=rect.getTextureCords()
+        textures[tcount++]=texture[0]
+        textures[tcount++]=texture[1]
+
+        textures[tcount++]=texture[2]
+        textures[tcount++]=texture[3]
+
+        textures[tcount++]=texture[4]
+        textures[tcount++]=texture[5]
+
+        textures[tcount++]=texture[6]
+        textures[tcount++]=texture[7]
+
+        mTexture=rect.getTexture().getId()
         roundedRectProperties[rcount++]=rect.getThickness()
         roundedRectProperties[rcount++]=sizeX*0.5f
 
@@ -314,6 +348,7 @@ class Batch() {
         val color2=rect.getColor(1)
         val color3=rect.getColor(2)
         val color4=rect.getColor(3)
+
         colors[acount++]=color1.get(0)
         colors[acount++]=color1.get(1)
         colors[acount++]=color1.get(2)
@@ -339,8 +374,8 @@ class Batch() {
 
     private fun addRectF(index:Int,vertex: Vertex){
         val rect= vertex as RectF
-        val sizeX=rect.getWidth()/2
-        val sizeY=rect.getHeight()/2
+        val sizeX=rect.getWidth()*0.5f
+        val sizeY=rect.getHeight()*0.5f
         val x=rect.getX()
         val y=rect.getY()
         val z=rect.getZ()
@@ -352,6 +387,7 @@ class Batch() {
             transforms[ncount++] = vertex.getScale().y
             transforms[ncount++] = 1f
         }
+
         //top left
         vertexes[vcount++]=-sizeX+x
         vertexes[vcount++]=sizeY+y
@@ -447,6 +483,7 @@ class Batch() {
         val color2=rect.getColor(1)
         val color3=rect.getColor(2)
         val color4=rect.getColor(3)
+
         colors[acount++]=color1.get(0)
         colors[acount++]=color1.get(1)
         colors[acount++]=color1.get(2)
@@ -492,6 +529,16 @@ class Batch() {
         vertexes[vcount++]=sizeX+x
         vertexes[vcount++]=sizeY+y
         vertexes[vcount++]=z
+
+        clipAttribute[qcount++]=line.getClipUpper().x
+        clipAttribute[qcount++]=line.getClipUpper().y
+        clipAttribute[qcount++]=line.getClipLower().x
+        clipAttribute[qcount++]=line.getClipLower().y
+
+        clipAttribute[qcount++]=line.getClipUpper().x
+        clipAttribute[qcount++]=line.getClipUpper().y
+        clipAttribute[qcount++]=line.getClipLower().x
+        clipAttribute[qcount++]=line.getClipLower().y
 
         indices[icount++]=(index*2+0).toShort()
         indices[icount++]=(index*2+1).toShort()
@@ -728,13 +775,8 @@ class Batch() {
     }
 
     private fun render(){
-
         defaultShader.use()
         defaultShader.getUniformMatrix4fv("u_MVPMatrix",1,mMVPMatrix)
-        val mat4=FloatArray(16)
-        Matrix.setIdentityM(mat4,0)
-        Matrix.setRotateM(mat4,0,5f,0f,0f,1f)
-        defaultShader.getUniformMatrix4fv("a_rotation",1,mat4)
         defaultShader.uniform2f("srcRes",ScreenRatio.getInstance().getSurfaceScreen().x,ScreenRatio.getInstance().getSurfaceScreen().y)
         defaultShader.uniformLi("a_isQuad",if(primitiveType== Primitives.QUAD||primitiveType==Primitives.CIRCLE&&!isText)1 else 0)
         defaultShader.uniformLi("isText",if(isText)1 else 0)
@@ -747,24 +789,23 @@ class Batch() {
         bindVertexShader()
         bindFragmentShader()
         if(primitiveType == Primitives.QUAD||primitiveType== Primitives.CIRCLE||primitiveType== Primitives.TRIANGLE)
-        GLES32.glDrawElements(GLES32.GL_TRIANGLES,icount,GLES32.GL_UNSIGNED_SHORT,drawListBuffer)
-        else if(primitiveType == Primitives.LINE||primitiveType== Primitives.POLYLINE){
-        GLES32.glDrawElements(GLES32.GL_LINES,icount,GLES32.GL_UNSIGNED_SHORT,drawListBuffer)
-
+             GLES32.glDrawElements(GLES32.GL_TRIANGLES,icount,GLES32.GL_UNSIGNED_SHORT,drawListBuffer)
+        else
+            if(primitiveType == Primitives.LINE||primitiveType== Primitives.POLYLINE){
+             GLES32.glDrawElements(GLES32.GL_LINES,icount,GLES32.GL_UNSIGNED_SHORT,drawListBuffer)
         }
     }
 
     private fun draw() {
-        drawListBuffer!!.put(indices)
-        drawListBuffer!!.position(0)
+        drawListBuffer?.put(indices)
+        drawListBuffer?.position(0)
         camera?.update(mViewMatrix)
         Matrix.setIdentityM(mModelMatrix,0)
         transform()
         Matrix.multiplyMM(mMVPMatrix,0,mViewMatrix,0,mModelMatrix,0)
         Matrix.multiplyMM(mMVPMatrix,0,camera?.getProjectionMatrix(),0,mMVPMatrix,0)
         render()
-
-         num_draw_calls++
+        num_draw_calls++
 
 
     }

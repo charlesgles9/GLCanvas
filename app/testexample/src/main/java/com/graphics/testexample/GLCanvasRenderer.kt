@@ -24,9 +24,12 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
     }
 
     private var rect=RectF(300f,300f,100f,100f)
+    private var rectf=RectF(50f,50f,50f,50f)
     private var circle=Circle(100f,100f,100f)
     private var line=Line(200f,200f,280f,300f)
+    private var polyline=PolyLine()
     private var angle=0f
+
     override fun draw() {
         GLES32.glClear(GLES32.GL_DEPTH_BUFFER_BIT or  GLES32.GL_COLOR_BUFFER_BIT)
         GLES32.glClearColor(0f,0f,0f,1f)
@@ -35,15 +38,21 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         home?.draw(batch)
         batch.end()
         rect.setTexture(atlas?.getTexture()!!)
-        batch.setMode(BatchQueue.ORDER)
+
+        polyline.moveTo(100f,100f)
+        polyline.lineTo(200f,100f)
+        polyline.lineTo(200f,200f)
+        batch.setMode(BatchQueue.UNORDER)
         batch.begin(camera)
-        batch.draw(line)
         batch.draw(rect)
-        batch.draw(circle)
+        batch.draw(rectf)
+        batch.draw(line)
+        batch.draw(polyline)
         batch.end()
         rect.setAngleZ(angle)
         angle+=1f
         angle %= 360
+        polyline.reset()
     }
 
     override fun update(delta: Long) {
