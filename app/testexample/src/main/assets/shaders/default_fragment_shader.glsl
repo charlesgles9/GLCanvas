@@ -1,7 +1,7 @@
 precision mediump float;
 varying vec4 v_color;
 varying vec2 pos;
-uniform int a_isQuad;
+uniform float a_isQuad;
 uniform vec2 srcRes;
 varying vec4 a_center;
 varying vec2 a_rounded_properties;
@@ -54,7 +54,11 @@ void main(){
 /* if its a quad test if it has rounded corners
     ignore text objects since texts are also quads*/
     float rounded=roundedEdge(src,pos,size,radius,thickness);
+    //prevents glitches in non-quad shapes all non-quad shapes should have a
+    // value of 1.0
+    rounded=min(1.0,rounded+1.0-a_isQuad);
     quadV=clip*rounded;
+
     vec4 quad_color=v_color*quadV;
 
 

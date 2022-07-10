@@ -240,8 +240,8 @@ class Batch() {
 
     private fun addCircle(index:Int,vertex: Vertex){
         val rect= vertex as Circle
-        val sizeX=rect.getRadius()*0.5f
-        val sizeY=rect.getRadius()*0.5f
+        val sizeX=rect.getRadius()
+        val sizeY=rect.getRadius()
         val x=rect.getX()
         val y=rect.getY()
         val z=rect.getZ()
@@ -790,14 +790,14 @@ class Batch() {
         centerBuffer?.put(centerVertex)?.position(0)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[3])
         GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,mcount*4,centerBuffer)
-        if(primitiveType== Primitives.QUAD||primitiveType==Primitives.CIRCLE) {
+      //  if(primitiveType== Primitives.QUAD||primitiveType==Primitives.CIRCLE) {
             defaultShader.enableVertexAttribPointer("v_center",4,0,centerBuffer)
             // pass the rounded corners for rectF shape
             roundedPropBuffer?.put(roundedRectProperties)?.position(0)
             GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[4])
             GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,rcount*4,roundedPropBuffer)
             defaultShader.enableVertexAttribPointer("v_rounded_properties",2,0,roundedPropBuffer)
-        }
+        //}
         clipBuffer?.put(clipAttribute)?.position(0)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[5])
         GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,qcount*4,clipBuffer)
@@ -842,7 +842,7 @@ class Batch() {
         defaultShader.use()
         defaultShader.getUniformMatrix4fv("u_MVPMatrix",1,mMVPMatrix)
         defaultShader.uniform2f("srcRes",ScreenRatio.getInstance().getSurfaceScreen().x,ScreenRatio.getInstance().getSurfaceScreen().y)
-        defaultShader.uniformLi("a_isQuad",if(primitiveType== Primitives.QUAD||primitiveType==Primitives.CIRCLE&&!isText)1 else 0)
+        defaultShader.uniform1f("a_isQuad",if((primitiveType== Primitives.QUAD||primitiveType==Primitives.CIRCLE)&&!isText)1f else 0f)
         defaultShader.uniformLi("isText",if(isText)1 else 0)
         // distance field uniforms for text rendering
         defaultShader.uniform1f("textEdge",textEdge)

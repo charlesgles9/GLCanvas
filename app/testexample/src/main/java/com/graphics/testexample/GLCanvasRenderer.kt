@@ -24,7 +24,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
 
     private var rect=RectF(300f,300f,100f,100f)
     private var rectf=RectF(50f,50f,50f,50f)
-    private var circle=Circle(100f,600f,100f)
+    private var circle=Circle(100f,600f,50f)
     private var line=Line(200f,200f,280f,300f)
     private var polyline=PolyLine()
     private var angle=0f
@@ -39,6 +39,9 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         rect.setTexture(atlas?.getTexture()!!)
         batch.begin(camera)
         batch.draw(rect)
+        batch.end()
+        batch.begin(camera)
+        batch.draw(circle)
         batch.end()
         polyline.moveTo(100f,100f)
         polyline.lineTo(200f,100f)
@@ -55,9 +58,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         batch.draw(polyline)
         batch.end()
 
-        batch.begin(camera)
-        batch.draw(circle)
-        batch.end()
+
         rect.setAngleZ(angle)
         angle+=1f
         angle %= 360
