@@ -1,20 +1,17 @@
 precision mediump float;
-varying vec4 v_color;
 varying vec2 pos;
-uniform float a_isQuad;
-uniform vec2 srcRes;
-varying vec4 a_center;
-varying vec2 a_rounded_properties;
-varying vec4 a_trim;
 uniform int sampleId;
 uniform int isText;
 uniform sampler2D u_texture;
+uniform float isQuad;
+uniform vec2 srcRes;
+varying vec4 v_center;
+varying vec2 v_rounded_properties;
+varying vec4 v_trim;
+varying vec4 v_color;
 varying vec2 v_TexCoordinate;
-uniform float textEdge;
-uniform float textWidth;
-uniform float textBorderWidth;
-uniform float textBorderEdge;
-uniform vec3 outlineColor;
+varying vec4 v_distanceFieldColor;
+varying vec4 v_distanceFieldBounds;
 
 float roundedEdge(vec2 pos,vec2 center,vec2 size,float radius,float thickness){
     vec2 pd=abs(pos-center);
@@ -28,11 +25,11 @@ void main(){
   src.x=gl_FragCoord.x;
   src.y=srcRes.y-gl_FragCoord.y;
   // pixel position
-  pos=a_center.xy;
+  pos=v_center.xy;
   // quad dimensions
-  size=a_center.zw;
-  float radius=a_rounded_properties.y;
-  float thickness=a_rounded_properties.x;
+  size=v_center.zw;
+  float radius=v_rounded_properties.y;
+  float thickness=v_rounded_properties.x;
   // thickness cannot be zero
   if(thickness==0.0)
    thickness=size.x*size.y;
@@ -40,13 +37,13 @@ void main(){
   min_v.y=size.y-radius;
         // apply clip rect
         // lower clip Y
-         float booleanLowerY=1.0-step(a_trim.w,src.y);
+         float booleanLowerY=1.0-step(v_trim.w,src.y);
         // upper clip Y
-         float booleanUpperY=1.0-step(src.y,a_trim.y);
+         float booleanUpperY=1.0-step(src.y,v_trim.y);
          // lower clip X
-         float booleanLowerX=1.0-step(a_trim.z,src.x);
+         float booleanLowerX=1.0-step(v_trim.z,src.x);
             // upper clip X
-         float booleanUpperX=1.0-step(src.x,a_trim.x);
+         float booleanUpperX=1.0-step(src.x,v_trim.x);
          float clip=booleanUpperY*booleanLowerY*booleanUpperX*booleanLowerX;
          float quadV=1.0;
 
@@ -56,7 +53,7 @@ void main(){
     float rounded=roundedEdge(src,pos,size,radius,thickness);
     //prevents glitches in non-quad shapes all non-quad shapes should have a
     // value of 1.0
-    rounded=min(1.0,rounded+1.0-a_isQuad);
+    rounded=min(1.0,rounded+1.0-isQuad);
     quadV=clip*rounded;
 
     vec4 quad_color=v_color*quadV;
@@ -68,11 +65,11 @@ void main(){
 
    if(isText==1){
       float innerDistance=1.0-texture2D(u_texture,v_TexCoordinate).a;
-      float innerAlpha=1.0-smoothstep(textWidth,textWidth+textEdge,innerDistance);
+      float innerAlpha=1.0-smoothstep(v_distanceFieldBounds.x,v_distanceFieldBounds.x+v_distanceFieldBounds.y,innerDistance);
       float borderDistance=1.0-texture2D(u_texture,v_TexCoordinate).a;
-      float outlineAlpha=1.0-smoothstep(textBorderWidth,textBorderWidth+textBorderEdge,borderDistance);
+      float outlineAlpha=1.0-smoothstep(v_distanceFieldBounds.z,v_distanceFieldBounds.z+v_distanceFieldBounds.w,borderDistance);
       float overallAlpha=innerAlpha+(1.0-innerAlpha)*outlineAlpha;
-      vec3 overallColor=mix(outlineColor.rgb,v_color.rgb,innerAlpha/overallAlpha);
+      vec3 overallColor=mix(v_distanceFieldColor.rgb,v_color.rgb,innerAlpha/overallAlpha);
       quad_color=vec4(overallColor.rgb,overallAlpha)*clip;
       }
 

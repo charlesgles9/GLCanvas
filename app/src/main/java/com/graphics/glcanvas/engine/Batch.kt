@@ -40,6 +40,7 @@ class Batch() {
     // create rounded edges
     private var roundedPropBuffer:FloatBuffer?=null
     private var transformBuffer:FloatBuffer?=null
+    private var textOptionsBuffer:FloatBuffer?=null
     //vertex count
     private var vcount=0
     //index count
@@ -56,7 +57,8 @@ class Batch() {
     private var qcount=0
     //transform count
     private var ncount=0
-
+    //textOptions count
+    private var ocount=0
     // draw calls counter
     private var num_draw_calls=0
     private var num_triangles=0
@@ -76,6 +78,7 @@ class Batch() {
     private var colors=FloatArray(BATCH_SIZE*COLOR_COORDS_PER_VERTEX*BYTES_PER_FLOAT)
     private var textures=FloatArray(BATCH_SIZE*TEXTURE_COORDS_PER_VERTEX*BYTES_PER_FLOAT)
     private var transforms=FloatArray(BATCH_SIZE*6*BYTES_PER_FLOAT)
+    private var textOptions=FloatArray(BATCH_SIZE*8*BYTES_PER_FLOAT)
     // current texture
     private var mTexture=0
     // text uniforms
@@ -90,7 +93,7 @@ class Batch() {
     private var centerVertex=FloatArray(BATCH_SIZE*4*BYTES_PER_FLOAT)
     private var roundedRectProperties=FloatArray(BATCH_SIZE*2*BYTES_PER_FLOAT)
     private var clipAttribute=FloatArray(BATCH_SIZE*4*BYTES_PER_FLOAT)
-    private val buffers=IntArray(7)
+    private val buffers=IntArray(8)
     private val defaultShader=Shader("shaders/default_vertex_shader.glsl","shaders/default_fragment_shader.glsl")
     private var camera:Camera2D?=null
     private val batchQueue=BatchQueue()
@@ -107,6 +110,7 @@ class Batch() {
         createTrimBuffer()
         createTransformBuffer()
         initializeDrawList()
+        createTextOptionsBuffer()
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,0)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,1)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,2)
@@ -114,13 +118,12 @@ class Batch() {
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,4)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,5)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,6)
-
+        GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,7)
     }
     
     fun begin(camera: Camera2D){
         this.camera=camera
         batchQueue.reset()
-
         reset()
     }
 
@@ -147,7 +150,7 @@ class Batch() {
         rcount=0
         qcount=0
         ncount=0
-
+        ocount=0
     }
 
     fun draw(vertex: Vertex){
@@ -191,11 +194,10 @@ class Batch() {
             isText=list.first() is Character
              if(isText){
                  val char=list.first() as Character
-                 textBorderEdge=char.getBorderEdge()
-                 textBorderWidth=char.getBorderWidth()
-                 textEdge=char.getInnerEdge()
-                 textWidth=char.getInnerWidth()
-                 outlineColor.set(char.getOutlineColor())
+                applyDistanceFields(char.getBorderWidth(),char.getBorderEdge(),
+                                    char.getInnerWidth(),char.getInnerEdge(),
+                                    char.getOutlineColor().get(0),char.getOutlineColor().get(1),
+                                    char.getOutlineColor().get(2),char.getOutlineColor().get(3))
              }
                var i=0
                for(vertex in list){
@@ -236,7 +238,18 @@ class Batch() {
     }
 
 
-
+    private fun applyDistanceFields(be:Float,bw:Float,ie:Float,iw:Float,r:Float,g:Float,b:Float,a:Float){
+        for(i in 0 until 4) {
+            textOptions[ocount++] = be
+            textOptions[ocount++] = bw
+            textOptions[ocount++] = ie
+            textOptions[ocount++] = iw
+            textOptions[ocount++] = r
+            textOptions[ocount++] = g
+            textOptions[ocount++] = b
+            textOptions[ocount++] = a
+        }
+    }
 
     private fun addCircle(index:Int,vertex: Vertex){
         val rect= vertex as Circle
@@ -756,6 +769,9 @@ class Batch() {
         drawListBuffer=Buffer.createDrawListBuffer(0,indices)
     }
 
+    private fun createTextOptionsBuffer(){
+        textOptionsBuffer=Buffer.createFloatBuffer(buffers[7],0,textOptions)
+    }
     private fun createColorBuffer(){
         colorBuffer=Buffer.createFloatBuffer(buffers[1],0,colors)
      }
@@ -791,17 +807,18 @@ class Batch() {
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[3])
         GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,mcount*4,centerBuffer)
       //  if(primitiveType== Primitives.QUAD||primitiveType==Primitives.CIRCLE) {
-            defaultShader.enableVertexAttribPointer("v_center",4,0,centerBuffer)
+            defaultShader.enableVertexAttribPointer("a_center",4,0,centerBuffer)
             // pass the rounded corners for rectF shape
             roundedPropBuffer?.put(roundedRectProperties)?.position(0)
             GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[4])
             GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,rcount*4,roundedPropBuffer)
-            defaultShader.enableVertexAttribPointer("v_rounded_properties",2,0,roundedPropBuffer)
+            defaultShader.enableVertexAttribPointer("a_rounded_properties",2,0,roundedPropBuffer)
         //}
         clipBuffer?.put(clipAttribute)?.position(0)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[5])
         GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,qcount*4,clipBuffer)
-        defaultShader.enableVertexAttribPointer("v_trim",4,0,clipBuffer)
+        defaultShader.enableVertexAttribPointer("a_trim",4,0,clipBuffer)
+        //send transformation data
         val transFormStrideBytes=6*4
         val rotationOffset=0
         val scaleOffset=3
@@ -814,6 +831,21 @@ class Batch() {
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[6])
         GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,ncount*4,transformBuffer)
         defaultShader.enableVertexAttribPointer("a_scale",3,transFormStrideBytes,transformBuffer)
+        // send distance fields data
+        val distanceFieldStrideBytes=8*4
+        val boundsOffset=0
+        val colorOffset=4
+        textOptionsBuffer?.clear()
+        textOptionsBuffer?.put(textOptions)?.position(boundsOffset)
+        GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[7])
+        GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,ocount*4,textOptionsBuffer)
+        defaultShader.enableVertexAttribPointer("a_distanceFieldBounds",4,distanceFieldStrideBytes,textOptionsBuffer)
+        textOptionsBuffer?.put(textOptions)?.position(colorOffset)
+        GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[7])
+        GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,ocount*4,textOptionsBuffer)
+        defaultShader.enableVertexAttribPointer("a_distanceFieldColor",4,distanceFieldStrideBytes,textOptionsBuffer)
+
+
     }
 
     // bind fragment shader attributes
@@ -840,16 +872,10 @@ class Batch() {
 
     private fun render(){
         defaultShader.use()
-        defaultShader.getUniformMatrix4fv("u_MVPMatrix",1,mMVPMatrix)
+        defaultShader.getUniformMatrix4fv("MVPMatrix",1,mMVPMatrix)
         defaultShader.uniform2f("srcRes",ScreenRatio.getInstance().getSurfaceScreen().x,ScreenRatio.getInstance().getSurfaceScreen().y)
-        defaultShader.uniform1f("a_isQuad",if((primitiveType== Primitives.QUAD||primitiveType==Primitives.CIRCLE)&&!isText)1f else 0f)
+        defaultShader.uniform1f("isQuad",if((primitiveType== Primitives.QUAD||primitiveType==Primitives.CIRCLE)&&!isText)1f else 0f)
         defaultShader.uniformLi("isText",if(isText)1 else 0)
-        // distance field uniforms for text rendering
-        defaultShader.uniform1f("textEdge",textEdge)
-        defaultShader.uniform1f("textWidth",textWidth)
-        defaultShader.uniform1f("textBorderWidth",textBorderWidth)
-        defaultShader.uniform1f("textBorderEdge",textBorderEdge)
-        defaultShader.uniform3f("outlineColor", outlineColor.get(0),outlineColor.get(1),outlineColor.get(2))
         bindVertexShader()
         bindFragmentShader()
         if(primitiveType == Primitives.QUAD||primitiveType== Primitives.CIRCLE||primitiveType== Primitives.TRIANGLE)

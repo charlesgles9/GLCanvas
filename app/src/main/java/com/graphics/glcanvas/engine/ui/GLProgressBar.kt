@@ -56,6 +56,11 @@ class GLProgressBar(width:Float,height:Float, progress:Float,horizontalBar:Boole
     }
 
 
+    fun setProgress(value: Float){
+        currentProgress=value
+        positionBars(horizontalBar,value, maxProgressBar)
+    }
+
     fun getProgress():Float{
         return currentProgress
     }
