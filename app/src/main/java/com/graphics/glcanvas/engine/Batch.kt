@@ -294,22 +294,22 @@ class Batch() {
         centerVertex[mcount++]=x
         centerVertex[mcount++]=y
         centerVertex[mcount++]=sizeX
-        centerVertex[mcount++]=rect.getThickness()
+        centerVertex[mcount++]=sizeY
 
         centerVertex[mcount++]=x
         centerVertex[mcount++]=y
         centerVertex[mcount++]=sizeX
-        centerVertex[mcount++]=rect.getThickness()
+        centerVertex[mcount++]=sizeY
 
         centerVertex[mcount++]=x
         centerVertex[mcount++]=y
         centerVertex[mcount++]=sizeX
-        centerVertex[mcount++]=rect.getThickness()
+        centerVertex[mcount++]=sizeY
 
         centerVertex[mcount++]=x
         centerVertex[mcount++]=y
         centerVertex[mcount++]=sizeX
-        centerVertex[mcount++]=rect.getThickness()
+        centerVertex[mcount++]=sizeY
 
         val texture=rect.getTextureCords()
         textures[tcount++]=texture[0]
@@ -326,16 +326,16 @@ class Batch() {
 
         mTexture=rect.getTexture().getId()
         roundedRectProperties[rcount++]=rect.getThickness()
-        roundedRectProperties[rcount++]=sizeX*0.5f
+        roundedRectProperties[rcount++]=sizeX
 
         roundedRectProperties[rcount++]=rect.getThickness()
-        roundedRectProperties[rcount++]=sizeX*0.5f
+        roundedRectProperties[rcount++]=sizeX
 
         roundedRectProperties[rcount++]=rect.getThickness()
-        roundedRectProperties[rcount++]=sizeX*0.5f
+        roundedRectProperties[rcount++]=sizeX
 
         roundedRectProperties[rcount++]=rect.getThickness()
-        roundedRectProperties[rcount++]=sizeX*0.5f
+        roundedRectProperties[rcount++]=sizeX
 
         indices[icount++]= (index*4+0).toShort()
         indices[icount++]= (index*4+1).toShort()
@@ -513,6 +513,7 @@ class Batch() {
         val x=line.getStartX()
         val y=line.getStartY()
         val z=line.getZ()
+
         for(i in 0 until  2) {
             transforms[ncount++] = Math.toRadians(vertex.getAngleX().toDouble()).toFloat()
             transforms[ncount++] = Math.toRadians(vertex.getAngleY().toDouble()).toFloat()
@@ -521,6 +522,7 @@ class Batch() {
             transforms[ncount++] = vertex.getScale().y
             transforms[ncount++] = 1f
         }
+
         // top left
         vertexes[vcount++]=x
         vertexes[vcount++]=y
@@ -529,6 +531,16 @@ class Batch() {
         vertexes[vcount++]=sizeX+x
         vertexes[vcount++]=sizeY+y
         vertexes[vcount++]=z
+
+        centerVertex[mcount++]=x
+        centerVertex[mcount++]=y
+        centerVertex[mcount++]=sizeX
+        centerVertex[mcount++]=sizeY
+
+        centerVertex[mcount++]=x
+        centerVertex[mcount++]=y
+        centerVertex[mcount++]=sizeX
+        centerVertex[mcount++]=sizeY
 
         clipAttribute[qcount++]=line.getClipUpper().x
         clipAttribute[qcount++]=line.getClipUpper().y
@@ -586,6 +598,26 @@ class Batch() {
                 vertexes[vcount++] = sizeX + x
                 vertexes[vcount++] = sizeY + y
                 vertexes[vcount++] = z
+
+                centerVertex[mcount++]=x
+                centerVertex[mcount++]=y
+                centerVertex[mcount++]=sizeX
+                centerVertex[mcount++]=sizeY
+
+                centerVertex[mcount++]=x
+                centerVertex[mcount++]=y
+                centerVertex[mcount++]=sizeX
+                centerVertex[mcount++]=sizeY
+
+                clipAttribute[qcount++]=polyLine.getClipUpper().x
+                clipAttribute[qcount++]=polyLine.getClipUpper().y
+                clipAttribute[qcount++]=polyLine.getClipLower().x
+                clipAttribute[qcount++]=polyLine.getClipLower().y
+
+                clipAttribute[qcount++]=polyLine.getClipUpper().x
+                clipAttribute[qcount++]=polyLine.getClipUpper().y
+                clipAttribute[qcount++]=polyLine.getClipLower().x
+                clipAttribute[qcount++]=polyLine.getClipLower().y
 
                 indices[icount++] = (lcount * 2 + 0).toShort()
                 indices[icount++] = (lcount * 2 + 1).toShort()
@@ -645,12 +677,44 @@ class Batch() {
                 vertexes[vcount++] = sizeBY + y
                 vertexes[vcount++] = z
 
+                centerVertex[mcount++]=x
+                centerVertex[mcount++]=y
+                centerVertex[mcount++]=x
+                centerVertex[mcount++]=y
+
+                centerVertex[mcount++]=x
+                centerVertex[mcount++]=y
+                centerVertex[mcount++]=sizeAX
+                centerVertex[mcount++]=sizeAY
+
+                centerVertex[mcount++]=x
+                centerVertex[mcount++]=y
+                centerVertex[mcount++]=sizeBX
+                centerVertex[mcount++]=sizeBY
+
+                clipAttribute[qcount++]=poly.getClipUpper().x
+                clipAttribute[qcount++]=poly.getClipUpper().y
+                clipAttribute[qcount++]=poly.getClipLower().x
+                clipAttribute[qcount++]=poly.getClipLower().y
+
+                clipAttribute[qcount++]=poly.getClipUpper().x
+                clipAttribute[qcount++]=poly.getClipUpper().y
+                clipAttribute[qcount++]=poly.getClipLower().x
+                clipAttribute[qcount++]=poly.getClipLower().y
+
+                clipAttribute[qcount++]=poly.getClipUpper().x
+                clipAttribute[qcount++]=poly.getClipUpper().y
+                clipAttribute[qcount++]=poly.getClipLower().x
+                clipAttribute[qcount++]=poly.getClipLower().y
+
                 indices[icount++] = (pcount * 3 + 0).toShort()
                 indices[icount++] = (pcount * 3 + 1).toShort()
                 indices[icount++] = (pcount * 3 + 2).toShort()
+
                 val color1=path.getColor(0)
                 val color2=path.getColor(1)
                 val color3=path.getColor(2)
+
                 colors[acount++] =color1.get(0)
                 colors[acount++] =color1.get(1)
                 colors[acount++] =color1.get(2)
