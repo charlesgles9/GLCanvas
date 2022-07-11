@@ -4,7 +4,6 @@ import android.content.Context
 import android.opengl.GLES32
 import android.opengl.Matrix
 import com.graphics.glcanvas.engine.constants.Primitives
-import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.maths.Vector3f
 import com.graphics.glcanvas.engine.structures.*
 import com.graphics.glcanvas.engine.ui.ScreenRatio
@@ -83,11 +82,6 @@ class Batch() {
     private var mTexture=0
     // text uniforms
     private var isText=false
-    private var textWidth=0.4f
-    private var textEdge=0.1f
-    private var textBorderWidth=0.1f
-    private var textBorderEdge=0.1f
-    private var outlineColor=ColorRGBA()
     // used to draw batched circles since we need the center position
     // also useful to pass in the center position of our quad to create rounded edges
     private var centerVertex=FloatArray(BATCH_SIZE*4*BYTES_PER_FLOAT)

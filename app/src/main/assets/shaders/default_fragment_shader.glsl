@@ -51,11 +51,10 @@ void main(){
 /* if its a quad test if it has rounded corners
     ignore text objects since texts are also quads*/
     float rounded=roundedEdge(src,pos,size,radius,thickness);
-    //prevents glitches in non-quad shapes all non-quad shapes should have a
-    // value of 1.0
+    /*prevents glitches in non-quad shapes all non-quad shapes should have a
+     value of 1.0 */
     rounded=min(1.0,rounded+1.0-isQuad);
     quadV=clip*rounded;
-
     vec4 quad_color=v_color*quadV;
 
 

@@ -13,13 +13,18 @@ class GLGridLayout(private val parent:GLView?,width:Float,height:Float,private v
     private var listener:OnItemClickEvent.OnItemClickListener?=null
     constructor(parent:GLView?,width:Float,height:Float, rows:Int,cols:Int,atlas: TextureAtlas,name:String,index:Int):this(parent,width, height,rows, cols){
         this.atlas=atlas
-        setBackgroundAtlas(atlas, name,index)
+        setBackgroundImageAtlas(atlas, name,index)
     }
 
-    fun setBackgroundAtlas(atlas: TextureAtlas, name:String, index:Int){
+    fun setBackgroundImageAtlas(atlas: TextureAtlas, name:String, index:Int){
         setBackgroundTextureAtlas(atlas)
         setPrimaryImage(name,index)
         setBackgroundSubTexture(name,index)
+    }
+    fun setBackgroundImageAtlas(atlas: TextureAtlas, name:String){
+        setBackgroundTextureAtlas(atlas)
+        setPrimaryImage(name,0)
+        setBackgroundSubTexture(name,0)
     }
     //push this view from center origin 0.5,0.5 -> 0,0
     fun setPosition(x:Float,y:Float){

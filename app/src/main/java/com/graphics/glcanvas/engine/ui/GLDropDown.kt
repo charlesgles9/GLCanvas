@@ -15,7 +15,7 @@ class GLDropDown (width:Float, height:Float,
     private var onItemClick:OnItemClickEvent?=null
     private var listener:OnItemClickEvent.OnItemClickListener?=null
     private var itemDropMaxHeight=Float.MAX_VALUE
-    private var showDropDowm=false
+    private var showDropDown=false
     init {
         setText(string,font,size)
     }
@@ -35,14 +35,14 @@ class GLDropDown (width:Float, height:Float,
     }
 
     fun toggleDropDown(){
-        showDropDowm=!showDropDowm
-        scrollView?.setVisibility(showDropDowm)
+        showDropDown=!showDropDown
+        scrollView?.setVisibility(showDropDown)
 
     }
 
     fun toggleDropDown(boolean: Boolean){
         scrollView?.setVisibility(boolean)
-        showDropDowm=boolean
+        showDropDown=boolean
     }
 
     fun setDropMaxHeight(itemDropMaxHeight:Float){
@@ -104,6 +104,7 @@ class GLDropDown (width:Float, height:Float,
         this.listener=listener
         this.onItemClick?.setListener(listener)
     }
+
     fun addEvents(controller:GLCanvasSurfaceView.TouchController?){
          scrollView?.addOnSwipeEvent(object :GLOnSwipeEvent.OnSwipeListener{
              override fun onSwipe() {
