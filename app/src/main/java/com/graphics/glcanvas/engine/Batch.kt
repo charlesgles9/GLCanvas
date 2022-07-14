@@ -195,7 +195,8 @@ class Batch() {
              }
                var i=0
                for(vertex in list){
-                   if(vcount>=BATCH_SIZE*12){
+                   val count=i*4*4
+                   if(count>=BATCH_SIZE*12*0.9f){
                        primitiveType = when(bucket.getPrimitiveType()){
                            Primitives.QUAD -> Primitives.QUAD
                            Primitives.TRIANGLE -> Primitives.TRIANGLE
@@ -795,23 +796,23 @@ class Batch() {
         vertexBuffer?.put(vertexes)?.position(0)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[0])
         GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,vcount*4,vertexBuffer)
-        defaultShader.enableVertexAttribPointer("a_position",VERTEX_COORDS_PER_VERTEX,0,vertexBuffer)
+        defaultShader.enableVertexAttribPointer("a_position",VERTEX_COORDS_PER_VERTEX,12,vertexBuffer)
         // pass in every circle or quads center position
         centerBuffer?.put(centerVertex)?.position(0)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[3])
         GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,mcount*4,centerBuffer)
       //  if(primitiveType== Primitives.QUAD||primitiveType==Primitives.CIRCLE) {
-            defaultShader.enableVertexAttribPointer("a_center",4,0,centerBuffer)
+            defaultShader.enableVertexAttribPointer("a_center",4,16,centerBuffer)
             // pass the rounded corners for rectF shape
             roundedPropBuffer?.put(roundedRectProperties)?.position(0)
             GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[4])
             GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,rcount*4,roundedPropBuffer)
-            defaultShader.enableVertexAttribPointer("a_rounded_properties",2,0,roundedPropBuffer)
+            defaultShader.enableVertexAttribPointer("a_rounded_properties",2,8,roundedPropBuffer)
         //}
         clipBuffer?.put(clipAttribute)?.position(0)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[5])
         GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,qcount*4,clipBuffer)
-        defaultShader.enableVertexAttribPointer("a_trim",4,0,clipBuffer)
+        defaultShader.enableVertexAttribPointer("a_trim",4,16,clipBuffer)
         //send transformation data
         val transFormStrideBytes=6*4
         val rotationOffset=0
@@ -829,15 +830,27 @@ class Batch() {
         val distanceFieldStrideBytes=8*4
         val boundsOffset=0
         val colorOffset=4
-        textOptionsBuffer?.clear()
-        textOptionsBuffer?.put(textOptions)?.position(boundsOffset)
-        GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[7])
-        GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,ocount*4,textOptionsBuffer)
-        defaultShader.enableVertexAttribPointer("a_distanceFieldBounds",4,distanceFieldStrideBytes,textOptionsBuffer)
-        textOptionsBuffer?.put(textOptions)?.position(colorOffset)
-        GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[7])
-        GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,ocount*4,textOptionsBuffer)
-        defaultShader.enableVertexAttribPointer("a_distanceFieldColor",4,distanceFieldStrideBytes,textOptionsBuffer)
+        if(isText) {
+            textOptionsBuffer?.clear()
+            textOptionsBuffer?.put(textOptions)?.position(boundsOffset)
+            GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER, buffers[7])
+            GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER, 0, ocount * 4, textOptionsBuffer)
+            defaultShader.enableVertexAttribPointer(
+                "a_distanceFieldBounds",
+                4,
+                distanceFieldStrideBytes,
+                textOptionsBuffer
+            )
+            textOptionsBuffer?.put(textOptions)?.position(colorOffset)
+            GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER, buffers[7])
+            GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER, 0, ocount * 4, textOptionsBuffer)
+            defaultShader.enableVertexAttribPointer(
+                "a_distanceFieldColor",
+                4,
+                distanceFieldStrideBytes,
+                textOptionsBuffer
+            )
+        }
 
 
     }

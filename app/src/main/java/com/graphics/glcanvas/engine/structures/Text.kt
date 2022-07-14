@@ -171,10 +171,12 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
     fun draw(batch: Batch){
         val id=TextureLoader.getInstance().getTexture(font.getTextureAtlasPath())
         if(visible)
-            words.forEach { word ->
-                word.getCharacter().forEach {
-                    it.getTexture().setId(id)
-                    batch.draw(it)
+            synchronized(words) {
+                words.forEach { word ->
+                    word.getCharacter().forEach {
+                        it.getTexture().setId(id)
+                        batch.draw(it)
+                    }
                 }
             }
 

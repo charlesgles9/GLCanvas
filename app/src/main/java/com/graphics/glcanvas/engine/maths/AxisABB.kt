@@ -11,10 +11,8 @@ open class AxisABB {
     }
 
      fun isIntersecting(a:RectF,b:RectF):Boolean{
-        val sizeABx=a.getWidth()+b.getWidth()
-        val sizeABy=a.getHeight()+b.getHeight()
-        return axis(a.getX()+a.getWidth()*0.5f,b.getX()+b.getWidth()*0.5f,sizeABx*0.5f)&&
-                axis(a.getY()+a.getHeight()*0.5f,b.getY()+b.getHeight()*0.5f,sizeABy*0.5f)
+       return isIntersecting(a.getX(),a.getY(),a.getWidth(),a.getHeight(),
+                b.getX(),b.getY(),b.getWidth(),b.getHeight())
     }
 
     private fun axis(centerA:Float,centerB:Float,sizeAB:Float):Boolean{

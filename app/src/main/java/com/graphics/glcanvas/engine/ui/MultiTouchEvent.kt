@@ -6,7 +6,7 @@ import com.graphics.glcanvas.engine.maths.AxisABB
 import com.graphics.glcanvas.engine.maths.Vector2f
 import com.graphics.glcanvas.engine.structures.RectF
 
-class MultiTouchEvent(private val listener:OnMultiTouchListener,private val rect: RectF) :Touch{
+open class MultiTouchEvent(private val listener:OnMultiTouchListener, private val rect: RectF) :Touch{
 
     private val fingers=HashMap<String,Vector2f>()
     private var axisABB=AxisABB()

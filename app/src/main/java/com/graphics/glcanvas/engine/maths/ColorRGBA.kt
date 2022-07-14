@@ -65,4 +65,11 @@ class ColorRGBA {
 
     }
 
+    fun multiply(scalar:Float){
+        data[R]=(data[R]*scalar)
+        data[G]=(data[G]*scalar)
+        data[B]=(data[B]*scalar)
+        data[A]=(data[A]*scalar)
+    }
+
 }
