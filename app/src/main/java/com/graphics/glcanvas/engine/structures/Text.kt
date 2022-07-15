@@ -5,6 +5,7 @@ import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.maths.Vector2f
 import com.graphics.glcanvas.engine.maths.Vector3f
 import com.graphics.glcanvas.engine.utils.TextureLoader
+import java.lang.IllegalStateException
 import kotlin.concurrent.thread
 import kotlin.math.max
 
@@ -170,15 +171,19 @@ class Text(private var text:String,private var fontSize:Float,private var font: 
     }
     fun draw(batch: Batch){
         val id=TextureLoader.getInstance().getTexture(font.getTextureAtlasPath())
-        if(visible)
-            synchronized(words) {
-                words.forEach { word ->
-                    word.getCharacter().forEach {
-                        it.getTexture().setId(id)
-                        batch.draw(it)
+        try {
+            if (visible)
+                synchronized(words) {
+                    for (i in 0 until words.size) {
+                        val word = words[i]
+                        for (j in 0 until word.getCharacter().size) {
+                            val char = word.getCharacter()[j]
+                            char.getTexture().setId(id)
+                            batch.draw(char)
+                        }
                     }
                 }
-            }
+        }catch (ignore:IllegalStateException){ }
 
 
     }

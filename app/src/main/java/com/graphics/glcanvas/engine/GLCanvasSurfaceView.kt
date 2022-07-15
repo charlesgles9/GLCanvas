@@ -42,10 +42,12 @@ class GLCanvasSurfaceView(private val context: Activity, private val renderer: G
         insetsController.hide(WindowInsetsCompat.Type.systemBars())
 
     }
+
+    // in case there is status bar or system bar on top
     private fun setScreenDisplayRatio(){
         val content=context.window.findViewById<View>(Window.ID_ANDROID_CONTENT)
-        val w=resources.displayMetrics.widthPixels+ (resources.displayMetrics.widthPixels-content.width)
-        val h=resources.displayMetrics.heightPixels+ (resources.displayMetrics.heightPixels- content.height)
+        val w=resources.displayMetrics.widthPixels- (resources.displayMetrics.widthPixels-content.width)
+        val h=resources.displayMetrics.heightPixels- (resources.displayMetrics.heightPixels- content.height)
         ScreenRatio.getInstance().setDisplayScreen(w.toFloat(),h.toFloat())
     }
     override fun onWindowFocusChanged(hasWindowFocus: Boolean) {
