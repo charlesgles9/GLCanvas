@@ -14,9 +14,10 @@ varying vec4 v_distanceFieldColor;
 varying vec4 v_distanceFieldBounds;
 
 float roundedEdge(vec2 pos,vec2 center,vec2 size,float radius,float thickness){
-    vec2 pd=abs(pos-center);
-    return 1.0-min(step(length(size)-
-          radius*0.5,length(pd))*radius,1.0);
+    float d=length(max(abs(pos-center)-size+radius,0.0))-radius;
+     if(radius==0.0)
+     return 1.0;
+    return smoothstep(-1.0,1.0,abs(d)-10.0);
 }
 
 void main(){
@@ -56,6 +57,7 @@ void main(){
     rounded=min(1.0,rounded+1.0-isQuad);
     quadV=clip*rounded;
     vec4 quad_color=v_color*quadV;
+
 
 
     if(quad_color.a<(1.0/255.0))
