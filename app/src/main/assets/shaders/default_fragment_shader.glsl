@@ -15,9 +15,7 @@ varying vec4 v_distanceFieldBounds;
 
 float roundedEdge(vec2 pos,vec2 center,vec2 size,float radius,float thickness){
     float d=length(max(abs(pos-center)-size+radius,0.0));
-     if(radius==0.0)
-     return 1.0;
-    return 1.0-smoothstep(-1.5,1.5,abs(d)-radius);
+    return 1.0-smoothstep(-1.5,1.5,abs(d)-radius)*min(1.0,radius);
 }
 
 void main(){

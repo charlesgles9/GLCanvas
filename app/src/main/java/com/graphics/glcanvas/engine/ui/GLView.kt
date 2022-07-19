@@ -225,14 +225,14 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
         // position the horizontal bar
         if(horizontalBar&&pw!=getForeground().getWidth().toInt()) {
             currentProgress = pw / width * maxProgressBar
-            getForeground().setWidth(pw.toFloat() - backgroundThickness * 2f)
+            getForeground().setWidth(pw.toFloat() - backgroundThickness *1f)
             fOffset.x = ((width - pw.toFloat()) * -0.5f)
             pThumb.set(getForeground().getX()+getForeground().getWidth()*0.5f,
                 getForeground().getY())
             //position the vertical bar
         }else if(!horizontalBar&&ph!=getForeground().getHeight().toInt()){
             currentProgress = pw / width * maxProgressBar
-            getForeground().setHeight(ph.toFloat() - backgroundThickness * 2f)
+            getForeground().setHeight(ph.toFloat() - backgroundThickness *1f)
             fOffset.y = ((height - ph.toFloat()) * -0.5f)
             pThumb.set(getForeground().getX(),
                 getForeground().getY()+getForeground().getHeight()*0.5f)
@@ -260,19 +260,27 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
           if(visible) {
               batch.draw(background)
               batch.draw(foreground)
-          }
-          // center the text if available
-          val tw= (text?.width?.times(0.5f)?: 0f)
-          val th=(text?.height?.times(0.5f)?:0f)
-          if(centerText)
-          text?.set(position.x-tw, position.y-th,getZ())
-          else
-              text?.set(position.x-width*0.45f,position.y-height*0.45f,getZ())
 
-          //clips text that are out of the viewing area of this entity
-         LayoutConstraint.clipView(position.x,position.y,width,height,
-                                    text?.position?.x?:0f,text?.position?.y?:0f,text?.width?:0f,text?.height?:0f,text)
-           text?.draw(batch)
+              // center the text if available
+              val tw = (text?.width?.times(0.5f) ?: 0f)
+              val th = (text?.height?.times(0.5f) ?: 0f)
+              if (centerText)
+                  text?.set(position.x - tw, position.y - th, getZ())
+              else
+                  text?.set(position.x - width * 0.45f, position.y - height * 0.45f, getZ())
+
+              //clips text that are out of the viewing area of this entity
+              LayoutConstraint.clipView(position.x,
+                  position.y,
+                  width,
+                  height,
+                  text?.position?.x ?: 0f,
+                  text?.position?.y ?: 0f,
+                  text?.width ?: 0f,
+                  text?.height ?: 0f,
+                  text)
+              text?.draw(batch)
+          }
          //click events for checkbox
           if(isCheckBox)
               checkBoxToggle(check)

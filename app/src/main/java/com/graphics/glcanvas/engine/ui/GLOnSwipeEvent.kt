@@ -3,6 +3,7 @@ package com.graphics.glcanvas.engine.ui
 import android.view.MotionEvent
 import com.graphics.glcanvas.engine.Touch
 import com.graphics.glcanvas.engine.maths.Vector2f
+import com.graphics.glcanvas.engine.utils.FpsCounter
 import kotlin.math.abs
 
 class GLOnSwipeEvent (private val listener: OnSwipeListener,
@@ -67,17 +68,18 @@ class GLOnSwipeEvent (private val listener: OnSwipeListener,
                 val distanceY=abs(origin.y -move.y+1)
                 val dirx= (origin.x-move.x+1) / distanceX
                 val diry=(origin.y-move.y +1 )/ distanceY
-                origin.set(move.x,move.y)
+               // causes jagged effect whilst scrolling up  origin.set(move.x,move.y)
                 listener.onSwipe()
-                offset.sub(dirx*threshHold,threshHold*diry)
+                val frame=60f/FpsCounter.getInstance().getFps()
+                offset.sub(dirx*threshHold*frame,threshHold*diry*frame)
                 if(offset.x>=maxOffset.x&&maxOffset.x!=0f)
                     offset.x=offset.x+dirx*threshHold
                 if(offset.x<=minOffset.x&&minOffset.x!=0f)
                     offset.x=offset.x+dirx*threshHold
                 if(offset.y>=maxOffset.y&&maxOffset.y!=0f)
-                    offset.y=offset.y+diry*threshHold
-                if(offset.y<=minOffset.y&&minOffset.y!=0f)
-                    offset.y=offset.y+diry*threshHold
+                    offset.y=offset.y+diry*threshHold*frame
+                else if(offset.y<=minOffset.y&&minOffset.y!=0f)
+                    offset.y=offset.y+diry*threshHold*frame
 
                 UP=velocity.y<0
                 DOWN=velocity.y>0

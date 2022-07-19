@@ -82,7 +82,7 @@ open class RelativeLayoutConstraint(private val parent:GLView?,width:Float, heig
         super.draw(batch)
 
         items.forEach {
-            it.set(getX()-width*0.5f+it.width*0.5f,getY()-height*0.5f+it.height)
+            it.set(getX()-width*0.5f+it.width*0.5f,getY()-height*0.5f+it.height*0.5f)
             applyMargin(it)
         }
         if(isVisible())

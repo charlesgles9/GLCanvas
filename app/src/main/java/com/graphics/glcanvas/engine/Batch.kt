@@ -518,8 +518,10 @@ class Batch() {
         val line=vertex as Line
         val sizeX= abs( line.getStartX()-line.getStopX())
         val sizeY=abs(line.getStartY()-line.getStopY())
-        val x=line.getStartX()
-        val y=line.getStartY()
+        val startx=line.getStartX()
+        val starty=line.getStartY()
+        val stopx=line.getStopX()
+        val stopy=line.getStopY()
         val z=line.getZ()
 
         for(i in 0 until  2) {
@@ -532,21 +534,21 @@ class Batch() {
         }
 
         // top left
-        vertexes[vcount++]=x
-        vertexes[vcount++]=y
+        vertexes[vcount++]=startx
+        vertexes[vcount++]=starty
         vertexes[vcount++]=z
         //bottom left
-        vertexes[vcount++]=sizeX+x
-        vertexes[vcount++]=sizeY+y
+        vertexes[vcount++]=stopx
+        vertexes[vcount++]=stopy
         vertexes[vcount++]=z
 
-        centerVertex[mcount++]=x
-        centerVertex[mcount++]=y
+        centerVertex[mcount++]=startx
+        centerVertex[mcount++]=starty
         centerVertex[mcount++]=sizeX
         centerVertex[mcount++]=sizeY
 
-        centerVertex[mcount++]=x
-        centerVertex[mcount++]=y
+        centerVertex[mcount++]=startx
+        centerVertex[mcount++]=starty
         centerVertex[mcount++]=sizeX
         centerVertex[mcount++]=sizeY
 
@@ -583,13 +585,16 @@ class Batch() {
         var lcount=index
         for(i in 0 until polyLine.getPaths().size) {
             val path=polyLine.getPaths()[i]
-            val x = path.getStart().x
-            val y = path.getStart().y
+            val startx = path.getStart().x
+            val starty = path.getStart().y
             val z=  polyLine.getZ()
             for(j in 0 until path.getEndPoints().size){
                 val line=path.getEndPoints()[j]
-                val sizeX = abs(x - line.x)
-                val sizeY = abs(y - line.y)
+                val stopx=line.x
+                val stopy=line.y
+                val sizeX = abs(startx - stopx)
+                val sizeY = abs(starty - stopy)
+
                 for(r in 0 until  2) {
                     transforms[ncount++] = Math.toRadians(vertex.getAngleX().toDouble()).toFloat()
                     transforms[ncount++] = Math.toRadians(vertex.getAngleY().toDouble()).toFloat()
@@ -599,21 +604,21 @@ class Batch() {
                     transforms[ncount++] = 1f
                 }
                 // top left
-                vertexes[vcount++] = x
-                vertexes[vcount++] = y
+                vertexes[vcount++] = startx
+                vertexes[vcount++] = starty
                 vertexes[vcount++] = z
                 //bottom left
-                vertexes[vcount++] = sizeX + x
-                vertexes[vcount++] = sizeY + y
+                vertexes[vcount++] = stopx
+                vertexes[vcount++] = stopy
                 vertexes[vcount++] = z
 
-                centerVertex[mcount++]=x
-                centerVertex[mcount++]=y
+                centerVertex[mcount++]=startx
+                centerVertex[mcount++]=starty
                 centerVertex[mcount++]=sizeX
                 centerVertex[mcount++]=sizeY
 
-                centerVertex[mcount++]=x
-                centerVertex[mcount++]=y
+                centerVertex[mcount++]=stopx
+                centerVertex[mcount++]=stopy
                 centerVertex[mcount++]=sizeX
                 centerVertex[mcount++]=sizeY
 
@@ -677,13 +682,13 @@ class Batch() {
                 vertexes[vcount++] = y
                 vertexes[vcount++] = z
 
-                vertexes[vcount++] = sizeAX + x
-                vertexes[vcount++] = sizeAY + y
-                vertexes[vcount++] = z
+                vertexes[vcount++] = a.x
+                vertexes[vcount++] = a.y
+                vertexes[vcount++] = a.z
 
-                vertexes[vcount++] = sizeBX + x
-                vertexes[vcount++] = sizeBY + y
-                vertexes[vcount++] = z
+                vertexes[vcount++] = b.x
+                vertexes[vcount++] = b.y
+                vertexes[vcount++] = b.z
 
                 centerVertex[mcount++]=x
                 centerVertex[mcount++]=y
@@ -802,12 +807,12 @@ class Batch() {
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[3])
         GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,mcount*4,centerBuffer)
       //  if(primitiveType== Primitives.QUAD||primitiveType==Primitives.CIRCLE) {
-            defaultShader.enableVertexAttribPointer("a_center",4,16,centerBuffer)
+            defaultShader.enableVertexAttribPointer("a_center",4,0,centerBuffer)
             // pass the rounded corners for rectF shape
             roundedPropBuffer?.put(roundedRectProperties)?.position(0)
             GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[4])
             GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,rcount*4,roundedPropBuffer)
-            defaultShader.enableVertexAttribPointer("a_rounded_properties",2,8,roundedPropBuffer)
+            defaultShader.enableVertexAttribPointer("a_rounded_properties",2,0,roundedPropBuffer)
         //}
         clipBuffer?.put(clipAttribute)?.position(0)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[5])
