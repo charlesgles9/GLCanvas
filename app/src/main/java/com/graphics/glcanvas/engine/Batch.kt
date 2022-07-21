@@ -585,16 +585,13 @@ class Batch() {
         var lcount=index
         for(i in 0 until polyLine.getPaths().size) {
             val path=polyLine.getPaths()[i]
-            val startx = path.getStart().x
-            val starty = path.getStart().y
+            val x = path.getStart().x
+            val y = path.getStart().y
             val z=  polyLine.getZ()
             for(j in 0 until path.getEndPoints().size){
                 val line=path.getEndPoints()[j]
-                val stopx=line.x
-                val stopy=line.y
-                val sizeX = abs(startx - stopx)
-                val sizeY = abs(starty - stopy)
-
+                val sizeX = abs(x - line.x)
+                val sizeY = abs(y - line.y)
                 for(r in 0 until  2) {
                     transforms[ncount++] = Math.toRadians(vertex.getAngleX().toDouble()).toFloat()
                     transforms[ncount++] = Math.toRadians(vertex.getAngleY().toDouble()).toFloat()
@@ -604,21 +601,21 @@ class Batch() {
                     transforms[ncount++] = 1f
                 }
                 // top left
-                vertexes[vcount++] = startx
-                vertexes[vcount++] = starty
+                vertexes[vcount++] = x
+                vertexes[vcount++] = y
                 vertexes[vcount++] = z
                 //bottom left
-                vertexes[vcount++] = stopx
-                vertexes[vcount++] = stopy
+                vertexes[vcount++] = sizeX + x
+                vertexes[vcount++] = sizeY + y
                 vertexes[vcount++] = z
 
-                centerVertex[mcount++]=startx
-                centerVertex[mcount++]=starty
+                centerVertex[mcount++]=x
+                centerVertex[mcount++]=y
                 centerVertex[mcount++]=sizeX
                 centerVertex[mcount++]=sizeY
 
-                centerVertex[mcount++]=stopx
-                centerVertex[mcount++]=stopy
+                centerVertex[mcount++]=x
+                centerVertex[mcount++]=y
                 centerVertex[mcount++]=sizeX
                 centerVertex[mcount++]=sizeY
 
@@ -682,13 +679,13 @@ class Batch() {
                 vertexes[vcount++] = y
                 vertexes[vcount++] = z
 
-                vertexes[vcount++] = a.x
-                vertexes[vcount++] = a.y
-                vertexes[vcount++] = a.z
+                vertexes[vcount++] = sizeAX + x
+                vertexes[vcount++] = sizeAY + y
+                vertexes[vcount++] = z
 
-                vertexes[vcount++] = b.x
-                vertexes[vcount++] = b.y
-                vertexes[vcount++] = b.z
+                vertexes[vcount++] = sizeBX + x
+                vertexes[vcount++] = sizeBY + y
+                vertexes[vcount++] = z
 
                 centerVertex[mcount++]=x
                 centerVertex[mcount++]=y
