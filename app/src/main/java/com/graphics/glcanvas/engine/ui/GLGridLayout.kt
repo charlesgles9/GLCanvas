@@ -16,6 +16,9 @@ class GLGridLayout(private val parent:GLView?,width:Float,height:Float,private v
         setBackgroundImageAtlas(atlas, name,index)
     }
 
+    constructor(parent:GLView?,width:Float,height:Float, rows:Int,cols:Int,atlas: TextureAtlas,name:String)
+            :this(parent, width, height, rows, cols,atlas,name,0){
+    }
     fun setBackgroundImageAtlas(atlas: TextureAtlas, name:String, index:Int){
         setBackgroundTextureAtlas(atlas)
         setPrimaryImage(name,index)

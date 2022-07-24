@@ -10,7 +10,7 @@ import com.graphics.glcanvas.engine.utils.TextureAtlas
 class SettingDialog(private val parent: GLView, atlas: TextureAtlas, font: Font,
                     controller: GLCanvasSurfaceView.TouchController?, width:Float, height:Float) {
     private var layout=RelativeLayoutConstraint(parent, width*0.8f, height*0.7f)
-    private var close= GLImageButton(50f,50f,atlas)
+    private var close= GLButton(50f,50f,atlas)
     private var visible=false
     init {
         close.setBackgroundImageAtlas("Checked",1)

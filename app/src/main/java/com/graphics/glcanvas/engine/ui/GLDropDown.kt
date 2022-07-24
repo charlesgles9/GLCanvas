@@ -34,7 +34,10 @@ class GLDropDown (width:Float, height:Float,
         setRippleColor(ColorRGBA.white)
         setDefaultColor(ColorRGBA.white)
     }
+    constructor(width: Float, height: Float, atlas: TextureAtlas, name: String, font:Font, string: String, size: Float)
+            :this(width,height,atlas,name,0,font, string, size) {
 
+    }
     fun toggleDropDown(){
         showDropDown=!showDropDown
         scrollView?.setVisibility(showDropDown)

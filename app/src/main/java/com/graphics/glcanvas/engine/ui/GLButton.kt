@@ -5,7 +5,7 @@ import com.graphics.glcanvas.engine.structures.Font
 import com.graphics.glcanvas.engine.structures.Text
 import com.graphics.glcanvas.engine.utils.TextureAtlas
 
-class GLImageButton(width:Float, height:Float) : GLView(width, height) {
+class GLButton(width:Float, height:Float) : GLView(width, height) {
 
 
     constructor(width: Float,height: Float,atlas: TextureAtlas):this(width, height) {
@@ -14,11 +14,15 @@ class GLImageButton(width:Float, height:Float) : GLView(width, height) {
         setForegroundTextureAtlas(atlas)
     }
 
-    constructor(width: Float,height: Float,atlas: TextureAtlas, name:String):this(width, height) {
+    constructor(width: Float,height: Float,atlas: TextureAtlas, name:String,index: Int)
+            :this(width, height) {
         this.atlas=atlas
         setBackgroundTextureAtlas(atlas)
         setForegroundTextureAtlas(atlas)
-        setBackgroundImageAtlas(name);
+        setBackgroundImageAtlas(name,index)
+    }
+    constructor(width: Float,height: Float,atlas: TextureAtlas, name:String)
+            :this(width, height,atlas,name,0) {
 
     }
      fun setBackgroundImageAtlas(name:String, index:Int){

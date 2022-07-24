@@ -11,7 +11,7 @@ class AboutDialog(private val parent:GLView, atlas: TextureAtlas,font: Font, con
     private var inner= LinearLayoutConstraint(scrollLayout,width*0.8f, height*0.5f)
     private var title=GLLabel(150f,50f,font,"About",0.4f)
     private var description=GLLabel(inner.width*0.9f,height*0.8f,font,"Hello this is an openGL renderer created by charlie.\n\n You can contribute to the project at my github page @charlesgles9.\n\n I created this for fun and out of curiosity I wanted to demystify some UI concepts.\n\n I also wanted to create a simple but efficient renderer for android phones.\n\n I will keep on improving it and adding more cool features.",0.2f)
-    private var close=GLImageButton(50f,50f,atlas)
+    private var close=GLButton(50f,50f,atlas)
     private var visible=false
     init {
 

@@ -11,6 +11,11 @@ open class RelativeLayoutConstraint(private val parent:GLView?,width:Float, heig
     constructor(parent: GLView?,width:Float, height:Float, atlas: TextureAtlas, name:String,index:Int):this(parent,width, height){
        setBackgroundAtlas(atlas, name,index)
     }
+    constructor(parent: GLView?,width:Float, height:Float, atlas: TextureAtlas, name:String)
+            :this(parent,width, height,atlas, name, 0){
+
+    }
+
     //push this view from center origin 0.5,0.5 -> 0,0
     fun setPosition(x:Float,y:Float){
         set(x+width*0.5f,y+height*0.5f)

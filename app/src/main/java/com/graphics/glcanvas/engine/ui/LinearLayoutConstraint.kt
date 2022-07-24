@@ -16,7 +16,9 @@ open class LinearLayoutConstraint(private val parent:GLView?, width:Float, heigh
         this.atlas=atlas
         setBackgroundSubTexture(atlas, name,index)
     }
-
+    constructor(parent:GLView?,width:Float,height:Float,atlas: TextureAtlas,name:String)
+            :this(parent, width, height, atlas, name, 0){
+    }
     fun setBackgroundSubTexture(atlas: TextureAtlas, name:String, index:Int){
         this.atlas=atlas
         setBackgroundTextureAtlas(atlas)

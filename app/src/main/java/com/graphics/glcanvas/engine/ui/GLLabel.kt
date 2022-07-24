@@ -25,7 +25,10 @@ open class GLLabel(width:Float, height:Float, private var font: Font, private va
         setText(string,font,size)
     }
 
+    constructor(width: Float, height: Float, atlas: TextureAtlas, name: String,font:Font,string: String,size: Float)
+            :this(width, height,atlas, name, 0, font, string, size) {
 
+    }
     override fun setVisibility(visible: Boolean) {
         super.setVisibility(visible)
     }

@@ -5,6 +5,9 @@ import com.graphics.glcanvas.engine.utils.TextureAtlas
 
 class GLImageCheckBox(width:Float, height:Float, atlas: TextureAtlas, primary: String,primaryIndex:Int,checked:String,checkedIndex:Int):GLView(width, height){
 
+
+    constructor(width: Float,height: Float,atlas: TextureAtlas,primary: String,checked: String)
+    :this(width,height,atlas,primary,0,checked,0){}
     init {
         this.atlas=atlas
         getForeground().setWidth(width*0.8f)
