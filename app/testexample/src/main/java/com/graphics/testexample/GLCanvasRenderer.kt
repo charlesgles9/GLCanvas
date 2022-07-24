@@ -25,6 +25,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
 
     private var rect=RectF(300f,300f,100f,100f)
     private var circle=Circle(100f,600f,50f)
+    private var rounded=RectF(100f,750f,100f,80f)
     private var polyline=PolyLine()
     private var angle=0f
 
@@ -32,6 +33,8 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         GLES32.glClear(GLES32.GL_DEPTH_BUFFER_BIT or  GLES32.GL_COLOR_BUFFER_BIT)
         GLES32.glClearColor(0f,0f,0f,1f)
 
+        rounded.setConnerRadius(30f)
+        rounded.setThickness(5.0f)
         batch.setMode(BatchQueue.UNORDER)
         batch.begin(camera)
         home?.draw(batch)
@@ -44,6 +47,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
 
         batch.begin(camera)
         batch.draw(circle)
+        batch.draw(rounded)
         batch.end()
 
         polyline.moveTo(100f,100f)

@@ -14,8 +14,13 @@ varying vec4 v_distanceFieldColor;
 varying vec4 v_distanceFieldBounds;
 
 float roundedEdge(vec2 pos,vec2 center,vec2 size,float radius,float thickness){
-    float d=length(max(abs(pos-center)-size+radius,0.0));
-    return 1.0-smoothstep(-1.5,1.5,abs(d)-radius)*min(1.0,radius);
+    float arc=length(max(abs(pos-center)-size+radius,0.0));
+    float t=smoothstep(-1.5,1.5,abs(arc)-radius+thickness);
+      if(radius==0.0)
+       return 1.0;
+       if(thickness==0.0)
+          t=1.0;
+    return (t*(1.0-smoothstep(-1.5,1.5,abs(arc)-radius)));
 }
 
 void main(){
@@ -29,9 +34,7 @@ void main(){
   size=v_center.zw;
   float radius=v_rounded_properties.y;
   float thickness=v_rounded_properties.x;
-  // thickness cannot be zero
-  if(thickness==0.0)
-   thickness=size.x*size.y;
+
   min_v.x=size.x-radius;
   min_v.y=size.y-radius;
         // apply clip rect

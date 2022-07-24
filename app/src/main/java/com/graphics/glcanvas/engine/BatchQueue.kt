@@ -17,7 +17,7 @@ class BatchQueue {
         this.mode=mode
     }
 
-    fun getBucket(texture:Int,primitiveType: Primitives):BatchBucket?{
+    private fun getBucket(texture:Int, primitiveType: Primitives):BatchBucket?{
       for(it in queue){
           if(it.getPrimitiveType()==primitiveType&&it.getFirst().getTexture().getId()==texture)
               return it
