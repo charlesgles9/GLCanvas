@@ -78,25 +78,25 @@ open class Vertex(pSize: Int, tSize: Int) {
         return spriteSheet.getCurrentFrame()
     }
 
-    fun setAngleX(angleX:Float){
+    fun setRotationX(angleX:Float){
         this.angleX=angleX
     }
 
-    fun setAngleY(angleY:Float){
+    fun setRotationY(angleY:Float){
         this.angleY=angleY
     }
 
-    fun setAngleZ(angleZ:Float){
+    fun setRotationZ(angleZ:Float){
         this.angleZ=angleZ
     }
 
-    fun getAngleX():Float{
+    fun getRotationX():Float{
         return angleX
     }
-    fun getAngleY():Float{
+    fun getRotationY():Float{
         return angleY
     }
-    fun getAngleZ():Float{
+    fun getRotationZ():Float{
         return angleZ
     }
 }

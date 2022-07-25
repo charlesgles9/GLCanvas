@@ -254,9 +254,9 @@ class Batch() {
         val y=rect.getY()
         val z=rect.getZ()
         for(i in 0 until  4) {
-            transforms[ncount++] = Math.toRadians(vertex.getAngleX().toDouble()).toFloat()
-            transforms[ncount++] = Math.toRadians(vertex.getAngleY().toDouble()).toFloat()
-            transforms[ncount++] = Math.toRadians(vertex.getAngleZ().toDouble()).toFloat()
+            transforms[ncount++] = Math.toRadians(vertex.getRotationX().toDouble()).toFloat()
+            transforms[ncount++] = Math.toRadians(vertex.getRotationY().toDouble()).toFloat()
+            transforms[ncount++] = Math.toRadians(vertex.getRotationZ().toDouble()).toFloat()
             transforms[ncount++] = vertex.getScale().x
             transforms[ncount++] = vertex.getScale().y
             transforms[ncount++] = 1f
@@ -388,9 +388,9 @@ class Batch() {
         val y=rect.getY()
         val z=rect.getZ()
         for(i in 0 until  4) {
-            transforms[ncount++] = Math.toRadians(vertex.getAngleX().toDouble()).toFloat()
-            transforms[ncount++] = Math.toRadians(vertex.getAngleY().toDouble()).toFloat()
-            transforms[ncount++] = Math.toRadians(vertex.getAngleZ().toDouble()).toFloat()
+            transforms[ncount++] = Math.toRadians(vertex.getRotationX().toDouble()).toFloat()
+            transforms[ncount++] = Math.toRadians(vertex.getRotationY().toDouble()).toFloat()
+            transforms[ncount++] = Math.toRadians(vertex.getRotationZ().toDouble()).toFloat()
             transforms[ncount++] = vertex.getScale().x
             transforms[ncount++] = vertex.getScale().y
             transforms[ncount++] = 1f
@@ -525,9 +525,9 @@ class Batch() {
         val z=line.getZ()
 
         for(i in 0 until  2) {
-            transforms[ncount++] = Math.toRadians(vertex.getAngleX().toDouble()).toFloat()
-            transforms[ncount++] = Math.toRadians(vertex.getAngleY().toDouble()).toFloat()
-            transforms[ncount++] = Math.toRadians(vertex.getAngleZ().toDouble()).toFloat()
+            transforms[ncount++] = Math.toRadians(vertex.getRotationX().toDouble()).toFloat()
+            transforms[ncount++] = Math.toRadians(vertex.getRotationY().toDouble()).toFloat()
+            transforms[ncount++] = Math.toRadians(vertex.getRotationZ().toDouble()).toFloat()
             transforms[ncount++] = vertex.getScale().x
             transforms[ncount++] = vertex.getScale().y
             transforms[ncount++] = 1f
@@ -593,9 +593,9 @@ class Batch() {
                 val sizeX = abs(x - line.x)
                 val sizeY = abs(y - line.y)
                 for(r in 0 until  2) {
-                    transforms[ncount++] = Math.toRadians(vertex.getAngleX().toDouble()).toFloat()
-                    transforms[ncount++] = Math.toRadians(vertex.getAngleY().toDouble()).toFloat()
-                    transforms[ncount++] = Math.toRadians(vertex.getAngleZ().toDouble()).toFloat()
+                    transforms[ncount++] = Math.toRadians(vertex.getRotationX().toDouble()).toFloat()
+                    transforms[ncount++] = Math.toRadians(vertex.getRotationY().toDouble()).toFloat()
+                    transforms[ncount++] = Math.toRadians(vertex.getRotationZ().toDouble()).toFloat()
                     transforms[ncount++] = vertex.getScale().x
                     transforms[ncount++] = vertex.getScale().y
                     transforms[ncount++] = 1f
@@ -667,10 +667,10 @@ class Batch() {
                 val sizeAY = y - a.y
                 val sizeBX = x - b.x
                 val sizeBY = y - b.y
-                for(r in 0 until  2) {
-                    transforms[ncount++] = Math.toRadians(vertex.getAngleX().toDouble()).toFloat()
-                    transforms[ncount++] = Math.toRadians(vertex.getAngleY().toDouble()).toFloat()
-                    transforms[ncount++] = Math.toRadians(vertex.getAngleZ().toDouble()).toFloat()
+                for(r in 0 until  3) {
+                    transforms[ncount++] = Math.toRadians(vertex.getRotationX().toDouble()).toFloat()
+                    transforms[ncount++] = Math.toRadians(vertex.getRotationY().toDouble()).toFloat()
+                    transforms[ncount++] = Math.toRadians(vertex.getRotationZ().toDouble()).toFloat()
                     transforms[ncount++] = vertex.getScale().x
                     transforms[ncount++] = vertex.getScale().y
                     transforms[ncount++] = 1f

@@ -6,6 +6,7 @@ import com.graphics.glcanvas.engine.*
 import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.structures.*
 import com.graphics.glcanvas.engine.utils.*
+import kotlin.math.round
 
 
 class GLCanvasRenderer(private val context: Context,width: Float, height: Float) : GLRendererView(width, height) {
@@ -46,7 +47,10 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         triangle.lineTo(300f,850f)
         triangle.gradient(gradient)
 
+        triangle.setRotationY(angle)
+        circle.setRotationZ(angle)
         circle.gradient(gradient)
+
         rounded.setConnerRadius(30f)
         rounded.setThickness(20.0f)
         batch.setMode(BatchQueue.UNORDER)
@@ -81,7 +85,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         batch.draw(polyline)
         batch.end()
 
-        rect.setAngleZ(angle)
+        rect.setRotationZ(angle)
         angle+=1f
         angle %= 360
         polyline.reset()
