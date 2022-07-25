@@ -36,6 +36,12 @@ class Path(x:Float,y:Float) {
         }
     }
 
+
+    fun gradient(gradient:MutableList<ColorRGBA>){
+        for(i in 0 until colors.size){
+            colors[i].set(gradient[i%gradient.size])
+        }
+    }
     fun getColor(index:Int):ColorRGBA{
         return colors[index]
     }

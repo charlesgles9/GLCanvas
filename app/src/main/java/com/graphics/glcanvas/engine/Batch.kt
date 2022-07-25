@@ -679,12 +679,12 @@ class Batch() {
                 vertexes[vcount++] = y
                 vertexes[vcount++] = z
 
-                vertexes[vcount++] = sizeAX + x
-                vertexes[vcount++] = sizeAY + y
+                vertexes[vcount++] = a.x
+                vertexes[vcount++] = a.y
                 vertexes[vcount++] = z
 
-                vertexes[vcount++] = sizeBX + x
-                vertexes[vcount++] = sizeBY + y
+                vertexes[vcount++] = b.x
+                vertexes[vcount++] = b.y
                 vertexes[vcount++] = z
 
                 centerVertex[mcount++]=x

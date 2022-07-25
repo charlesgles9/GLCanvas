@@ -27,6 +27,11 @@ class Polygon:Vertex(0,0) {
         clipLower.set(lowerX,lowerY)
     }
 
+    override fun gradient(gradient: MutableList<ColorRGBA>) {
+        paths.forEach {path->
+            path.gradient(gradient)
+        }
+    }
     fun getClipUpper(): Vector2f {
         return clipUpper
     }

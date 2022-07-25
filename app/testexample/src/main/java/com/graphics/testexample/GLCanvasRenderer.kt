@@ -3,8 +3,10 @@ package com.graphics.testexample
 import android.content.Context
 import android.opengl.GLES32
 import com.graphics.glcanvas.engine.*
+import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.structures.*
 import com.graphics.glcanvas.engine.utils.*
+
 
 class GLCanvasRenderer(private val context: Context,width: Float, height: Float) : GLRendererView(width, height) {
 
@@ -25,16 +27,28 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
 
     private var rect=RectF(300f,300f,100f,100f)
     private var circle=Circle(100f,600f,50f)
-    private var rounded=RectF(100f,750f,100f,80f)
+    private var rounded=RectF(100f,750f,100f,90f)
+    private var triangle=Polygon()
     private var polyline=PolyLine()
     private var angle=0f
-
+    private var gradient = mutableListOf(ColorRGBA(1.0f,0f,0f,1.0f), ColorRGBA(0.0f,1f,0f,1.0f),
+        ColorRGBA(0.0f,0f,1f,1.0f),ColorRGBA(1.0f,0f,1f,1.0f))
     override fun draw() {
         GLES32.glClear(GLES32.GL_DEPTH_BUFFER_BIT or  GLES32.GL_COLOR_BUFFER_BIT)
         GLES32.glClearColor(0f,0f,0f,1f)
 
+        triangle.moveTo(300f,790f)
+        //first triangle
+        triangle.lineTo(300f,850f)
+        triangle.lineTo(350f,850f)
+        //second triangle
+        triangle.lineTo(250f,850f)
+        triangle.lineTo(300f,850f)
+        triangle.gradient(gradient)
+
+        circle.gradient(gradient)
         rounded.setConnerRadius(30f)
-        rounded.setThickness(5.0f)
+        rounded.setThickness(20.0f)
         batch.setMode(BatchQueue.UNORDER)
         batch.begin(camera)
         home?.draw(batch)
@@ -48,6 +62,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         batch.begin(camera)
         batch.draw(circle)
         batch.draw(rounded)
+        batch.draw(triangle)
         batch.end()
 
         polyline.moveTo(100f,100f)
@@ -70,6 +85,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         angle+=1f
         angle %= 360
         polyline.reset()
+        triangle.reset()
     }
 
     override fun update(delta: Long) {

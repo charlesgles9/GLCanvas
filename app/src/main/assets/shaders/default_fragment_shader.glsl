@@ -9,22 +9,27 @@ varying vec4 v_center;
 varying vec2 v_rounded_properties;
 varying vec4 v_trim;
 varying vec4 v_color;
+varying vec4 v_gradient;
 varying vec2 v_TexCoordinate;
 varying vec4 v_distanceFieldColor;
 varying vec4 v_distanceFieldBounds;
 
+
 float roundedEdge(vec2 pos,vec2 center,vec2 size,float radius,float thickness){
+  // the outer radius
     float arc=length(max(abs(pos-center)-size+radius,0.0));
-    float t=smoothstep(-1.5,1.5,abs(arc)-radius+thickness);
-      if(radius==0.0)
-       return 1.0;
-       if(thickness==0.0)
-          t=1.0;
-    return (t*(1.0-smoothstep(-1.5,1.5,abs(arc)-radius)));
+    float len=length(size)*0.5;
+    // the inner radius
+    float inner=length(max(abs(pos-center)-size+len,0.0));
+    float t=smoothstep(-1.5,1.5,abs(inner)-len+thickness);
+    float r=1.0-smoothstep(-1.5,1.5,abs(arc)-radius);
+    t=thickness!=0.0?t:1.0;
+    r=radius==0.0?1.0:r;
+    return (t*r);
 }
 
 void main(){
- vec2 src,pos,size,min_v,max_v,topLeft,topRight,bottomLeft,bottomRight;
+ vec2 src,pos,size;
 // modify  coordinates to match screen space coordinates
   src.x=gl_FragCoord.x;
   src.y=srcRes.y-gl_FragCoord.y;
@@ -34,9 +39,6 @@ void main(){
   size=v_center.zw;
   float radius=v_rounded_properties.y;
   float thickness=v_rounded_properties.x;
-
-  min_v.x=size.x-radius;
-  min_v.y=size.y-radius;
         // apply clip rect
         // lower clip Y
          float booleanLowerY=1.0-step(v_trim.w,src.y);
@@ -60,10 +62,8 @@ void main(){
     vec4 quad_color=v_color*quadV;
 
 
-
     if(quad_color.a<(1.0/255.0))
-      discard;
-
+        discard;
 
    if(isText==1){
       float innerDistance=1.0-texture2D(u_texture,v_TexCoordinate).a;

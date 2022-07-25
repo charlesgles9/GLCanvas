@@ -25,16 +25,19 @@ open class LinearLayoutConstraint(private val parent:GLView?, width:Float, heigh
         setPrimaryImage(name,index)
         setBackgroundSubTexture(name,index)
     }
+
     fun setBackgroundSubTexture(atlas: TextureAtlas, name:String){
         this.atlas=atlas
         setBackgroundTextureAtlas(atlas)
         setPrimaryImage(name,0)
         setBackgroundSubTexture(name,0)
     }
+
     companion object{
         const val VERTICAL=0
         const val HORIZONTAL=1
     }
+
     //push this view from center origin 0.5,0.5 -> 0,0
      fun setPosition(x:Float,y:Float){
         set(x+width*0.5f,y+height*0.5f)
