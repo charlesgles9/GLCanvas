@@ -23,8 +23,10 @@ float roundedEdge(vec2 pos,vec2 center,vec2 size,float radius,float thickness){
     float inner=length(max(abs(pos-center)-size+len,0.0));
     float t=smoothstep(-1.5,1.5,abs(inner)-len+thickness);
     float r=1.0-smoothstep(-1.5,1.5,abs(arc)-radius);
-    t=thickness!=0.0?t:1.0;
-    r=radius==0.0?1.0:r;
+    // make sure thickness and radius values are not zero
+     t=t+step(thickness,0.0);
+     r=r+step(radius,0.0);
+
     return (t*r);
 }
 

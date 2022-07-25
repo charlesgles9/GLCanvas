@@ -6,7 +6,7 @@ import com.graphics.glcanvas.engine.*
 import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.structures.*
 import com.graphics.glcanvas.engine.utils.*
-import kotlin.math.round
+
 
 
 class GLCanvasRenderer(private val context: Context,width: Float, height: Float) : GLRendererView(width, height) {
@@ -90,6 +90,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         angle %= 360
         polyline.reset()
         triangle.reset()
+
     }
 
     override fun update(delta: Long) {
