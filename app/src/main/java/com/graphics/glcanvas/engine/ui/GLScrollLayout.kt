@@ -38,6 +38,10 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
          setBackgroundSubTexture(name,index)
      }
 
+    fun setBackgroundAtlas(atlas: TextureAtlas, name:String){
+       setBackgroundAtlas(atlas, name, 0)
+    }
+
     fun showScrollBar(enableScrollBar:Boolean){
         this.enableScrollBar=enableScrollBar
     }

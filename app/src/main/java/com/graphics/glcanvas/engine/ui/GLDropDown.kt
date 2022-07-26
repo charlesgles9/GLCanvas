@@ -49,9 +49,12 @@ class GLDropDown (width:Float, height:Float,
         showDropDown=boolean
     }
 
+
     fun setDropMaxHeight(itemDropMaxHeight:Float){
         this.itemDropMaxHeight=itemDropMaxHeight
         scrollView?.setHeightPixels(itemDropMaxHeight)
+        if(views.size!=0)
+            setItems()
     }
 
     fun setDropDownBackgroundColor(color: ColorRGBA){
@@ -65,9 +68,16 @@ class GLDropDown (width:Float, height:Float,
     fun setItems(strings:MutableList<String>){
         //calculate maximum height of the wrapper
           var totalViewHeight=0f
+          views.clear()
            strings.forEach {
                views.add(genLabel(it))
            }
+           setItems()
+    }
+
+    private fun setItems(){
+        //calculate maximum height of the wrapper
+        var totalViewHeight=0f
         for (view in views) {
             totalViewHeight += view.height
             view.setVisibility(false)
@@ -91,7 +101,6 @@ class GLDropDown (width:Float, height:Float,
         if(listener!=null)
             onItemClick?.setListener(listener!!)
     }
-
     private fun genLabel(message:String):GLLabel{
         val lbl= GLLabel(width,height,font,message,size)
         lbl.setBackgroundColor(ColorRGBA.transparent)

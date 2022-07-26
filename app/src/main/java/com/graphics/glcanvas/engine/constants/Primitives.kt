@@ -5,5 +5,6 @@ enum class Primitives {
         TRIANGLE,
         CIRCLE,
         LINE,
-        POLYLINE
+        POLYLINE,
+        POINT
 }

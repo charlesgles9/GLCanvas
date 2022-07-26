@@ -2,7 +2,6 @@ package com.graphics.glcanvas.engine.ui
 
 import com.graphics.glcanvas.engine.maths.Vector2f
 import com.graphics.glcanvas.engine.structures.Text
-import kotlin.math.abs
 import kotlin.math.max
 
 open class LayoutConstraint(private val view:GLView) : Constraints() {
@@ -13,6 +12,10 @@ open class LayoutConstraint(private val view:GLView) : Constraints() {
     private var below:GLView?=null
     private var center:GLView?=null
     private var end:GLView?=null
+    private var topLeft:GLView?=null
+    private var bottomLeft:GLView?=null
+    private var topRight:GLView?=null
+    private var bottomRight:GLView?=null
     private var center_Horizontal:GLView?=null
     private var center_Vertical:GLView?=null
     private var MARGIN= floatArrayOf(0f,0f,0f,0f)
@@ -45,6 +48,23 @@ open class LayoutConstraint(private val view:GLView) : Constraints() {
     override fun alignEnd(view:GLView){
         this.end=view
     }
+
+    override fun alignTopLeft(view: GLView) {
+        this.topLeft=view
+    }
+
+    override fun alignBottomLeft(view: GLView) {
+        this.bottomLeft=view
+    }
+
+    override fun alignTopRight(view: GLView) {
+        topRight=view
+    }
+
+    override fun alignBottomRight(view: GLView) {
+        bottomRight=view
+    }
+
      override fun alignCenterVertical(view:GLView){
          this.center_Vertical=view
      }
@@ -102,6 +122,32 @@ open class LayoutConstraint(private val view:GLView) : Constraints() {
         view.set(lx,ly)
     }
 
+    private fun applyAlignTopLeft(){
+        val height=(topLeft?.height?:0f)
+        val ly= (topLeft?.getY()?.minus(height*0.5f-view.height*0.5f)?:view.getY())
+        view.set(view.getX(),ly)
+    }
+
+    private fun applyAlignBottomLeft(){
+        val height=(bottomLeft?.height?:0f)
+        val ly= (bottomLeft?.getY()?.plus(height*0.5f-view.height*0.5f)?:view.getY())
+        view.set(view.getX(),ly)
+    }
+    private fun applyAlignTopRight(){
+        val height=(topRight?.height?:0f)
+        val width=(topRight?.width?:0f)
+        val ly= (topRight?.getY()?.minus(height*0.5f-view.height*0.5f)?:view.getY())
+        val lx= (topRight?.getX()?.plus(width*0.5f-view.width*0.5f+getMarginLeft()-getMarginRight())?:view.getX())
+        view.set(lx,ly)
+    }
+
+    private fun applyAlignBottomRight(){
+        val height=(bottomRight?.height?:0f)
+        val width=(bottomRight?.width?:0f)
+        val ly= (bottomRight?.getY()?.plus(height*0.5f-view.height*0.5f)?:view.getY())
+        val lx= (bottomRight?.getX()?.plus(width*0.5f-view.width*0.5f+getMarginLeft()-getMarginRight())?:view.getX())
+        view.set(lx,ly)
+    }
 
      private fun applyCenterVertical(){
              val ly= (center_Vertical?.getY()?:view.getY())
@@ -136,6 +182,10 @@ open class LayoutConstraint(private val view:GLView) : Constraints() {
         applyBelow()
         applyCenter()
         applyEnd()
+        applyAlignTopLeft()
+        applyAlignBottomLeft()
+        applyAlignTopRight()
+        applyAlignBottomRight()
         applyCenterVertical()
         applyCenterHorizontal()
     }

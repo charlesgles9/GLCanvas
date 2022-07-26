@@ -19,16 +19,17 @@ class GLGridLayout(private val parent:GLView?,width:Float,height:Float,private v
     constructor(parent:GLView?,width:Float,height:Float, rows:Int,cols:Int,atlas: TextureAtlas,name:String)
             :this(parent, width, height, rows, cols,atlas,name,0){
     }
+
     fun setBackgroundImageAtlas(atlas: TextureAtlas, name:String, index:Int){
         setBackgroundTextureAtlas(atlas)
         setPrimaryImage(name,index)
         setBackgroundSubTexture(name,index)
     }
+
     fun setBackgroundImageAtlas(atlas: TextureAtlas, name:String){
-        setBackgroundTextureAtlas(atlas)
-        setPrimaryImage(name,0)
-        setBackgroundSubTexture(name,0)
+        setBackgroundImageAtlas(atlas, name,0)
     }
+
     //push this view from center origin 0.5,0.5 -> 0,0
     fun setPosition(x:Float,y:Float){
         set(x+width*0.5f,y+height*0.5f)

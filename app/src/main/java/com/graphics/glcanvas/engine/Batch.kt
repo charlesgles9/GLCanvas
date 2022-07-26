@@ -176,6 +176,8 @@ class Batch() {
                     type= Primitives.TRIANGLE
                 is Circle ->
                     type = Primitives.CIRCLE
+                is Point->
+                    type=Primitives.POINT
             }
              batchQueue.addVertex(entity,type)
         }
@@ -203,6 +205,7 @@ class Batch() {
                            Primitives.CIRCLE -> Primitives.CIRCLE
                            Primitives.LINE -> Primitives.LINE
                            Primitives.POLYLINE -> Primitives.POLYLINE
+                           Primitives.POINT->Primitives.POINT
                        }
                        draw()
                        reset()
@@ -215,6 +218,7 @@ class Batch() {
                        Primitives.CIRCLE ->  addCircle(i,vertex)
                        Primitives.LINE ->  addLine(i,vertex)
                        Primitives.POLYLINE -> addPolyLine(i, vertex)
+                       Primitives.POINT->addPoint(i,vertex)
                    }
                    i++
                }
@@ -225,6 +229,7 @@ class Batch() {
                     Primitives.CIRCLE -> Primitives.CIRCLE
                     Primitives.LINE -> Primitives.LINE
                     Primitives.POLYLINE -> Primitives.POLYLINE
+                    Primitives.POINT->Primitives.POINT
                 }
                 draw()
             }
@@ -513,7 +518,57 @@ class Batch() {
         colors[acount++]=color4.get(3)
         num_triangles+=2
     }
+    private fun addPoint(index:Int,vertex: Vertex){
+        val point= vertex as Point
+        val sizeX=point.getWidth()*0.5f
+        val sizeY=point.getHeight()*0.5f
+        val x=point.getX()
+        val y=point.getY()
+        val z=point.getZ()
+        for(i in 0 until  1) {
+            transforms[ncount++] = Math.toRadians(vertex.getRotationX().toDouble()).toFloat()
+            transforms[ncount++] = Math.toRadians(vertex.getRotationY().toDouble()).toFloat()
+            transforms[ncount++] = Math.toRadians(vertex.getRotationZ().toDouble()).toFloat()
+            transforms[ncount++] = vertex.getScale().x
+            transforms[ncount++] = vertex.getScale().y
+            transforms[ncount++] = 1f
+        }
 
+        //center
+        vertexes[vcount++]=x
+        vertexes[vcount++]=y
+        vertexes[vcount++]=z
+
+
+        clipAttribute[qcount++]=point.getClipUpper().x
+        clipAttribute[qcount++]=point.getClipUpper().y
+        clipAttribute[qcount++]=point.getClipLower().x
+        clipAttribute[qcount++]=point.getClipLower().y
+
+
+        mTexture=point.getTexture().getId()
+
+        centerVertex[mcount++]=x
+        centerVertex[mcount++]=y
+        centerVertex[mcount++]=sizeX
+        centerVertex[mcount++]=sizeY
+
+
+
+        indices[icount++]= (index*1+0).toShort()
+
+
+        val color1=point.getColor(0)
+
+
+        colors[acount++]=color1.get(0)
+        colors[acount++]=color1.get(1)
+        colors[acount++]=color1.get(2)
+        colors[acount++]=color1.get(3)
+
+
+        num_triangles+=1
+    }
     private fun addLine(index: Int, vertex: Vertex){
         val line=vertex as Line
         val sizeX= abs( line.getStartX()-line.getStopX())
@@ -803,14 +858,15 @@ class Batch() {
         centerBuffer?.put(centerVertex)?.position(0)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[3])
         GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,mcount*4,centerBuffer)
-      //  if(primitiveType== Primitives.QUAD||primitiveType==Primitives.CIRCLE) {
-            defaultShader.enableVertexAttribPointer("a_center",4,0,centerBuffer)
-            // pass the rounded corners for rectF shape
-            roundedPropBuffer?.put(roundedRectProperties)?.position(0)
-            GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[4])
-            GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,rcount*4,roundedPropBuffer)
-            defaultShader.enableVertexAttribPointer("a_rounded_properties",2,0,roundedPropBuffer)
-        //}
+        defaultShader.enableVertexAttribPointer("a_center",4,0,centerBuffer)
+
+        // pass the rounded corners for rectF shape
+        roundedPropBuffer?.put(roundedRectProperties)?.position(0)
+        GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[4])
+        GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,rcount*4,roundedPropBuffer)
+        defaultShader.enableVertexAttribPointer("a_rounded_properties",2,0,roundedPropBuffer)
+
+
         clipBuffer?.put(clipAttribute)?.position(0)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[5])
         GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,qcount*4,clipBuffer)
@@ -890,9 +946,11 @@ class Batch() {
         if(primitiveType == Primitives.QUAD||primitiveType== Primitives.CIRCLE||primitiveType== Primitives.TRIANGLE)
              GLES32.glDrawElements(GLES32.GL_TRIANGLES,icount,GLES32.GL_UNSIGNED_SHORT,drawListBuffer)
         else
-            if(primitiveType == Primitives.LINE||primitiveType== Primitives.POLYLINE){
+            if(primitiveType == Primitives.LINE||primitiveType== Primitives.POLYLINE)
              GLES32.glDrawElements(GLES32.GL_LINES,icount,GLES32.GL_UNSIGNED_SHORT,drawListBuffer)
-        }
+         else
+             GLES32.glDrawElements(GLES32.GL_POINTS,icount,GLES32.GL_UNSIGNED_SHORT,drawListBuffer)
+
     }
 
     private fun draw() {

@@ -38,6 +38,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         GLES32.glClear(GLES32.GL_DEPTH_BUFFER_BIT or  GLES32.GL_COLOR_BUFFER_BIT)
         GLES32.glClearColor(0f,0f,0f,1f)
 
+
         triangle.moveTo(300f,790f)
         //first triangle
         triangle.lineTo(300f,850f)

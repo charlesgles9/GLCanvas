@@ -63,6 +63,10 @@ open class Vertex(pSize: Int, tSize: Int) {
         return colors[index]
     }
 
+    fun getColor():ColorRGBA{
+        return colors[0]
+    }
+
     fun getPosition(index: Int):Vector3f{
         return positions[index]
     }
@@ -70,6 +74,7 @@ open class Vertex(pSize: Int, tSize: Int) {
     fun getScale():Vector2f{
         return scale
     }
+
     fun vertexCount():Int{
         return positions.size
     }
