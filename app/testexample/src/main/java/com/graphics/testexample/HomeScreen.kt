@@ -95,9 +95,6 @@ class HomeScreen(atlas: TextureAtlas, font: Font, controller: GLCanvasSurfaceVie
         controller?.addEvent(settings)
         controller?.addEvent(about)
         controller?.addEvent(exit)
-        val bb=GLButton(50f,50f)
-        bb.getConstraints().alignBottomLeft(layout)
-        layout.addItem(bb)
 
     }
 

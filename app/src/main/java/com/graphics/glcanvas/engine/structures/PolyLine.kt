@@ -4,7 +4,7 @@ import com.graphics.glcanvas.engine.maths.ColorRGBA
 import com.graphics.glcanvas.engine.maths.Vector2f
 
 
-class PolyLine() :Vertex(0,0){
+class PolyLine() :Vertex(0){
   private var clipUpper= Vector2f(Float.MIN_VALUE, Float.MIN_VALUE)
   private var clipLower= Vector2f(Float.MAX_VALUE, Float.MAX_VALUE)
   private val paths= MutableList(0,init = { Path(0.0f,0.0f) })

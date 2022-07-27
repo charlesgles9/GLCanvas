@@ -3,7 +3,7 @@ package com.graphics.glcanvas.engine.structures
 import com.graphics.glcanvas.engine.maths.Vector2f
 
 class Line(private var startX: Float, private var startY: Float,
-           private var stopX: Float, private var stopY: Float) : Vertex(2, 2) {
+           private var stopX: Float, private var stopY: Float) : Vertex(2) {
     private var clipUpper= Vector2f(Float.MIN_VALUE, Float.MIN_VALUE)
     private var clipLower= Vector2f(Float.MAX_VALUE, Float.MAX_VALUE)
     private var z=0f

@@ -8,7 +8,7 @@ import com.graphics.glcanvas.engine.utils.SpriteSheet
 import com.graphics.glcanvas.engine.utils.Texture
 import com.graphics.glcanvas.engine.utils.TextureLoader
 
-open class Vertex(pSize: Int, tSize: Int) {
+open class Vertex(pSize: Int) {
     private var visible=true
     private var positions= MutableList(pSize,init = { Vector3f() })
     private var colors=MutableList(pSize,init = {ColorRGBA(1.0f,1.0f,1.0f,1.0f) })

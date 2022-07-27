@@ -14,8 +14,8 @@ open class RectF :Vertex {
     private var clipLower=Vector2f(Float.MAX_VALUE, Float.MAX_VALUE)
     private var animator:SpriteAnimator?=null
     private var atlas:TextureAtlas?=null
-    constructor():super(4,4){}
-    constructor(x:Float,y:Float,width:Float,height:Float):super(4,4){
+    constructor():super(4){}
+    constructor(x:Float,y:Float,width:Float,height:Float):super(4){
         this.width=width
         this.height=height
         this.position.set(x,y,0.0f)
