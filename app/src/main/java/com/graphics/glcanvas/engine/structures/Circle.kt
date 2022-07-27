@@ -10,8 +10,8 @@ class Circle:Vertex {
     private var width=0.0f
     private var height=0.0f
     private var thickness=0.0f
-    constructor():super(4,4){}
-    constructor(x:Float,y:Float,radius:Float):super(4,4){
+    constructor():super(4){}
+    constructor(x:Float,y:Float,radius:Float):super(4){
         this.width=radius
         this.height=radius
         this.position.set(x,y,0.0f)

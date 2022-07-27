@@ -12,10 +12,17 @@ class ColorRGBA {
         val white=ColorRGBA(1f,1f,1f,1f)
         val blue=ColorRGBA(0f,0f,1f,1f)
         val green=ColorRGBA(0f,1f,0f,1f)
+        val gray=ColorRGBA(0.5f,0.5f,0.5f,1.0f)
+        val lightGray=ColorRGBA(0.75f,0.75f,0.75f,1.0f)
+        val yellow=ColorRGBA(1.0f,1f,0.0f,1.0f)
+        val pink=ColorRGBA(1.0f,0f,1.0f,1.0f)
+        val cyan=ColorRGBA(0f,1.0f,1.0f,1.0f)
+
+        fun darken( factor:Float,color:ColorRGBA):ColorRGBA{
+            color.multiply(factor)
+            return color
+        }
     }
-
-
-
 
     private var data=arrayOf(1.0f,1.0f,1.0f,1.0f)
     constructor( value:Float)  {
@@ -69,7 +76,9 @@ class ColorRGBA {
         data[R]=(data[R]*scalar)
         data[G]=(data[G]*scalar)
         data[B]=(data[B]*scalar)
-        data[A]=(data[A]*scalar)
+
     }
+
+
 
 }
