@@ -27,6 +27,12 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
         const val VERTICAL=0
         const val HORIZONTAL=1
     }
+
+    init {
+
+        scrollBarProgress.setColor(ColorRGBA.green)
+        scrollBarBackground.setColor(ColorRGBA.gray)
+    }
     constructor(width:Float, height:Float, atlas: TextureAtlas, name:String,index: Int):this(width, height){
         setBackgroundAtlas(atlas, name,index)
     }
@@ -83,11 +89,12 @@ class GLScrollLayout(width:Float,height:Float):GLView(width,height) {
 
     fun setItems(items:MutableList<GLView>){
         this.items.addAll(items)
-
+        items.forEach { it.wrapContent=true }
     }
 
     fun addItem(view:GLView){
         this.items.add(view)
+        view.wrapContent=true;
     }
 
     override fun setVisibility(visible: Boolean) {

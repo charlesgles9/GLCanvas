@@ -11,6 +11,7 @@ class GLGridLayout(private val parent:GLView?,width:Float,height:Float,private v
     private var offset= Vector2f()
     private var onItemClick=OnItemClickEvent(null,parent?:this,null,items)
     private var listener:OnItemClickEvent.OnItemClickListener?=null
+
     constructor(parent:GLView?,width:Float,height:Float, rows:Int,cols:Int,atlas: TextureAtlas,name:String,index:Int):this(parent,width, height,rows, cols){
         this.atlas=atlas
         setBackgroundImageAtlas(atlas, name,index)
@@ -43,8 +44,15 @@ class GLGridLayout(private val parent:GLView?,width:Float,height:Float,private v
         this.items.addAll(items)
     }
 
+    fun addItem(view:GLView){
+        items.add(view)
+    }
     fun getItems():MutableList<GLView>{
         return items
+    }
+
+    fun setOffset(offset:Vector2f){
+        this.offset.set(offset)
     }
     override fun setEnableTouchEvents(enable: Boolean){
         super.setEnableTouchEvents(enable)

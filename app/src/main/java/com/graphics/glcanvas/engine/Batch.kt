@@ -539,12 +539,10 @@ class Batch() {
         vertexes[vcount++]=y
         vertexes[vcount++]=z
 
-
         clipAttribute[qcount++]=point.getClipUpper().x
         clipAttribute[qcount++]=point.getClipUpper().y
         clipAttribute[qcount++]=point.getClipLower().x
         clipAttribute[qcount++]=point.getClipLower().y
-
 
         mTexture=point.getTexture().getId()
 
@@ -553,14 +551,9 @@ class Batch() {
         centerVertex[mcount++]=sizeX
         centerVertex[mcount++]=sizeY
 
-
-
         indices[icount++]= (index*1+0).toShort()
 
-
         val color1=point.getColor(0)
-
-
         colors[acount++]=color1.get(0)
         colors[acount++]=color1.get(1)
         colors[acount++]=color1.get(2)
@@ -865,7 +858,6 @@ class Batch() {
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[4])
         GLES32.glBufferSubData(GLES32.GL_ARRAY_BUFFER,0,rcount*4,roundedPropBuffer)
         defaultShader.enableVertexAttribPointer("a_rounded_properties",2,0,roundedPropBuffer)
-
 
         clipBuffer?.put(clipAttribute)?.position(0)
         GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER,buffers[5])

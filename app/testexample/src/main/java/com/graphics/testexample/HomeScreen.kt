@@ -21,6 +21,7 @@ class HomeScreen(atlas: TextureAtlas, font: Font, controller: GLCanvasSurfaceVie
     private var aboutDialog= AboutDialog(layout,atlas, font, controller, width, height)
     private var settingDialog= SettingDialog(layout,atlas, font, controller, width, height)
     private var startGameDialog= StartGameDialog(layout,atlas, font, controller, width, height)
+
     init {
         layout.setBackgroundColor(ColorRGBA.white)
         layout.setX(width*0.5f)
@@ -91,13 +92,64 @@ class HomeScreen(atlas: TextureAtlas, font: Font, controller: GLCanvasSurfaceVie
             }
         })
 
+        val list= mutableListOf<GLView>()
+        for(i in 0 until 50 ) {
+            val color=ColorRGBA(ColorRGBA.cyan)
+            list.add(
+                genButton(
+                    i.toString(),
+                    100f,
+                    50f,
+                    ColorRGBA.darken(0.7f, color),
+                    10f,font
+                )
+            )
+        }
+
+        val scrollView=GLScrollLayout(width,280f)
+        val gridLayout=GLGridLayout(scrollView,400f,250f,5,10)
+        gridLayout.setItems(list)
+        gridLayout.setBackgroundColor(ColorRGBA.transparent)
+        scrollView.setOrientation(GLScrollLayout.HORIZONTAL)
+        scrollView.addItem(gridLayout)
+        scrollView.getConstraints().layoutMarginBottom(50f)
+        scrollView.getConstraints().alignCenterHorizontal(layout)
+        scrollView.getConstraints().alignBelow(mainContainer)
+        layout.addItem(scrollView)
+
+
+        scrollView.addOnSwipeEvent(object :GLOnSwipeEvent.OnSwipeListener{
+            override fun onSwipe() {
+
+            }
+        })
+
+        gridLayout.setOnItemClickListener(object :OnItemClickEvent.OnItemClickListener{
+            override fun onItemClick(view: GLView) {
+                println("Clicked: "+view.Id)
+            }
+        })
+
+
         controller?.addEvent(start)
         controller?.addEvent(settings)
         controller?.addEvent(about)
         controller?.addEvent(exit)
+        controller?.addEvent(gridLayout)
+        controller?.addEvent(scrollView)
+
 
     }
 
+
+    fun genButton(id:String,w:Float,h:Float,color:ColorRGBA,rounded:Float,font: Font):GLButton{
+        val button =GLButton(w,h)
+        button.roundedCorner(rounded)
+        button.setBackgroundColor(color)
+        button.setText(id,font,0.25f)
+        button.Id=id
+        return button
+    }
     fun draw(batch: Batch){
         layout.draw(batch)
         aboutDialog.draw(batch)

@@ -17,6 +17,9 @@ import kotlin.math.min
 
 open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Update, Touch{
 
+
+     var Id=""
+     var wrapContent=false
     /*helps us specify the foreground objects position
      relative to the background image this will help us create progress bars */
       private var fOffset=Vector2f()
