@@ -99,6 +99,10 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
 
     }
 
+    override fun onRelease() {
+      batch.cleanUp()
+      TextureLoader.getInstance().clearTextures()
+    }
 
 
 }

@@ -12,10 +12,10 @@ class TextureLoader {
         return if(!data.containsKey(PATH))
                  loadTexture(context,PATH)
             else
-            data[PATH]!!
+            data[PATH]!![0]
     }
     fun getTexture(PATH: String):Int{
-           return data[PATH]!!
+           return data[PATH]!![0]
     }
    private fun loadTexture(context: Context,PATH: String):Int{
        val textureHandle=IntArray(1)
@@ -37,12 +37,15 @@ class TextureLoader {
         }
         if(textureHandle[0]==0)
             throw RuntimeException("Error loading texture")
-        data[PATH] = textureHandle[0]
+        data[PATH] = textureHandle
 
         return textureHandle[0]
     }
 
     fun clearTextures(){
+        for (texture in data){
+          GLES32.glDeleteTextures(1,texture.value,0)
+        }
         data.clear()
     }
 
@@ -52,7 +55,7 @@ class TextureLoader {
 
     companion object {
         private var instance:TextureLoader?=null
-        private val data= HashMap<String,Int>()
+        private val data= HashMap<String,IntArray>()
         fun getInstance(): TextureLoader {
             if (instance == null)
                 instance = TextureLoader()

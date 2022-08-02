@@ -961,6 +961,9 @@ class Batch() {
 
     fun initShader(context: Context){
         defaultShader.createProgram(context)
+    }
 
+    fun cleanUp(){
+      defaultShader.clean()
     }
 }

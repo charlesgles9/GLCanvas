@@ -78,6 +78,10 @@ class GLCanvasSurfaceView(private val context: Activity, private val renderer: G
         renderMode= RENDERMODE_CONTINUOUSLY
     }
 
+    fun onRelease(){
+        renderer.onRelease()
+    }
+
  inner class TouchController{
      private val events= mutableListOf<Touch>()
      fun addEvent(touch: Touch){

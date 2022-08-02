@@ -2,6 +2,7 @@ package com.graphics.testexample
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import com.graphics.glcanvas.engine.GLCanvasSurfaceView
 
 class MainActivity : AppCompatActivity() {
@@ -14,5 +15,12 @@ class MainActivity : AppCompatActivity() {
         surface= GLCanvasSurfaceView(this, renderer!!)
         setContentView(surface)
 
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Toast.makeText(this,"Hello!",Toast.LENGTH_SHORT).show()
+        renderer?.onRelease()
     }
 }

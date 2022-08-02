@@ -132,8 +132,13 @@ class Shader(private val vname:String,private val fname:String) {
     fun disableVertexAttribPointer(name:String){
         GLES32.glDisableVertexAttribArray(GLES32.glGetAttribLocation(getProgram(),name))
     }
-    fun getProgram():Int{
+
+    private fun getProgram():Int{
         return program
+    }
+
+    fun clean(){
+        GLES32.glUseProgram(0)
     }
 
 }
