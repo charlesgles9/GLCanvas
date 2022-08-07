@@ -23,6 +23,7 @@ open class GLRendererView(private val width: Float, private val height: Float) :
     override fun onRelease() {
 
     }
+
     fun getRenderer(): GLRenderer {
         return renderer
     }

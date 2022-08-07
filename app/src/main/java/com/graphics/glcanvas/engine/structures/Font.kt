@@ -1,26 +1,40 @@
 package com.graphics.glcanvas.engine.structures
 
 import android.content.Context
+import com.graphics.glcanvas.engine.utils.TextureLoader
 import java.io.InputStream
 
-class Font(path:String,context: Context) {
+class Font(path:String,val context: Context) {
   private val metaList= mutableMapOf<Char,FontMetaData>()
    var lineHeight=0f
    var scaleW=0f
    var scaleH=0f
    val padding=FloatArray(4)
    var textureAtlas=""
+
     companion object {
          val PADDING_LEFT = 0
          val PADDING_TOP = 1
          val PADDING_RIGHT = 2
          val PADDING_BOTTOM = 3
+         val ARIAL="fonts/arial.fnt"
+         val BERLINSANS="fonts/berlinSans.fnt"
+         val CALIBRI="fonts/calibri.fnt"
+         val CANDARA="fonts/candara.fnt"
+         val HARRINGTON="fonts/harrington.fnt"
+         val SANS="fonts/sans.fnt"
+         val SEGOE="fonts/segoe.fnt"
+         val SEGOEUI="fonts/segoeUI.fnt"
+         val TAHOMA="fonts/tahoma.fnt"
     }
   init {
+
       val stream:InputStream=context.assets.open(path)
          stream.bufferedReader().forEachLine {
             processLine(it)
          }
+
+
   }
 
   private fun processArgs(str:String):List<String>{
@@ -94,6 +108,7 @@ class Font(path:String,context: Context) {
   }
 
     fun getTextureAtlasPath():String{
+        TextureLoader.getInstance().getTexture(context,textureAtlas)
         return textureAtlas
     }
 }
