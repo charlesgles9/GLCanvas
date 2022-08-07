@@ -306,7 +306,7 @@ open class LayoutConstraint(private val view:GLView) : Constraints() {
                     //if its the first item position it at the top
                     if (i == 0)
                         view.set(
-                            parent.getX() - parent.width * 0.5f + view.width * 0.5f + view.getConstraints()
+                            parent.getX() - parent.width * 0.5f + view.width * 0.5f +view.getConstraints().getMarginLeft()-view.getConstraints()
                                 .getMarginRight() + offset.x,
                             yOffset + view.height * 0.5f + view.getConstraints()
                                 .getMarginBottom()
@@ -315,7 +315,7 @@ open class LayoutConstraint(private val view:GLView) : Constraints() {
                     if (view != items.last()) {
                         val next = items[i + 1]
                         next.setY(
-                            yOffset + next.height * 0.5f + view.getConstraints()
+                            yOffset + next.height * 0.5f+next.getConstraints().getMarginTop() - view.getConstraints()
                                 .getMarginBottom()
                         )
                         next.getConstraints().toRightOf(view)

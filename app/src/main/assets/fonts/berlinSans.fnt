@@ -1,6 +1,6 @@
 info face="Berlin Sans FB" size=62 bold=0 italic=0 charset="" unicode=0 stretchH=100 smooth=1 aa=1 padding=8,8,8,8 spacing=0,0
 common lineHeight=85 base=56 scaleW=512 scaleH=512 pages=1 packed=0
-page id=0 file="berlinSans.png"
+page id=0 file="fonts/berlinSans.png"
 chars count=95
 char id=32   x=0     y=0     width=0     height=0     xoffset=0     yoffset=56    xadvance=32     page=0  chnl=0 
 char id=41   x=0     y=0     width=36     height=72     xoffset=-8     yoffset=3    xadvance=38     page=0  chnl=0 
