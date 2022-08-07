@@ -18,7 +18,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
     override fun prepare() {
         batch.initShader(context)
         camera.setOrtho( getCanvasWidth(), getCanvasHeight())
-        atlas= TextureAtlas("textures/ui/test_UI.atlas",context)
+        atlas=TextureAtlasParser.load(context, "textures/ui/test_UI.atlas")[0]
         home= HomeScreen(atlas!!,Font(Font.CALIBRI,context),getController(),getCanvasWidth(), getCanvasHeight())
     }
 

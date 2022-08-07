@@ -110,6 +110,7 @@ open class LayoutConstraint(private val view:GLView) : Constraints() {
         val lx= (end?.getX()?.plus(width*0.5f-view.width*0.5f+getMarginLeft()-getMarginRight())?:view.getX())
         view.set(lx,view.getY())
     }
+
     private fun applyBelow(){
         val height=(below?.height?:0f)
         val ly= (below?.getY()?.plus(height*0.5f+view.height*0.5f+getMarginBottom())?:view.getY())
@@ -133,6 +134,7 @@ open class LayoutConstraint(private val view:GLView) : Constraints() {
         val ly= (bottomLeft?.getY()?.plus(height*0.5f-view.height*0.5f)?:view.getY())
         view.set(view.getX(),ly)
     }
+
     private fun applyAlignTopRight(){
         val height=(topRight?.height?:0f)
         val width=(topRight?.width?:0f)

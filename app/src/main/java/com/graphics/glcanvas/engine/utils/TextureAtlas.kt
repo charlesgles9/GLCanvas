@@ -3,9 +3,10 @@ package com.graphics.glcanvas.engine.utils
 import android.content.Context
 import com.graphics.glcanvas.engine.maths.Vector2f
 import java.io.InputStream
+import java.lang.StringBuilder
 
 
-class TextureAtlas(path:String,context: Context) {
+class TextureAtlas(text: StringBuilder,context: Context) {
     private var texturePath=""
     private var texture:Texture?=null
     private var resolution=Vector2f()
@@ -14,10 +15,11 @@ class TextureAtlas(path:String,context: Context) {
     private var sheet:SpriteSheet?=null
     private var current:ArrayList<Atlas>?=null
     init {
-        parse(path,context)
+        parse(text)
         sheet= SpriteSheet(1,1)
         sheet?.resize(coordinateCount())
         var counter=0
+
         map.forEach{(k,l)->
            l.sortBy {
                it.getIndex()
@@ -57,11 +59,11 @@ class TextureAtlas(path:String,context: Context) {
             return list?.get(0)
         return list?.get(index)
     }
-    private fun parse(path: String,context: Context){
-        val stream: InputStream =context.assets.open(path)
-        stream.bufferedReader().forEachLine {
-            // if it doesn't contain this sign then this line is
-            //a title
+
+    private fun parse(text: StringBuilder){
+        val list=text.split("\n")
+        list.forEach {
+            // if it doesn't contain this sign then this line is a title
              if(!it.contains(":")){
                  // test if this data is the image details located at the
                  // start of the text file

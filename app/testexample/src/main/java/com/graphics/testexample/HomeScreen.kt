@@ -112,7 +112,6 @@ class HomeScreen(atlas: TextureAtlas, font: Font, controller: GLCanvasSurfaceVie
         gridLayout.setBackgroundColor(ColorRGBA.transparent)
         scrollView.setOrientation(GLScrollLayout.HORIZONTAL)
         scrollView.addItem(gridLayout)
-        scrollView.getConstraints().layoutMarginBottom(50f)
         scrollView.getConstraints().alignCenterHorizontal(layout)
         scrollView.getConstraints().alignBelow(mainContainer)
         layout.addItem(scrollView)
