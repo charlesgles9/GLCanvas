@@ -47,6 +47,7 @@ class GLRenderer(private val updatable: Updatable) : GLSurfaceView.Renderer {
         GLES32.glDepthFunc(GLES32.GL_LEQUAL)
         GLES32.glDepthMask(true)
 
+
     }
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
@@ -66,7 +67,7 @@ class GLRenderer(private val updatable: Updatable) : GLSurfaceView.Renderer {
      private fun setTransparency(gl:GL10, transparency:Boolean){
         if(transparency){
             gl.glEnable(GL10.GL_BLEND)
-            gl.glBlendFunc(GL10.GL_ONE,GL10.GL_ONE_MINUS_SRC_ALPHA)
+            gl.glBlendFunc(GL10.GL_SRC_ALPHA,GL10.GL_ONE_MINUS_SRC_ALPHA)
         }else{
             gl.glEnable(GL10.GL_BLEND)
         }

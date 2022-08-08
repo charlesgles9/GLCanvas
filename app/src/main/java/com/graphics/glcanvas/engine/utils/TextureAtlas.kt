@@ -2,18 +2,17 @@ package com.graphics.glcanvas.engine.utils
 
 import android.content.Context
 import com.graphics.glcanvas.engine.maths.Vector2f
-import java.io.InputStream
 import java.lang.StringBuilder
 
 
-class TextureAtlas(text: StringBuilder,context: Context) {
+ class TextureAtlas(text: StringBuilder,context: Context) {
     private var texturePath=""
     private var texture:Texture?=null
     private var resolution=Vector2f()
     private var format=""
-    private val map=HashMap<String,ArrayList<Atlas>>()
+    private val map=HashMap<String,ArrayList<AtlasMetaData>>()
     private var sheet:SpriteSheet?=null
-    private var current:ArrayList<Atlas>?=null
+    private var current:ArrayList<AtlasMetaData>?=null
     init {
         parse(text)
         sheet= SpriteSheet(1,1)
@@ -49,11 +48,11 @@ class TextureAtlas(text: StringBuilder,context: Context) {
         return text.split(":")
     }
 
-    private fun get(name:String):ArrayList<Atlas>?{
+    private fun get(name:String):ArrayList<AtlasMetaData>?{
          return map[name]
     }
 
-    private fun get(name:String, index: Int):Atlas?{
+    private fun get(name:String, index: Int):AtlasMetaData?{
         val list=get(name)
         if(index>list?.size?:0)
             return list?.get(0)
@@ -73,29 +72,41 @@ class TextureAtlas(text: StringBuilder,context: Context) {
                      val objList=get(it)
                      if(objList==null){
                       current= ArrayList()
-                      current?.add(Atlas(it))
+                      current?.add(AtlasMetaData(it))
                       map[it] = current!!
                       }else {
                          current = objList
-                         current?.add(Atlas(it))
+                         current?.add(AtlasMetaData(it))
                      }
                  }
              }else{
                  // sprite coordinate data and texture information
                  if(map.isEmpty()) {
-                     if(it.indexOf("size") != -1){
-                         val arr = split(it)[1].split(',')
-                         resolution.set(arr[0].trim().toFloat(), arr[1].trim().toFloat())
-                     }else if (it.indexOf("format") != -1) {
-                         format = split(it)[1]
+                     when {
+                         it.indexOf("size") != -1->{
+                             val arr = split(it)[1].split(',')
+                             resolution.set(arr[0].trim().toFloat(), arr[1].trim().toFloat())
+                         }
+
+                         it.indexOf("format") != -1 -> {
+                             val format = split(it)[1].trim()
+                             val obj = current?.last()
+                             obj?.setFormat(format)
+                         }
+                         it.indexOf("filter") != -1 -> {
+                             val filter = split(it)[1].split(',')
+                             val obj = current?.last()
+                             obj?.setFilter(filter[0].trim(), filter[1].trim())
+                         }
                      }
+
                  }else{
 
                      when {
                          it.indexOf("size") != -1->{
-                             val arr = split(it)[1].split(',')
+                             val size = split(it)[1].split(',')
                              val obj=current?.last()
-                                 obj?.setSize(arr[0].trim().toFloat(), arr[1].trim().toFloat())
+                                 obj?.setSize(size[0].trim().toFloat(), size[1].trim().toFloat())
                          }
                          it.indexOf("rotate") != -1 -> {
                              val rotate = split(it)[1].trim()
@@ -115,6 +126,7 @@ class TextureAtlas(text: StringBuilder,context: Context) {
                                  origin[1].trim().toFloat()
                              )
                          }
+
 
                          it.indexOf("offset") != -1 -> {
                              val offset = split(it)[1].split(",")
@@ -136,7 +148,7 @@ class TextureAtlas(text: StringBuilder,context: Context) {
     }
 
 
-    fun getItem(key:String):Atlas?{
+    fun getItem(key:String):AtlasMetaData?{
         return map[key]?.get(0)
     }
 
@@ -154,9 +166,11 @@ class TextureAtlas(text: StringBuilder,context: Context) {
         return texture
     }
 
-    inner class Atlas(private val name:String){
+    inner class AtlasMetaData(private val name:String){
         private var rotate=false
         private var position=Vector2f()
+        private var format="RGBA8888"
+        private var filter=Array(2,init = {"nearest"})
         private var size= Vector2f()
         private var origin=Vector2f()
         private var offset=Vector2f()
@@ -180,6 +194,16 @@ class TextureAtlas(text: StringBuilder,context: Context) {
         fun setOffset(x:Float,y:Float){
             this.offset.set(x,y)
         }
+
+        fun setFormat(format:String){
+           this.format=format
+        }
+
+        fun setFilter(f1:String,f2:String){
+            this.filter[0]=f1
+            this.filter[1]=f2
+        }
+
         fun setIndex(index:Int){
             this.index=index
         }
@@ -192,6 +216,14 @@ class TextureAtlas(text: StringBuilder,context: Context) {
         }
         fun getPosition():Vector2f{
             return position
+        }
+
+        fun getFormat():String{
+            return format
+        }
+
+        fun getFilter():Array<String>{
+            return filter
         }
         fun getSize():Vector2f{
             return size

@@ -35,6 +35,7 @@ class ResourceLoader {
             stream=assets.open(path)
             val options=BitmapFactory.Options()
             options.inScaled=false
+            options.inPreferredConfig=Bitmap.Config.ARGB_8888
             bitmap=BitmapFactory.decodeStream(stream,null,options)
         }catch (e:IOException){
             return bitmap

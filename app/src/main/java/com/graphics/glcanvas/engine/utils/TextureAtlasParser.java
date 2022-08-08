@@ -19,14 +19,16 @@ public class TextureAtlasParser {
           String line;
           while (( line=bufferedReader.readLine())!=null){
               // this must be the start of the texture atlas definition
-              // csv format of a texture atlas contains the file name at the start
+              // csv format of a texture atlas contains the file path at the start
               if(line.contains("/")){
                   //create a new buffer
                   buffer= new StringBuilder();
                   atlas_text_array.add(buffer);
               }
-             if(buffer!=null)
-                buffer.append(line);
+             if(buffer!=null) {
+                 buffer.append(line);
+                 buffer.append("\n");
+             }
           }
 
           List<TextureAtlas>atlases= new ArrayList<>();

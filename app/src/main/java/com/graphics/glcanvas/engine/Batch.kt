@@ -935,6 +935,7 @@ class Batch() {
         defaultShader.uniformLi("isText",if(isText)1 else 0)
         bindVertexShader()
         bindFragmentShader()
+        GLES32.glDisable(GLES32.GL_DEPTH_TEST)
         if(primitiveType == Primitives.QUAD||primitiveType== Primitives.CIRCLE||primitiveType== Primitives.TRIANGLE)
              GLES32.glDrawElements(GLES32.GL_TRIANGLES,icount,GLES32.GL_UNSIGNED_SHORT,drawListBuffer)
         else

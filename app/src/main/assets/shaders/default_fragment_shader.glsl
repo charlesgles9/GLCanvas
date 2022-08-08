@@ -1,4 +1,4 @@
-precision mediump float;
+precision lowp float;
 varying vec2 pos;
 uniform int sampleId;
 uniform int isText;
@@ -64,8 +64,7 @@ void main(){
     vec4 quad_color=v_color*quadV;
 
 
-    if(quad_color.a<(1.0/255.0))
-        discard;
+
 
    if(isText==1){
       float innerDistance=1.0-texture2D(u_texture,v_TexCoordinate).a;

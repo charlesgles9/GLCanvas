@@ -33,6 +33,7 @@ class Font(path:String,val context: Context) {
          stream.bufferedReader().forEachLine {
             processLine(it)
          }
+      TextureLoader.getInstance().getTexture(context,textureAtlas)
 
 
   }
@@ -108,7 +109,7 @@ class Font(path:String,val context: Context) {
   }
 
     fun getTextureAtlasPath():String{
-        TextureLoader.getInstance().getTexture(context,textureAtlas)
+
         return textureAtlas
     }
 }
