@@ -1,6 +1,7 @@
 package com.graphics.glcanvas.engine
 
 import android.content.Context
+import android.opengl.GLES10
 import android.opengl.GLES32
 import android.opengl.Matrix
 import com.graphics.glcanvas.engine.constants.Primitives

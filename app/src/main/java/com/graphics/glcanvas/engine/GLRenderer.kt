@@ -1,4 +1,5 @@
 package com.graphics.glcanvas.engine
+import android.opengl.GLES10
 import android.opengl.GLES32
 import android.opengl.GLSurfaceView
 import android.os.SystemClock
@@ -68,6 +69,8 @@ class GLRenderer(private val updatable: Updatable) : GLSurfaceView.Renderer {
         if(transparency){
             gl.glEnable(GL10.GL_BLEND)
             gl.glBlendFunc(GL10.GL_SRC_ALPHA,GL10.GL_ONE_MINUS_SRC_ALPHA)
+            gl.glEnable(GLES10.GL_ALPHA_TEST)
+            gl.glAlphaFunc(GLES10.GL_GREATER,1/255f)
         }else{
             gl.glEnable(GL10.GL_BLEND)
         }
