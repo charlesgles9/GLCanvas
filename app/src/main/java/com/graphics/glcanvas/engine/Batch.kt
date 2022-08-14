@@ -985,6 +985,8 @@ class Batch() {
     }
 
     fun cleanUp(){
+        //clean up OpenGL memory
       defaultShader.clean()
+      GLES32.glDeleteBuffers(buffers.size,buffers,0)
     }
 }
