@@ -63,6 +63,7 @@ class Batch() {
     private var num_draw_calls=0
     private var num_triangles=0
 
+    var enableClipping=false
     private val VERTEX_COORDS_PER_VERTEX=3
     private val COLOR_COORDS_PER_VERTEX=4
     private val TEXTURE_COORDS_PER_VERTEX=2
@@ -214,14 +215,32 @@ class Batch() {
 
                    }
                    when(bucket.getPrimitiveType()){
-                       Primitives.QUAD ->  addRectF(i, vertex)
-                       Primitives.TRIANGLE -> addPolygon(i, vertex)
-                       Primitives.CIRCLE ->  addCircle(i,vertex)
-                       Primitives.LINE ->  addLine(i,vertex)
-                       Primitives.POLYLINE -> addPolyLine(i, vertex)
-                       Primitives.POINT->addPoint(i,vertex)
+                       Primitives.QUAD ->  {
+                           addRectF(i, vertex)
+                           i++
+                       }
+                       Primitives.TRIANGLE -> {
+                           addPolygon(i, vertex)
+                           i++
+                       }
+                       Primitives.CIRCLE ->  {
+                           addCircle(i,vertex)
+                           i++
+                       }
+                       Primitives.LINE ->  {
+                           addLine(i,vertex)
+                           i++
+                       }
+                       Primitives.POLYLINE -> {
+                           i = addPolyLine(i, vertex)
+
+                       }
+                       Primitives.POINT-> {
+                           addPoint(i, vertex)
+                           i++
+                       }
                    }
-                   i++
+
                }
             if(i!=0) {
                 primitiveType = when(bucket.getPrimitiveType()){
@@ -654,9 +673,9 @@ class Batch() {
                 vertexes[vcount++] = y
                 vertexes[vcount++] = z
                 //bottom left
-                vertexes[vcount++] = sizeX + x
-                vertexes[vcount++] = sizeY + y
-                vertexes[vcount++] = z
+                vertexes[vcount++] = line.x
+                vertexes[vcount++] = line.y
+                vertexes[vcount++] = line.z
 
                 centerVertex[mcount++]=x
                 centerVertex[mcount++]=y
@@ -696,7 +715,7 @@ class Batch() {
 
         }
         mTexture=vertex.getTexture().getId()
-        return vcount
+        return lcount
 
     }
 
@@ -794,7 +813,7 @@ class Batch() {
 
         }
         mTexture=vertex.getTexture().getId()
-        return vcount
+        return pcount
 
     }
 
@@ -933,6 +952,7 @@ class Batch() {
         defaultShader.getUniformMatrix4fv("MVPMatrix",1,mMVPMatrix)
         defaultShader.uniform2f("srcRes",ScreenRatio.getInstance().getSurfaceScreen().x,ScreenRatio.getInstance().getSurfaceScreen().y)
         defaultShader.uniform1f("isQuad",if((primitiveType== Primitives.QUAD||primitiveType==Primitives.CIRCLE)&&!isText)1f else 0f)
+        defaultShader.uniform1f("enableClipRect",if(enableClipping) 1f else 0f)
         defaultShader.uniformLi("isText",if(isText)1 else 0)
         bindVertexShader()
         bindFragmentShader()
@@ -956,8 +976,7 @@ class Batch() {
         Matrix.multiplyMM(mMVPMatrix,0,camera?.getProjectionMatrix(),0,mMVPMatrix,0)
         render()
         num_draw_calls++
-
-
+        enableClipping=false
     }
 
     fun initShader(context: Context){

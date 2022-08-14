@@ -243,6 +243,7 @@ open class GLView(width:Float,height:Float) :GLLayoutParams(width, height),Updat
     }
 
       override fun draw(batch: Batch) {
+          batch.enableClipping=true
           constraint.applyConstraints()
         //  applyMargin()
           // update click events before drawing

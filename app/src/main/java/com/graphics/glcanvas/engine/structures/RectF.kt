@@ -121,7 +121,7 @@ open class RectF :Vertex {
         return animator
     }
 
-   fun update(delta:Long){
+   open fun update(delta:Long){
        animator?.update(delta)
    }
 
