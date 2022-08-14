@@ -63,6 +63,7 @@ void main(){
     float rounded=1.0;
  /*prevents glitches in non-quad shapes all non-quad shapes should have a
      value of 1.0 */
+     if(isQuad==1.0)
     rounded=roundedEdge(src,pos,size,radius,thickness);
 
     quadV=clip*rounded;
