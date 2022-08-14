@@ -114,7 +114,7 @@ class HomeScreen(atlas: TextureAtlas, font: Font, controller: GLCanvasSurfaceVie
         scrollView.addItem(gridLayout)
         scrollView.getConstraints().alignCenterHorizontal(layout)
         scrollView.getConstraints().alignBelow(mainContainer)
-       layout.addItem(scrollView)
+      // layout.addItem(scrollView)
 
 
         scrollView.addOnSwipeEvent(object :GLOnSwipeEvent.OnSwipeListener{

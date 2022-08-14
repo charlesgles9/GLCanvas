@@ -44,7 +44,7 @@ void main(){
   float thickness=v_rounded_properties.x;
         // apply clip rect
         float clip=1.0;
-        if(enableClipRect==1.0){
+
         // lower clip Y
          float booleanLowerY=1.0-step(v_trim.w,src.y);
         // upper clip Y
@@ -54,23 +54,19 @@ void main(){
             // upper clip X
          float booleanUpperX=1.0-step(src.x,v_trim.x);
           clip=booleanUpperY*booleanLowerY*booleanUpperX*booleanLowerX;
-         }
+
          float quadV=1.0;
 
 
 /* if its a quad test if it has rounded corners
     ignore text objects since texts are also quads*/
-    float rounded=1.0;
+   float rounded=roundedEdge(src,pos,size,radius,thickness);
+
  /*prevents glitches in non-quad shapes all non-quad shapes should have a
      value of 1.0 */
-     if(isQuad==1.0)
-    rounded=roundedEdge(src,pos,size,radius,thickness);
-
+   rounded+=(1.0-isQuad);
     quadV=clip*rounded;
     vec4 quad_color=v_color*quadV;
-
-
-
 
    if(isText==1){
       float innerDistance=1.0-texture2D(u_texture,v_TexCoordinate).a;

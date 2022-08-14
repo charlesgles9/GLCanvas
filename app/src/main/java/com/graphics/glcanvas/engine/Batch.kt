@@ -963,6 +963,7 @@ class Batch() {
              GLES32.glDrawElements(GLES32.GL_LINES,icount,GLES32.GL_UNSIGNED_SHORT,drawListBuffer)
          else
              GLES32.glDrawElements(GLES32.GL_POINTS,icount,GLES32.GL_UNSIGNED_SHORT,drawListBuffer)
+        enableClipping=true
 
     }
 
@@ -976,7 +977,7 @@ class Batch() {
         Matrix.multiplyMM(mMVPMatrix,0,camera?.getProjectionMatrix(),0,mMVPMatrix,0)
         render()
         num_draw_calls++
-        enableClipping=false
+
     }
 
     fun initShader(context: Context){
