@@ -46,7 +46,7 @@ class GLCanvasRenderer(private val context: Context,width: Float, height: Float)
         triangle.setRotationY(angle)
         circle.setRotationZ(angle)
         circle.setColor(ColorRGBA.cyan)
-
+        
         rounded.gradient(gradient)
         rounded.setConnerRadius(30f)
         rounded.setThickness(20.0f)
