@@ -42,6 +42,10 @@ void main(){
   size=v_center.zw;
   float radius=v_rounded_properties.y;
   float thickness=v_rounded_properties.x;
+
+   if(v_color.a<1.0/255.0)
+       discard;
+
         // apply clip rect
         float clip=1.0;
 
@@ -65,6 +69,7 @@ void main(){
  /*prevents glitches in non-quad shapes all non-quad shapes should have a
      value of 1.0 */
    rounded+=(1.0-isQuad);
+   rounded=min(rounded,1.0);
     quadV=clip*rounded;
     vec4 quad_color=v_color*quadV;
 
