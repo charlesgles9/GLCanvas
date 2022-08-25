@@ -3,7 +3,7 @@ package com.graphics.glcanvas.engine.structures
 import com.graphics.glcanvas.engine.maths.Vector2f
 import com.graphics.glcanvas.engine.maths.Vector3f
 
-class Circle:Vertex {
+open class Circle:Vertex {
     private val position= Vector3f()
     private var clipUpper= Vector2f(Float.MIN_VALUE, Float.MIN_VALUE)
     private var clipLower= Vector2f(Float.MAX_VALUE, Float.MAX_VALUE)

@@ -1,4 +1,4 @@
-precision lowp float;
+precision mediump float;
 varying vec2 pos;
 uniform int sampleId;
 uniform int isText;
@@ -6,6 +6,7 @@ uniform sampler2D u_texture;
 uniform float isQuad;
 uniform float enableClipRect;
 uniform vec2 srcRes;
+uniform vec2 cameraPos;
 varying vec4 v_center;
 varying vec2 v_rounded_properties;
 varying vec4 v_trim;
@@ -28,7 +29,7 @@ float roundedEdge(vec2 pos,vec2 center,vec2 size,float radius,float thickness){
      t=t+step(thickness,0.0);
      r=r+step(radius,0.0);
 
-    return (t*r);
+    return  (t*r);
 }
 
 void main(){
@@ -36,13 +37,19 @@ void main(){
 // modify  coordinates to match screen space coordinates
   src.x=gl_FragCoord.x;
   src.y=srcRes.y-gl_FragCoord.y;
-  // pixel position
-  pos=v_center.xy;
+   /* pixel position plus in case the camera is not at origin (0,0) for accuracies in the rounded
+    calculations since gl_FragCoord will always be in the range of the surfaceView
+    */
+  pos=v_center.xy-cameraPos;
+
   // quad dimensions
   size=v_center.zw;
   float radius=v_rounded_properties.y;
   float thickness=v_rounded_properties.x;
 
+   // maintains transparency with quads with different z values for some reason
+   // depth testing doesn't work with transprency when the z values are different
+   // also ignores transparent pixels
    if(v_color.a<1.0/255.0)
        discard;
 

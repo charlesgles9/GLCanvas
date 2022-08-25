@@ -273,6 +273,7 @@ class Batch() {
 
     private fun addCircle(index:Int,vertex: Vertex){
         val rect= vertex as Circle
+
         val sizeX=rect.getRadius()
         val sizeY=rect.getRadius()
         val x=rect.getX()
@@ -948,9 +949,12 @@ class Batch() {
     }
 
     private fun render(){
+        val cameraX=camera?.getEye()?.x?:0f
+        val cameraY=camera?.getEye()?.y?:0f
         defaultShader.use()
         defaultShader.getUniformMatrix4fv("MVPMatrix",1,mMVPMatrix)
         defaultShader.uniform2f("srcRes",ScreenRatio.getInstance().getSurfaceScreen().x,ScreenRatio.getInstance().getSurfaceScreen().y)
+        defaultShader.uniform2f("cameraPos",cameraX,cameraY)
         defaultShader.uniform1f("isQuad",if((primitiveType== Primitives.QUAD||primitiveType==Primitives.CIRCLE)&&!isText)1f else 0f)
         defaultShader.uniform1f("enableClipRect",if(enableClipping) 1f else 0f)
         defaultShader.uniformLi("isText",if(isText)1 else 0)

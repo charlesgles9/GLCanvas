@@ -57,14 +57,16 @@ class GLCanvasSurfaceView(private val context: Activity, private val renderer: G
 
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        queueEvent {
+        var flag=false
+      //  queueEvent {
             for(touch in controller.getEvents()){
-                touch.onTouchEvent(event)
+               val value= touch.onTouchEvent(event)
+               flag= value
 
-            }
+          //  }
         }
 
-        return true
+        return flag
     }
 
 

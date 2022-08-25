@@ -37,6 +37,14 @@ open class Camera {
         return lookAt
     }
 
+
+    fun getX():Float{
+        return eye.x
+    }
+
+    fun getY():Float{
+        return eye.y
+    }
     fun getUp():Vector3f{
         return  up;
     }
